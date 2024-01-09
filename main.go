@@ -67,6 +67,10 @@ func main() {
 		go model.SyncOptions(common.SyncFrequency)
 		go model.SyncChannelCache(common.SyncFrequency)
 	}
+
+	// 数据看板
+	go model.UpdateQuotaData()
+
 	if os.Getenv("CHANNEL_UPDATE_FREQUENCY") != "" {
 		frequency, err := strconv.Atoi(os.Getenv("CHANNEL_UPDATE_FREQUENCY"))
 		if err != nil {
@@ -100,7 +104,15 @@ func main() {
 
 	// Initialize HTTP server
 	server := gin.New()
-	server.Use(gin.Recovery())
+	server.Use(gin.CustomRecovery(func(c *gin.Context, err any) {
+		common.SysError(fmt.Sprintf("panic detected: %v", err))
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": gin.H{
+				"message": fmt.Sprintf("Panic detected, error: %v. Please submit a issue here: https://github.com/Calcium-Ion/new-api", err),
+				"type":    "new_api_panic",
+			},
+		})
+	}))
 	// This will cause SSE not to work!!!
 	//server.Use(gzip.Gzip(gzip.DefaultCompression))
 	server.Use(middleware.RequestId())
