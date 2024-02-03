@@ -145,47 +145,48 @@ func countTokenMessages(messages []Message, model string) (int, error) {
 	for _, message := range messages {
 		tokenNum += tokensPerMessage
 		tokenNum += getTokenNum(tokenEncoder, message.Role)
-		var arrayContent []MediaMessage
-		if err := json.Unmarshal(message.Content, &arrayContent); err != nil {
-
-			var stringContent string
-			if err := json.Unmarshal(message.Content, &stringContent); err != nil {
-				return 0, err
-			} else {
-				tokenNum += getTokenNum(tokenEncoder, stringContent)
-				if message.Name != nil {
-					tokenNum += tokensPerName
-					tokenNum += getTokenNum(tokenEncoder, *message.Name)
-				}
-			}
-		} else {
-			for _, m := range arrayContent {
-				if m.Type == "image_url" {
-					var imageTokenNum int
-					if str, ok := m.ImageUrl.(string); ok {
-						imageTokenNum, err = getImageToken(&MessageImageUrl{Url: str, Detail: "auto"})
-					} else {
-						imageUrlMap := m.ImageUrl.(map[string]interface{})
-						detail, ok := imageUrlMap["detail"]
-						if ok {
-							imageUrlMap["detail"] = detail.(string)
-						} else {
-							imageUrlMap["detail"] = "auto"
-						}
-						imageUrl := MessageImageUrl{
-							Url:    imageUrlMap["url"].(string),
-							Detail: imageUrlMap["detail"].(string),
-						}
-						imageTokenNum, err = getImageToken(&imageUrl)
-					}
-					if err != nil {
-						return 0, err
-					}
-
-					tokenNum += imageTokenNum
-					log.Printf("image token num: %d", imageTokenNum)
+		if len(message.Content) > 0 {
+			var arrayContent []MediaMessage
+			if err := json.Unmarshal(message.Content, &arrayContent); err != nil {
+				var stringContent string
+				if err := json.Unmarshal(message.Content, &stringContent); err != nil {
+					return 0, err
 				} else {
-					tokenNum += getTokenNum(tokenEncoder, m.Text)
+					tokenNum += getTokenNum(tokenEncoder, stringContent)
+					if message.Name != nil {
+						tokenNum += tokensPerName
+						tokenNum += getTokenNum(tokenEncoder, *message.Name)
+					}
+				}
+			} else {
+				for _, m := range arrayContent {
+					if m.Type == "image_url" {
+						var imageTokenNum int
+						if str, ok := m.ImageUrl.(string); ok {
+							imageTokenNum, err = getImageToken(&MessageImageUrl{Url: str, Detail: "auto"})
+						} else {
+							imageUrlMap := m.ImageUrl.(map[string]interface{})
+							detail, ok := imageUrlMap["detail"]
+							if ok {
+								imageUrlMap["detail"] = detail.(string)
+							} else {
+								imageUrlMap["detail"] = "auto"
+							}
+							imageUrl := MessageImageUrl{
+								Url:    imageUrlMap["url"].(string),
+								Detail: imageUrlMap["detail"].(string),
+							}
+							imageTokenNum, err = getImageToken(&imageUrl)
+						}
+						if err != nil {
+							return 0, err
+						}
+
+						tokenNum += imageTokenNum
+						log.Printf("image token num: %d", imageTokenNum)
+					} else {
+						tokenNum += getTokenNum(tokenEncoder, m.Text)
+					}
 				}
 			}
 		}
@@ -257,6 +258,19 @@ func shouldDisableChannel(err *OpenAIError, statusCode int) bool {
 	return false
 }
 
+func shouldEnableChannel(err error, openAIErr *OpenAIError) bool {
+	if !common.AutomaticEnableChannelEnabled {
+		return false
+	}
+	if err != nil {
+		return false
+	}
+	if openAIErr != nil {
+		return false
+	}
+	return true
+}
+
 func setEventStreamHeaders(c *gin.Context) {
 	c.Writer.Header().Set("Content-Type", "text/event-stream")
 	c.Writer.Header().Set("Cache-Control", "no-cache")
@@ -294,9 +308,13 @@ func relayErrorHandler(resp *http.Response) (openAIErrorWithStatusCode *OpenAIEr
 
 func getFullRequestURL(baseURL string, requestURL string, channelType int) string {
 	fullRequestURL := fmt.Sprintf("%s%s", baseURL, requestURL)
-	if channelType == common.ChannelTypeOpenAI {
-		if strings.HasPrefix(baseURL, "https://gateway.ai.cloudflare.com") {
+
+	if strings.HasPrefix(baseURL, "https://gateway.ai.cloudflare.com") {
+		switch channelType {
+		case common.ChannelTypeOpenAI:
 			fullRequestURL = fmt.Sprintf("%s%s", baseURL, strings.TrimPrefix(requestURL, "/v1"))
+		case common.ChannelTypeAzure:
+			fullRequestURL = fmt.Sprintf("%s%s", baseURL, strings.TrimPrefix(requestURL, "/openai/deployments"))
 		}
 	}
 	return fullRequestURL

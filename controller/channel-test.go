@@ -34,23 +34,27 @@ func testChannel(channel *model.Channel, request ChatRequest) (err error, openai
 	case common.ChannelTypeXunfei:
 		return errors.New("该渠道类型当前版本不支持测试，请手动测试"), nil
 	case common.ChannelTypeAzure:
-		request.Model = "gpt-35-turbo"
+		if request.Model == "" {
+			request.Model = "gpt-35-turbo"
+		}
 		defer func() {
 			if err != nil {
 				err = errors.New("请确保已在 Azure 上创建了 gpt-35-turbo 模型，并且 apiVersion 已正确填写！")
 			}
 		}()
 	default:
-		request.Model = "gpt-3.5-turbo"
-	}
-	requestURL := common.ChannelBaseURLs[channel.Type]
-	if channel.Type == common.ChannelTypeAzure {
-		requestURL = fmt.Sprintf("%s/openai/deployments/%s/chat/completions?api-version=2023-03-15-preview", channel.GetBaseURL(), request.Model)
-	} else {
-		if channel.GetBaseURL() != "" {
-			requestURL = channel.GetBaseURL()
+		if request.Model == "" {
+			request.Model = "gpt-3.5-turbo"
 		}
-		requestURL += "/v1/chat/completions"
+	}
+	baseUrl := common.ChannelBaseURLs[channel.Type]
+	if channel.GetBaseURL() != "" {
+		baseUrl = channel.GetBaseURL()
+	}
+	requestURL := getFullRequestURL(baseUrl, "/v1/chat/completions", channel.Type)
+
+	if channel.Type == common.ChannelTypeAzure {
+		requestURL = getFullRequestURL(channel.GetBaseURL(), fmt.Sprintf("/openai/deployments/%s/chat/completions?api-version=2023-03-15-preview", request.Model), channel.Type)
 	}
 
 	jsonData, err := json.Marshal(request)
@@ -78,6 +82,9 @@ func testChannel(channel *model.Channel, request ChatRequest) (err error, openai
 		return err, nil
 	}
 	if response.Usage.CompletionTokens == 0 {
+		if response.Error.Message == "" {
+			response.Error.Message = "补全 tokens 非预期返回 0"
+		}
 		return errors.New(fmt.Sprintf("type %s, code %v, message %s", response.Error.Type, response.Error.Code, response.Error.Message)), &response.Error
 	}
 	return nil, nil
@@ -106,6 +113,7 @@ func TestChannel(c *gin.Context) {
 		})
 		return
 	}
+	testModel := c.Param("model")
 	channel, err := model.GetChannelById(id, true)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -115,6 +123,9 @@ func TestChannel(c *gin.Context) {
 		return
 	}
 	testRequest := buildTestRequest()
+	if testModel != "" {
+		testRequest.Model = testModel
+	}
 	tik := time.Now()
 	err, _ = testChannel(channel, *testRequest)
 	tok := time.Now()
@@ -142,12 +153,23 @@ var testAllChannelsRunning bool = false
 
 // disable & notify
 func disableChannel(channelId int, channelName string, reason string) {
-	if common.RootUserEmail == "" {
-		common.RootUserEmail = model.GetRootUserEmail()
-	}
 	model.UpdateChannelStatusById(channelId, common.ChannelStatusAutoDisabled)
 	subject := fmt.Sprintf("通道「%s」（#%d）已被禁用", channelName, channelId)
 	content := fmt.Sprintf("通道「%s」（#%d）已被禁用，原因：%s", channelName, channelId, reason)
+	notifyRootUser(subject, content)
+}
+
+func enableChannel(channelId int, channelName string) {
+	model.UpdateChannelStatusById(channelId, common.ChannelStatusEnabled)
+	subject := fmt.Sprintf("通道「%s」（#%d）已被启用", channelName, channelId)
+	content := fmt.Sprintf("通道「%s」（#%d）已被启用", channelName, channelId)
+	notifyRootUser(subject, content)
+}
+
+func notifyRootUser(subject string, content string) {
+	if common.RootUserEmail == "" {
+		common.RootUserEmail = model.GetRootUserEmail()
+	}
 	err := common.SendEmail(subject, common.RootUserEmail, content)
 	if err != nil {
 		common.SysError(fmt.Sprintf("failed to send email: %s", err.Error()))
@@ -176,9 +198,7 @@ func testAllChannels(notify bool) error {
 	}
 	go func() {
 		for _, channel := range channels {
-			if channel.Status != common.ChannelStatusEnabled {
-				continue
-			}
+			isChannelEnabled := channel.Status == common.ChannelStatusEnabled
 			tik := time.Now()
 			err, openaiErr := testChannel(channel, *testRequest)
 			tok := time.Now()
@@ -197,8 +217,11 @@ func testAllChannels(notify bool) error {
 			if channel.AutoBan != nil && *channel.AutoBan == 0 {
 				ban = false
 			}
-			if shouldDisableChannel(openaiErr, -1) && ban {
+			if isChannelEnabled && shouldDisableChannel(openaiErr, -1) && ban {
 				disableChannel(channel.Id, channel.Name, err.Error())
+			}
+			if !isChannelEnabled && shouldEnableChannel(err, openaiErr) {
+				enableChannel(channel.Id, channel.Name)
 			}
 			channel.UpdateResponseTime(milliseconds)
 			time.Sleep(common.RequestInterval)

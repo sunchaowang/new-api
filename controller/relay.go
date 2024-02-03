@@ -13,9 +13,11 @@ import (
 )
 
 type Message struct {
-	Role    string          `json:"role"`
-	Content json.RawMessage `json:"content"`
-	Name    *string         `json:"name,omitempty"`
+	Role       string          `json:"role"`
+	Content    json.RawMessage `json:"content"`
+	Name       *string         `json:"name,omitempty"`
+	ToolCalls  any             `json:"tool_calls,omitempty"`
+	ToolCallId string          `json:"tool_call_id,omitempty"`
 }
 
 type MediaMessage struct {
@@ -33,6 +35,14 @@ const (
 	ContentTypeText     = "text"
 	ContentTypeImageURL = "image_url"
 )
+
+func (m Message) StringContent() string {
+	var stringContent string
+	if err := json.Unmarshal(m.Content, &stringContent); err == nil {
+		return stringContent
+	}
+	return string(m.Content)
+}
 
 func (m Message) ParseContent() []MediaMessage {
 	var contentList []MediaMessage
