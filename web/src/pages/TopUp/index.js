@@ -8,8 +8,11 @@ const TopUp = () => {
     const [redemptionCode, setRedemptionCode] = useState('');
     const [topUpCode, setTopUpCode] = useState('');
     const [topUpCount, setTopUpCount] = useState(10);
+    const [minTopupCount, setMinTopUpCount] = useState(1);
     const [amount, setAmount] = useState(0.0);
+    const [minTopUp, setMinTopUp] = useState(1);
     const [topUpLink, setTopUpLink] = useState('');
+    const [enableOnlineTopUp, setEnableOnlineTopUp] = useState(false);
     const [userQuota, setUserQuota] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [open, setOpen] = useState(false);
@@ -52,8 +55,16 @@ const TopUp = () => {
     };
 
     const preTopUp = async (payment) => {
+        if (!enableOnlineTopUp) {
+            showError('管理员未开启在线充值！');
+            return;
+        }
         if (amount === 0) {
             await getAmount();
+        }
+        if (topUpCount < minTopUp) {
+            showInfo('充值数量不能小于' + minTopUp);
+            return;
         }
         setPayWay(payment)
         setOpen(true);
@@ -62,6 +73,10 @@ const TopUp = () => {
     const onlineTopUp = async () => {
         if (amount === 0) {
             await getAmount();
+        }
+        if (topUpCount < minTopUp) {
+            showInfo('充值数量不能小于' + minTopUp);
+            return;
         }
         setOpen(false);
         try {
@@ -125,6 +140,12 @@ const TopUp = () => {
             status = JSON.parse(status);
             if (status.top_up_link) {
                 setTopUpLink(status.top_up_link);
+            }
+            if (status.min_topup) {
+                setMinTopUp(status.min_topup);
+            }
+            if (status.enable_online_topup) {
+                setEnableOnlineTopUp(status.enable_online_topup);
             }
         }
         getUserQuota().then();
@@ -227,13 +248,24 @@ const TopUp = () => {
                                 </Divider>
                                 <Form>
                                     <Form.Input
+                                        disabled={!enableOnlineTopUp}
                                         field={'redemptionCount'}
                                         label={'实付金额：' + renderAmount()}
-                                        placeholder='充值数量'
+                                        placeholder={'充值数量，最低' + minTopUp + '$'}
                                         name='redemptionCount'
                                         type={'number'}
                                         value={topUpCount}
+                                        suffix={'$'}
+                                        min={minTopUp}
+                                        defaultValue={minTopUp}
+                                        max={100000}
                                         onChange={async (value) => {
+                                            if (value < 1) {
+                                                value = 1;
+                                            }
+                                            if (value > 100000) {
+                                                value = 100000;
+                                            }
                                             setTopUpCount(value);
                                             await getAmount(value);
                                         }}

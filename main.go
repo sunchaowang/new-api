@@ -13,6 +13,7 @@ import (
 	"one-api/middleware"
 	"one-api/model"
 	"one-api/router"
+	"one-api/service"
 	"os"
 	"strconv"
 
@@ -105,7 +106,7 @@ func main() {
 		common.SysLog("pprof enabled")
 	}
 
-	controller.InitTokenEncoders()
+	service.InitTokenEncoders()
 
 	// Initialize HTTP server
 	server := gin.New()

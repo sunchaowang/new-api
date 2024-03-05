@@ -20,6 +20,8 @@ func GetStatus(c *gin.Context) {
 			"email_verification":       common.EmailVerificationEnabled,
 			"github_oauth":             common.GitHubOAuthEnabled,
 			"github_client_id":         common.GitHubClientId,
+			"telegram_oauth":           common.TelegramOAuthEnabled,
+			"telegram_bot_name":        common.TelegramBotName,
 			"system_name":              common.SystemName,
 			"logo":                     common.Logo,
 			"footer_html":              common.Footer,
@@ -27,6 +29,7 @@ func GetStatus(c *gin.Context) {
 			"wechat_login":             common.WeChatAuthEnabled,
 			"server_address":           common.ServerAddress,
 			"price":                    common.Price,
+			"min_topup":                common.MinTopUp,
 			"turnstile_check":          common.TurnstileCheckEnabled,
 			"turnstile_site_key":       common.TurnstileSiteKey,
 			"top_up_link":              common.TopUpLink,
@@ -38,6 +41,8 @@ func GetStatus(c *gin.Context) {
 			"enable_drawing":           common.DrawingEnabled,
 			"enable_data_export":       common.DataExportEnabled,
 			"data_export_default_time": common.DataExportDefaultTime,
+			"default_collapse_sidebar": common.DefaultCollapseSidebar,
+			"enable_online_topup":      common.PayAddress != "" && common.EpayId != "" && common.EpayKey != "",
 		},
 	})
 	return
