@@ -186,7 +186,7 @@ const (
 const (
 	ChannelTypeUnknown        = 0
 	ChannelTypeOpenAI         = 1
-	ChannelTypeAPI2D          = 2
+	ChannelTypeMidjourney     = 2
 	ChannelTypeAzure          = 3
 	ChannelTypeCloseAI        = 4
 	ChannelTypeOpenAISB       = 5
@@ -238,7 +238,7 @@ var ChannelBaseURLs = []string{
 	"https://api.aiproxy.io",            // 21
 	"https://fastgpt.run/api/openapi",   // 22
 	"https://hunyuan.cloud.tencent.com", //23
-	"",                                  //24
-	"https://api.moonshot.cn",           //25
-	"https://open.bigmodel.cn",          //26
+	"https://generativelanguage.googleapis.com", //24
+	"https://api.moonshot.cn",                   //25
+	"https://open.bigmodel.cn",                  //26
 }

@@ -17,10 +17,10 @@ import (
 
 var StopFinishReason = "stop"
 
-func RelayErrorHandler(resp *http.Response) (openAIErrorWithStatusCode *dto.OpenAIErrorWithStatusCode) {
-	openAIErrorWithStatusCode = &dto.OpenAIErrorWithStatusCode{
+func RelayErrorHandler(resp *http.Response) (OpenAIErrorWithStatusCode *dto.OpenAIErrorWithStatusCode) {
+	OpenAIErrorWithStatusCode = &dto.OpenAIErrorWithStatusCode{
 		StatusCode: resp.StatusCode,
-		OpenAIError: dto.OpenAIError{
+		Error: dto.OpenAIError{
 			Message: fmt.Sprintf("bad response status code %d", resp.StatusCode),
 			Type:    "upstream_error",
 			Code:    "bad_response_status_code",
@@ -40,7 +40,7 @@ func RelayErrorHandler(resp *http.Response) (openAIErrorWithStatusCode *dto.Open
 	if err != nil {
 		return
 	}
-	openAIErrorWithStatusCode.OpenAIError = textResponse.Error
+	OpenAIErrorWithStatusCode.Error = textResponse.Error
 	return
 }
 
@@ -59,15 +59,6 @@ func GetFullRequestURL(baseURL string, requestURL string, channelType int) strin
 }
 
 func GetAPIVersion(c *gin.Context) string {
-	query := c.Request.URL.Query()
-	apiVersion := query.Get("api-version")
-	if apiVersion == "" {
-		apiVersion = c.GetString("api_version")
-	}
-	return apiVersion
-}
-
-func GetAzureAPIVersion(c *gin.Context) string {
 	query := c.Request.URL.Query()
 	apiVersion := query.Get("api-version")
 	if apiVersion == "" {

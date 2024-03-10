@@ -140,8 +140,8 @@ func responseGeminiChat2OpenAI(response *GeminiChatResponse) *dto.OpenAITextResp
 			},
 			FinishReason: relaycommon.StopFinishReason,
 		}
-		content, _ = json.Marshal(candidate.Content.Parts[0].Text)
 		if len(candidate.Content.Parts) > 0 {
+			content, _ = json.Marshal(candidate.Content.Parts[0].Text)
 			choice.Message.Content = content
 		}
 		fullTextResponse.Choices = append(fullTextResponse.Choices, choice)
@@ -246,7 +246,7 @@ func geminiChatHandler(c *gin.Context, resp *http.Response, promptTokens int, mo
 	}
 	if len(geminiResponse.Candidates) == 0 {
 		return &dto.OpenAIErrorWithStatusCode{
-			OpenAIError: dto.OpenAIError{
+			Error: dto.OpenAIError{
 				Message: "No candidates returned",
 				Type:    "server_error",
 				Param:   "",
