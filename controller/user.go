@@ -815,3 +815,45 @@ func TopUp(c *gin.Context) {
 	})
 	return
 }
+
+// UserCheckIn
+func UserCheckIn(c *gin.Context) {
+	// 是否已经签到
+	id := c.GetInt("id")
+	user, err := model.GetUserById(id, true)
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	// 打印用户信息
+	fmt.Println(user)
+
+	// 检查是否已经签到
+	//
+	operation, err := model.GetOperationCheckInByUserId(id)
+	// 打印用户信息
+	fmt.Println(operation)
+}
+
+func UserIsCheckIn(c *gin.Context) {
+	// 是否已经签到
+	id := c.GetInt("id")
+	user, err := model.GetUserById(id, true)
+
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	//
+	operation, err := model.GetOperationCheckInByUserId(user.Id)
+	// 打印用户信息
+	fmt.Println(operation)
+}
