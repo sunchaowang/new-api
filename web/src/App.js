@@ -37,6 +37,8 @@ function App() {
       let data = JSON.parse(user);
       userDispatch({ type: 'login', payload: data });
     }
+
+
   };
 
   useEffect(() => {
