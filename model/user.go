@@ -38,6 +38,14 @@ type User struct {
 	DeletedAt        gorm.DeletedAt `gorm:"index"`
 }
 
+type UserOperation struct {
+	Id       int       `json:"id"`
+	UserId   int       `json:"user_id"`
+	CreateAt time.Time `json:"create_at"`
+	Type     string    `json:"type"`
+	Remark   string    `json:"remark"`
+}
+
 // CheckUserExistOrDeleted check if user exist or deleted, if not exist, return false, nil, if deleted or exist, return true, nil
 func CheckUserExistOrDeleted(username string, email string) (bool, error) {
 	var user User
@@ -491,4 +499,10 @@ func updateUserRequestCount(id int, count int) {
 func GetUsernameById(id int) (username string, err error) {
 	err = DB.Model(&User{}).Where("id = ?", id).Select("username").Find(&username).Error
 	return username, err
+}
+
+// 获取用户UserOperation
+func GetOperationCheckInByUserId(userId int) (user_operation UserOperation, err error) {
+	err = DB.Model(&UserOperation{}).Where("user_id = ?", userId).Find(&user_operation).Error
+	return user_operation, err
 }

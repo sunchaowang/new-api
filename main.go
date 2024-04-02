@@ -3,9 +3,6 @@ package main
 import (
 	"embed"
 	"fmt"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"one-api/common"
@@ -17,7 +14,13 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
+
 	_ "net/http/pprof"
+
+	"github.com/joho/godotenv"
 )
 
 //go:embed web/dist
@@ -27,6 +30,9 @@ var buildFS embed.FS
 var indexPage []byte
 
 func main() {
+	// 加载 .env 文件中的环境变量
+	godotenv.Load(".env")
+
 	common.SetupLogger()
 	common.SysLog("New API " + common.Version + " started")
 	if os.Getenv("GIN_MODE") != "debug" {

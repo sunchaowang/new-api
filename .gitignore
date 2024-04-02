@@ -6,3 +6,7 @@ upload
 build
 *.db-journal
 logs
+
+.env
+.env.*
+.env.*.local

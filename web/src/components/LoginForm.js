@@ -9,15 +9,9 @@ import {
   Card,
   Divider,
   Form,
-<<<<<<< HEAD
-  Icon,
-  Layout,
-  Modal,
-=======
   Layout,
   Modal,
   Icon,
->>>>>>> sunchaowang
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
@@ -39,11 +33,8 @@ const LoginForm = () => {
   const [turnstileEnabled, setTurnstileEnabled] = useState(false);
   const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
-<<<<<<< HEAD
-=======
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginDisabled, setLoginDisabled] = useState(false);
->>>>>>> sunchaowang
   let navigate = useNavigate();
   const [status, setStatus] = useState({});
   const logo = getLogo();
@@ -58,10 +49,7 @@ const LoginForm = () => {
       setStatus(status);
       if (status.turnstile_check) {
         setTurnstileEnabled(true);
-<<<<<<< HEAD
-=======
         setLoginDisabled(true)
->>>>>>> sunchaowang
         setTurnstileSiteKey(status.turnstile_site_key);
       }
     }
@@ -104,10 +92,7 @@ const LoginForm = () => {
     }
     setSubmitted(true);
     if (username && password) {
-<<<<<<< HEAD
-=======
       setLoginLoading(true)
->>>>>>> sunchaowang
       const res = await API.post(
         `/api/user/login?turnstile=${turnstileToken}`,
         {
@@ -130,10 +115,7 @@ const LoginForm = () => {
         navigate('/token');
       } else {
         showError(message);
-<<<<<<< HEAD
-=======
         setLoginLoading(false)
->>>>>>> sunchaowang
       }
     } else {
       showError('请输入用户名和密码！');
@@ -211,11 +193,8 @@ const LoginForm = () => {
                     size='large'
                     htmlType={'submit'}
                     onClick={handleSubmit}
-<<<<<<< HEAD
-=======
                     disabled={loginDisabled}
                     loading={loginLoading}
->>>>>>> sunchaowang
                   >
                     登录
                   </Button>
@@ -332,10 +311,7 @@ const LoginForm = () => {
                     sitekey={turnstileSiteKey}
                     onVerify={(token) => {
                       setTurnstileToken(token);
-<<<<<<< HEAD
-=======
                       setLoginDisabled(false);
->>>>>>> sunchaowang
                     }}
                   />
                 </div>
