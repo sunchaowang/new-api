@@ -28,6 +28,10 @@ const TopUp = () => {
   const [enableOnlineTopUp, setEnableOnlineTopUp] = useState(false);
   const [userQuota, setUserQuota] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+<<<<<<< HEAD
+=======
+  const [isCheckIning, setIsCheckIning] = useState(true);
+>>>>>>> sunchaowang
   const [open, setOpen] = useState(false);
   const [payWay, setPayWay] = useState('');
 
@@ -63,6 +67,15 @@ const TopUp = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  // 签到
+  const checkIn = async () => {
+    //
+    const res = await API.post('/api/user/check_in', {});
+  }
+
+>>>>>>> sunchaowang
   const openTopUpLink = () => {
     if (!topUpLink) {
       showError('超级管理员未设置充值链接！');
@@ -264,6 +277,18 @@ const TopUp = () => {
                     >
                       {isSubmitting ? '兑换中...' : '兑换'}
                     </Button>
+<<<<<<< HEAD
+=======
+                    <Button
+                      type={'warning'}
+                      theme={'solid'}
+                      onClick={checkIn}
+                      disabled={isCheckIning}
+                    >
+                      {isCheckIning ? '签到(（开发中)' : '签到'}
+                    </Button>
+
+>>>>>>> sunchaowang
                   </Space>
                 </Form>
               </div>
