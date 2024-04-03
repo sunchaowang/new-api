@@ -29,6 +29,7 @@ const TopUp = () => {
   const [userQuota, setUserQuota] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckIning, setIsCheckIning] = useState(false);
+  const [isChekced, setIsChekced]= useState(false);
   const [open, setOpen] = useState(false);
   const [payWay, setPayWay] = useState('');
 
@@ -66,8 +67,20 @@ const TopUp = () => {
 
   // 签到
   const checkIn = async () => {
-    //
+    try {
+      //
     const res = await API.post('/api/user/check_in', {});
+    const { success, message, data } = res.data;
+    if (success) {
+      showSuccess(message);
+      getUserQuota()
+      return
+    }else {
+      showError(message)
+    }
+    } catch (error) {
+      showError('请求失败');
+    }
   }
 
   const openTopUpLink = () => {
@@ -154,6 +167,7 @@ const TopUp = () => {
     const { success, message, data } = res.data;
     if (success) {
       setUserQuota(data.quota);
+      setIsChekced(data.check_in)
     } else {
       showError(message);
     }
@@ -268,16 +282,18 @@ const TopUp = () => {
                       theme={'solid'}
                       onClick={topUp}
                       disabled={isSubmitting}
+                      loading={isSubmitting}
                     >
                       {isSubmitting ? '兑换中...' : '兑换'}
                     </Button>
                     <Button
-                      type={'warning'}
+                      type={'link'}
                       theme={'solid'}
                       onClick={checkIn}
-                      disabled={isCheckIning}
+                      disabled={isChekced}
+                      loading={isCheckIning}
                     >
-                      {isCheckIning ? '签到(（开发中)' : '签到'}
+                      {isChekced ? "今日已签到" :isCheckIning ? '签到中...' : '签到'}
                     </Button>
 
                   </Space>

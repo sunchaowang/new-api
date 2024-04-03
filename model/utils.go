@@ -12,7 +12,8 @@ const (
 	BatchUpdateTypeUsedQuota
 	BatchUpdateTypeChannelUsedQuota
 	BatchUpdateTypeRequestCount
-	BatchUpdateTypeCount // if you add a new type, you need to add a new map and a new lock
+	BatchUpdateTypeUserQuotaByCheckIn // if you add a new type, you need to add a new map and a new lock
+	BatchUpdateTypeCount
 )
 
 var batchUpdateStores []map[int]int

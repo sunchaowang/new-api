@@ -33,6 +33,13 @@ function renderModalTable(data, provider) {
 function App() {
   return (
     <Card bordered={false} style={{width: '100%'}}>
+        <Card
+            title={
+                "异常日志"
+            }
+        >
+            <Tag color={"red"}>2024-4-3：站长误操作把数据库 IP 给封禁了导致数据库失联 😮‍💨</Tag>
+        </Card>
       <h2>介绍</h2>
       <ul>
         <li>OpenAI 接口转发站</li>

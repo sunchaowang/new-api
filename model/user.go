@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"one-api/common"
 	"strconv"
 	"strings"
@@ -42,7 +43,7 @@ type UserOperation struct {
 	Id       int       `json:"id"`
 	UserId   int       `json:"user_id"`
 	CreateAt time.Time `json:"create_at"`
-	Type     string    `json:"type"`
+	Type     int       `json:"type"`
 	Remark   string    `json:"remark"`
 }
 
@@ -501,8 +502,50 @@ func GetUsernameById(id int) (username string, err error) {
 	return username, err
 }
 
-// 获取用户UserOperation
-func GetOperationCheckInByUserId(userId int) (user_operation UserOperation, err error) {
-	err = DB.Model(&UserOperation{}).Where("user_id = ?", userId).Find(&user_operation).Error
-	return user_operation, err
+// 获取用户今日的UserOperation
+func GetOperationCheckInByUserId(userId int) (userOperation UserOperation, err error) {
+	//  获取今天的日期
+	today := time.Now().Format("2006-01-02")
+
+	//  使用Find()获取记录
+	err = DB.Model(&UserOperation{}).
+		Where("user_id  =  ?  AND  type  =  ?  AND  DATE(create_at)  =  ?", userId, 1, today).Find(&userOperation).Error //  使用First()因为根据描述，我们通常只期望得到一个记录
+
+	return userOperation, err
+}
+
+// 插入一条 UserOperation
+func InsertOperation(user_operation UserOperation) (err error) {
+	err = DB.Model(&UserOperation{}).Create(&user_operation).Error
+	return err
+}
+
+// 插入一条 InsertOperationCheckIn
+func InsertOperationCheckIn(userId int) (quota int, err error) {
+	// 获得随机额度
+	//  初始化随机数生成器的种子
+	rand.Seed(time.Now().UnixNano())
+
+	//  生成一个0到1之间的随机浮点数
+	randomMultiplier := rand.Float64() + 0.15
+
+	//  将随机倍数与500000相乘
+	quota = int(randomMultiplier * 100000.0)
+
+	operationRemark := []string{"签到", ",", fmt.Sprintf("获得额度 %v", quota)}
+
+	// 更新用户额度
+	err = increaseUserQuota(userId, quota)
+	if err != nil {
+		return 0, err
+	}
+
+	RecordLog(userId, LogTypeUserQuotoIncrease, strings.Join(operationRemark, ""))
+	err = InsertOperation(UserOperation{
+		UserId:   userId,
+		Type:     1,
+		Remark:   strings.Join(operationRemark, ""),
+		CreateAt: time.Now(),
+	})
+	return
 }

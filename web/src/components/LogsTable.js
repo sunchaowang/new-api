@@ -83,6 +83,13 @@ function renderType(type) {
           系统{' '}
         </Tag>
       );
+    case 5:
+      return (
+        <Tag size='large'>
+          {' '}
+          签到{' '}
+        </Tag>
+      );
     default:
       return (
         <Tag color='black' size='large'>

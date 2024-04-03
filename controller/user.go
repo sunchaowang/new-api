@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"one-api/common"
 	"one-api/model"
+	"reflect"
 	"strconv"
 
 	"github.com/gin-contrib/sessions"
@@ -367,6 +368,7 @@ func GetAffCode(c *gin.Context) {
 func GetSelf(c *gin.Context) {
 	id := c.GetInt("id")
 	user, err := model.GetUserById(id, false)
+
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -374,10 +376,36 @@ func GetSelf(c *gin.Context) {
 		})
 		return
 	}
+	// 查询签到信息
+	userOperation, err := model.GetOperationCheckInByUserId(id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	// 使用反射遍历User的所有字段
+
+	result := gin.H{}
+	val := reflect.ValueOf(user)
+	if val.Kind() == reflect.Ptr {
+		val = val.Elem()
+	}
+	for i := 0; i < val.Type().NumField(); i++ {
+		field := val.Type().Field(i)
+		value := val.Field(i)
+		// 将User的字段添加到结果映射中
+		result[field.Tag.Get("json")] = value.Interface()
+	}
+
+	// 添加新的键值对到映射中
+	result["check_in"] = userOperation.Id
+
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
-		"data":    user,
+		"data":    result,
 	})
 	return
 }
@@ -830,13 +858,45 @@ func UserCheckIn(c *gin.Context) {
 		return
 	}
 	// 打印用户信息
-	fmt.Println(user)
+	fmt.Println(user, "user")
 
 	// 检查是否已经签到
 	//
 	operation, err := model.GetOperationCheckInByUserId(id)
+	fmt.Println(operation, "operation")
+
 	// 打印用户信息
-	fmt.Println(operation)
+	if err != nil {
+		c.JSON(http.StatusExpectationFailed, gin.H{
+			"success": false,
+			"message": "数据库查询失败",
+		})
+		return
+	}
+	if operation.UserId != 0 {
+		// 已签到
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "今日已签到",
+		})
+		return
+	}
+	// 插入一条数据
+	quota, err := model.InsertOperationCheckIn(user.Id)
+	if err != nil {
+		// 签到失败
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "签到失败",
+		})
+		return
+	}
+	// 签到成功
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": fmt.Sprintf("签到成功, 获得额度 %v", quota),
+	})
+
 }
 
 func UserIsCheckIn(c *gin.Context) {

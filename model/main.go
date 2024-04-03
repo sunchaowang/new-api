@@ -1,16 +1,17 @@
 package model
 
 import (
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 	"log"
 	"one-api/common"
 	"os"
 	"strings"
 	"sync"
 	"time"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
@@ -137,6 +138,10 @@ func InitDB() (err error) {
 			return err
 		}
 		err = db.AutoMigrate(&QuotaData{})
+		if err != nil {
+			return err
+		}
+		err = db.AutoMigrate(&UserOperation{})
 		if err != nil {
 			return err
 		}

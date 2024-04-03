@@ -3,9 +3,10 @@ package model
 import (
 	"context"
 	"fmt"
-	"gorm.io/gorm"
 	"one-api/common"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 type Log struct {
@@ -32,6 +33,7 @@ const (
 	LogTypeConsume
 	LogTypeManage
 	LogTypeSystem
+	LogTypeUserQuotoIncrease
 )
 
 func GetLogByKey(key string) (logs []*Log, err error) {
