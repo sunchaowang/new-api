@@ -20,8 +20,8 @@ jobs:
       - name: Extract Version
         id: version_step
         run: |
-          echo "##[set-output ;]DOCKERHUB_USERNAME=${secrets.DOCKERHUB_USERNAME}"
-          echo "##[set-output ;]DOCKERHUB_TOKEN=${secrets.DOCKERHUB_TOKEN}"
+          echo "{name}={value}" >> $secrets.DOCKERHUB_USERNAME
+          echo "{name}={value}" >> $secrets.DOCKERHUB_TOKEN
 
       - name: Check out the repo
         uses: actions/checkout@v3
