@@ -35,7 +35,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            calciumion/new-api
+            sunnchao/new-api
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v3
