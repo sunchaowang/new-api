@@ -548,10 +548,12 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	rand.Seed(time.Now().UnixNano())
 
 	//  生成一个0到1之间的随机浮点数
-	randomMultiplier := rand.Float64() + 0.03
+	randomMultiplier := rand.Float64() + 0.01
+	// 打印随机数
+	fmt.Printf("randomMultiplier %v", randomMultiplier)
 
-	//  将随机倍数与500000相乘
-	quota = int(randomMultiplier * 100000.0)
+	//  将随机倍数与 50000 相乘
+	quota = int(randomMultiplier * 50000.0)
 
 	operationRemark := []string{"签到", ",", fmt.Sprintf("获得额度 %v", quota)}
 

@@ -133,12 +133,15 @@ func SendEmailVerification(c *gin.Context) {
 				break
 			}
 		}
-		if allowed && !containsSpecialSymbols {
-			c.JSON(http.StatusOK, gin.H{
-				"success": false,
-				"message": "Your email address is allowed.",
-			})
-			return
+		if allowed {
+			if containsSpecialSymbols {
+				c.JSON(http.StatusOK, gin.H{
+					"success": false,
+					"message": "Your email address is not allowed.",
+				})
+				return
+			}
+
 		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
