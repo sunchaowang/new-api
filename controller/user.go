@@ -8,6 +8,7 @@ import (
 	"one-api/model"
 	"reflect"
 	"strconv"
+	"sync"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -817,7 +818,11 @@ type topUpRequest struct {
 	Key string `json:"key"`
 }
 
+var lock = sync.Mutex{}
+
 func TopUp(c *gin.Context) {
+	lock.Lock()
+	defer lock.Unlock()
 	req := topUpRequest{}
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
