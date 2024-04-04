@@ -548,7 +548,7 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	rand.Seed(time.Now().UnixNano())
 
 	//  生成一个0到1之间的随机浮点数
-	randomMultiplier := rand.Float64() + 0.15
+	randomMultiplier := rand.Float64() + 0.03
 
 	//  将随机倍数与500000相乘
 	quota = int(randomMultiplier * 100000.0)
