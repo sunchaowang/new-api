@@ -379,13 +379,9 @@ func GetSelf(c *gin.Context) {
 	}
 	// 查询签到信息
 	userOperation, err := model.GetOperationCheckInByUserId(id)
-	// if err != nil {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"success": false,
-	// 		"message": err.Error(),
-	// 	})
-	// 	return
-	// }
+	if err != nil {
+		common.SysLog(err.Error())
+	}
 	// 使用反射遍历User的所有字段
 
 	result := gin.H{}
@@ -401,7 +397,7 @@ func GetSelf(c *gin.Context) {
 	}
 
 	// 添加新的键值对到映射中
-	result["check_in"] = userOperation.Id
+	result["check_in"] = userOperation.CreateAt
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,

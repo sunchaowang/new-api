@@ -526,7 +526,9 @@ func GetUsernameById(id int) (username string, err error) {
 // 获取用户今日的UserOperation
 func GetOperationCheckInByUserId(userId int) (userOperation UserOperation, err error) {
 	//  获取今天的日期
-	today := time.Now().Format("2006-01-02")
+	//  获取当前日期的0点时间
+	today := time.Now().UTC().Truncate(24 * time.Hour)
+	fmt.Printf("today %v", today)
 
 	//  使用Find()获取记录
 	err = DB.Model(&UserOperation{}).
@@ -548,12 +550,12 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	rand.Seed(time.Now().UnixNano())
 
 	//  生成一个0到1之间的随机浮点数
-	randomMultiplier := rand.Float64() + 0.01
+	randomMultiplier := rand.Float64() + 0.03
 	// 打印随机数
 	fmt.Printf("randomMultiplier %v", randomMultiplier)
 
 	//  将随机倍数与 50000 相乘
-	quota = int(randomMultiplier * 50000.0)
+	quota = int(randomMultiplier * 68888.0)
 
 	operationRemark := []string{"签到", ",", fmt.Sprintf("获得额度 %v", quota)}
 
