@@ -137,7 +137,7 @@ func SendEmailVerification(c *gin.Context) {
 			if containsSpecialSymbols {
 				c.JSON(http.StatusOK, gin.H{
 					"success": false,
-					"message": "Your email address is not allowed.",
+					"message": "邮箱不允许包含 + 号 以及两个及以上的小数点.",
 				})
 				return
 			}
@@ -145,7 +145,7 @@ func SendEmailVerification(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": "The administrator has enabled the email domain name whitelist, and your email address is not allowed due to special symbols or it's not in the whitelist.",
+				"message": "管理员已启用电子邮件域名白名单，由于特殊符号或者不在白名单中，您的电子邮件地址被禁止使用.",
 			})
 			return
 		}
