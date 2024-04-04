@@ -17,12 +17,6 @@ jobs:
       packages: write
       contents: read
     steps:
-      - name: Extract Version
-        id: version_step
-        run: |
-          echo "{name}={value}" >> $secrets.DOCKERHUB_USERNAME
-          echo "{name}={value}" >> $secrets.DOCKERHUB_TOKEN
-
       - name: Check out the repo
         uses: actions/checkout@v3
 
