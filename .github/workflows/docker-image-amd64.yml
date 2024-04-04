@@ -36,11 +36,14 @@ jobs:
         with:
           images: |
             sunchaowang/new-api
+          tags: |
+            sunchaowang/new-api:latest
+          
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
