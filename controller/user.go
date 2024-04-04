@@ -378,13 +378,13 @@ func GetSelf(c *gin.Context) {
 	}
 	// 查询签到信息
 	userOperation, err := model.GetOperationCheckInByUserId(id)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"success": false,
-			"message": err.Error(),
-		})
-		return
-	}
+	// if err != nil {
+	// 	c.JSON(http.StatusOK, gin.H{
+	// 		"success": false,
+	// 		"message": err.Error(),
+	// 	})
+	// 	return
+	// }
 	// 使用反射遍历User的所有字段
 
 	result := gin.H{}
@@ -867,11 +867,7 @@ func UserCheckIn(c *gin.Context) {
 
 	// 打印用户信息
 	if err != nil {
-		c.JSON(http.StatusExpectationFailed, gin.H{
-			"success": false,
-			"message": "数据库查询失败",
-		})
-		return
+		common.SysError(fmt.Sprintf("UserCheckIn: %s", err.Error()))
 	}
 	if operation.UserId != 0 {
 		// 已签到

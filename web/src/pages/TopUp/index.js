@@ -69,17 +69,19 @@ const TopUp = () => {
   const checkIn = async () => {
     try {
       //
-    const res = await API.post('/api/user/check_in', {});
-    const { success, message, data } = res.data;
-    if (success) {
-      showSuccess(message);
-      getUserQuota()
-      return
-    }else {
-      showError(message)
-    }
+      setIsCheckIning(true);
+      const res = await API.post('/api/user/check_in', {});
+      const { success, message, data } = res.data;
+      if (success) {
+        showSuccess(message);
+        getUserQuota()
+      }else {
+        showError(message)
+      }
+      setIsCheckIning(false)
     } catch (error) {
       showError('请求失败');
+      setIsCheckIning(false)
     }
   }
 
@@ -167,7 +169,7 @@ const TopUp = () => {
     const { success, message, data } = res.data;
     if (success) {
       setUserQuota(data.quota);
-      setIsChekced(data.check_in)
+      setIsChekced(!!data.check_in)
     } else {
       showError(message);
     }
@@ -287,7 +289,7 @@ const TopUp = () => {
                       {isSubmitting ? '兑换中...' : '兑换'}
                     </Button>
                     <Button
-                      type={'link'}
+                      type={'secondary'}
                       theme={'solid'}
                       onClick={checkIn}
                       disabled={isChekced}

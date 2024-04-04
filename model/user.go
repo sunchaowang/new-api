@@ -510,7 +510,7 @@ func GetOperationCheckInByUserId(userId int) (userOperation UserOperation, err e
 
 	//  使用Find()获取记录
 	err = DB.Model(&UserOperation{}).
-		Where("user_id  =  ?  AND  type  =  ?  AND  DATE(create_at)  =  ?", userId, 1, today).Find(&userOperation).Error //  使用First()因为根据描述，我们通常只期望得到一个记录
+		Where("user_id  =  ?  AND  type  =  ?  AND  create_at  >=  ?", userId, 1, today).First(&userOperation).Error //  使用First()因为根据描述，我们通常只期望得到一个记录
 
 	return userOperation, err
 }
