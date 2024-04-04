@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -870,7 +871,7 @@ func UserCheckIn(c *gin.Context) {
 	if err != nil {
 		common.SysError(fmt.Sprintf("UserCheckIn: %s", err.Error()))
 	}
-	if operation.UserId != 0 {
+	if operation.CreateAt.After(time.Now().UTC().Truncate(24 * time.Hour)) {
 		// 已签到
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
