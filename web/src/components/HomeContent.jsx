@@ -38,7 +38,7 @@ function App() {
                 "更新日志"
             }
         >
-            <Tag color={"blue"}>2024-4-4：增加了签到功能，请前往钱包页查看</Tag>
+            <Tag color={"blue"}>2024-4-4：增加了每日签到功能，请前往钱包页查看</Tag>
         </Card>
       <h2>介绍</h2>
       <ul>
@@ -52,8 +52,8 @@ function App() {
           >
         </li>
         <li>
-          每位注册用户都将获得 <Tag color={'red'}>$2</Tag> 的初始使用额度,
-          填写邀请码可以再额外获得 <Tag color={'red'}>$1</Tag> 的使用额度
+          每位注册用户都将获得 <Tag color={'red'}>$1</Tag> 的初始使用额度,
+          填写邀请码可以再额外获得 <Tag color={'red'}>$0.5</Tag> 的使用额度
         </li>
         <li>
           当前注册仅支持 <Tag color={'red'}>Github</Tag> 和
