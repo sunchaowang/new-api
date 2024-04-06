@@ -1,7 +1,7 @@
 export async function onRequest(context) {
   // return new Response(JSON.stringify(context.params.req))
     // 目标API的URL
-    const targetUrl = 'http://35.236.93.91:3000/api';
+    const targetUrl = 'http://35.236.93.91:3000';
   
     // 获取原始请求的信息
     const { request } = context;
