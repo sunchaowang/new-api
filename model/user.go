@@ -555,7 +555,7 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	fmt.Printf("randomMultiplier %v", randomMultiplier)
 
 	//  将随机倍数与 50000 相乘
-	quota = int(randomMultiplier * 68888.0)
+	quota = int(randomMultiplier * 188888.0)
 
 	operationRemark := []string{"签到", ",", fmt.Sprintf("获得额度 %v", quota)}
 
