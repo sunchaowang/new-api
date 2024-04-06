@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"strconv"
 	"sync"
-	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -378,11 +377,7 @@ func GetSelf(c *gin.Context) {
 		})
 		return
 	}
-	// 查询签到信息
-	userOperation, err := model.GetOperationCheckInByUserId(id)
-	if err != nil {
-		common.SysLog(err.Error())
-	}
+
 	// 使用反射遍历User的所有字段
 
 	result := gin.H{}
@@ -397,8 +392,14 @@ func GetSelf(c *gin.Context) {
 		result[field.Tag.Get("json")] = value.Interface()
 	}
 
+	// 查询签到信息
+	checkInTime, err := model.IsCheckInToday(id)
+	if err != nil {
+		common.SysLog(err.Error())
+	}
+
 	// 添加新的键值对到映射中
-	result["check_in"] = userOperation.CreateAt
+	result["check_in"] = checkInTime
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -871,7 +872,11 @@ func UserCheckIn(c *gin.Context) {
 	if err != nil {
 		common.SysError(fmt.Sprintf("UserCheckIn: %s", err.Error()))
 	}
-	if operation.CreateAt.After(time.Now().UTC().Truncate(24 * time.Hour)) {
+	checkInTime, err := model.IsCheckInToday(user.Id)
+	if err != nil {
+		common.SysLog(fmt.Sprintf("UserCheckIn: %s", err.Error()))
+	}
+	if len(checkInTime) > 0 {
 		// 已签到
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

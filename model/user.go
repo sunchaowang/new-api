@@ -574,3 +574,30 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	})
 	return
 }
+
+// 判断是否已经签到
+func IsCheckInToday(userId int) (checkInTime string, err error) {
+	var userOperation UserOperation
+	userOperation, err = GetOperationCheckInByUserId(userId)
+	if err != nil {
+		return "", err
+	}
+	// 获取当前的UTC时间
+	nowUTC := time.Now().UTC()
+
+	// 将UTC时间转换为北京时间（UTC+8）
+	beijingLocation, err := time.LoadLocation("Asia/Shanghai")
+
+	nowBeijing := nowUTC.In(beijingLocation)
+
+	// 将北京时间截断至当天的开始（即零点）
+	beijingMidnight := nowBeijing.Truncate(24 * time.Hour)
+	fmt.Printf("beijingMidnight: %v, userOperation.CreateAt: %v\n", beijingMidnight, userOperation.CreateAt)
+
+	// 比较签到时间是否晚于北京时间的今日零点
+	if userOperation.CreateAt.After(beijingMidnight) {
+		// 已签到
+		return userOperation.CreateAt.GoString(), err
+	}
+	return "", err
+}

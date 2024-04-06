@@ -172,7 +172,7 @@ const TopUp = () => {
     const { success, message, data } = res.data;
     if (success) {
       setUserQuota(data.quota);
-      setIsChekced(data.check_in !== '0001-01-01T00:00:00Z')
+      setIsChekced(!!data.check_in)
     } else {
       showError(message);
     }
