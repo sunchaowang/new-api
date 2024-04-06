@@ -8,6 +8,7 @@ export async function onRequest(context) {
   
     // 创建新的请求URL
     const newUrl = `${targetUrl}${url.pathname}`;
+    console.log('newUrl, ', newUrl)
   
     // 创建并发送新请求
     const response = await fetch(newUrl, request);
