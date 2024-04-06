@@ -1,6 +1,6 @@
 export async function onRequest(context) {
   // 目标API的URL
-  const targetUrl = 'http://35.236.93.91:3000';
+  const targetUrl = 'https://api.wochirou.com';
 
   // 获取原始请求的信息
   const { request } = context;
