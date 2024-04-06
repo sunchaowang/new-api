@@ -2,16 +2,18 @@ export async function onRequest(context) {
   // 目标API的URL
   const targetUrl = 'https://api.wochirou.com';
 
+ 
   // 获取原始请求的信息
   const { request } = context;
   const url = new URL(request.url);
 
+  // 创建新的请求URL，包括查询字符串
+  // `url.search` 包含了原始URL中的查询参数，如"?key=value"
+  const newUrl = `${targetUrl}${url.pathname}${url.search || ''}`;
+  console.log('newUrl, ', newUrl);
+
   // 提取原始请求中的Cookie头
   const cookies = request.headers.get('Cookie');
-
-  // 创建新的请求URL
-  const newUrl = `${targetUrl}${url.pathname}`;
-  console.log('newUrl, ', newUrl);
 
   // 准备新请求的头部，包括原始请求中的Cookies
   const newHeaders = new Headers(request.headers);
@@ -19,11 +21,11 @@ export async function onRequest(context) {
     newHeaders.set('Cookie', cookies);
   }
 
-  // 创建新的请求对象，包含新的头部（可能包括Cookies）
+  // 创建新的请求对象，包含新的头部（可能包括Cookies）和方法
   const newRequestInit = {
     method: request.method, // 保持原始请求的方法
     headers: newHeaders,
-    body: request.body, // 保持原始请求的body，对于POST请求等可能含有有效负载的情况
+    body: request.method !== 'GET' ? request.body : undefined, // GET请求没有body
     redirect: 'follow' // 根据需要处理重定向
   };
 
