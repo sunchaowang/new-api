@@ -12,3 +12,6 @@ logs
 .env.*.local
 
 pkg
+tmp
+
+web/dist
