@@ -1,6 +1,6 @@
 export async function onRequest(context) {
   // 目标API的URL
-  const targetUrl = 'https://api.wochirou.com';
+  const targetUrl = process.env.TARGET_URL;
 
  
   // 获取原始请求的信息
