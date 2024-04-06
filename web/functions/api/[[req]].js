@@ -1,8 +1,7 @@
 export async function onRequest(context) {
   // 目标API的URL
-  const targetUrl = process.env.TARGET_URL;
+  const targetUrl = process.env.TARGET_URL || "https://openai-replay.wochirou.com";
 
- 
   // 获取原始请求的信息
   const { request } = context;
   const url = new URL(request.url);
