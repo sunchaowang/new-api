@@ -211,23 +211,23 @@ function App() {
             },
             {
               "name": "gpt-4-v",
-              "inputTokens": "$0.1每次 轻度 GPT-4 用户性价比远超官网",
+              "inputTokens": "$0.15每次 轻度 GPT-4 用户性价比远超官网",
               "outputTokens": "",
               "isSupport": "测试中",
               isVip: true
             },
             {
               "name": "gpt-4-dalle",
-              "inputTokens": "$0.1每次 轻度 GPT-4 用户性价比远超官网",
+              "inputTokens": "$0.15每次 轻度 GPT-4 用户性价比远超官网",
               "outputTokens": "",
               "isSupport": "测试中",
               isVip: true
             },
             {
               "name": "gpt-4-all",
-              "inputTokens": "$0.1每次 轻度 GPT-4 用户性价比远超官网",
-              "outputTokens": "$0.21 / 1k tokens",
-              "isSupport": "测试中",
+              "inputTokens": "$0.15每次 轻度 GPT-4 用户性价比远超官网",
+              "outputTokens": "",
+              "isSupport": "支持",
               isVip: true
             },
             {
