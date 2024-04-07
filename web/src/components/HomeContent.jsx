@@ -157,8 +157,8 @@ function App() {
             },
             {
               "name": "gpt-4-vision-preview",
-              "inputTokens": "$0.01 / 1k tokens",
-              "outputTokens": "$0.03 / 1k tokens",
+              "inputTokens": "$0.02 / 1k tokens",
+              "outputTokens": "$0.06 / 1k tokens",
               "isSupport": "支持"
             },
             {
@@ -169,18 +169,25 @@ function App() {
             },
             {
               "name": "gpt-4-32k",
-              "inputTokens": "$0.07 / 1k tokens",
-              "outputTokens": "$0.14 / 1k tokens",
+              "inputTokens": "$0.06 / 1k tokens",
+              "outputTokens": "$0.12 / 1k tokens",
               "isSupport": "支持",
               isVip: true
             },
             {
               "name": "gpt-4-32k-0613",
-              "inputTokens": "$0.07 / 1k tokens",
-              "outputTokens": "$0.14 / 1k tokens",
+              "inputTokens": "$0.06 / 1k tokens",
+              "outputTokens": "$0.12 / 1k tokens",
               "isSupport": "支持",
               isVip: true
             },
+          {
+              "name": "gpt-4-32k-0314",
+              "inputTokens": "$0.06 / 1k tokens",
+              "outputTokens": "$0.12 / 1k tokens",
+              "isSupport": "支持",
+              isVip: true
+          },
             {
               "name": "dall-e-3 1024x1024",
               "inputTokens": "$0.3每次",
