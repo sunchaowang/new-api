@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"fmt"
+	"math"
 	"math/rand"
 	"one-api/common"
 	"strconv"
@@ -525,20 +526,15 @@ func GetUsernameById(id int) (username string, err error) {
 
 // 获取用户今日的UserOperation
 func GetOperationCheckInByUserId(userId int) (userOperation UserOperation, err error) {
-	//  获取今天的日期
-	//  获取当前日期的0点时间
-	today := time.Now().UTC().Truncate(24 * time.Hour)
-	fmt.Printf("today %v", today)
-
-	//  使用Find()获取记录
+	//  使用Find()获取最近一条记录
 	err = DB.Model(&UserOperation{}).
-		Where("user_id  =  ?  AND  type  =  ?  AND  create_at  >=  ?", userId, 1, today).First(&userOperation).Error //  使用First()因为根据描述，我们通常只期望得到一个记录
+		Where("user_id = ? AND type = ?", userId, 1).Order("id desc").First(&userOperation).Error
 
 	return userOperation, err
 }
 
 // 插入一条 UserOperation
-func InsertOperation(user_operation UserOperation) (err error) {
+func insertOperation(user_operation UserOperation) (err error) {
 	err = DB.Model(&UserOperation{}).Create(&user_operation).Error
 	return err
 }
@@ -546,16 +542,12 @@ func InsertOperation(user_operation UserOperation) (err error) {
 // 插入一条 InsertOperationCheckIn
 func InsertOperationCheckIn(userId int) (quota int, err error) {
 	// 获得随机额度
-	//  初始化随机数生成器的种子
 	rand.Seed(time.Now().UnixNano())
-
-	//  生成一个0到1之间的随机浮点数
-	randomMultiplier := rand.Float64() + 0.03
+	randomMultiplier := math.Round(rand.Float64()*100) / 100
 	// 打印随机数
 	fmt.Printf("randomMultiplier %v", randomMultiplier)
 
-	//  将随机倍数与 50000 相乘
-	quota = int(randomMultiplier * 188888.0)
+	quota = int(randomMultiplier * 168888.0)
 
 	operationRemark := []string{"签到", ",", fmt.Sprintf("获得额度 %v", quota)}
 
@@ -566,7 +558,7 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	}
 
 	RecordLog(userId, LogTypeUserQuotoIncrease, strings.Join(operationRemark, ""))
-	err = InsertOperation(UserOperation{
+	err = insertOperation(UserOperation{
 		UserId:   userId,
 		Type:     1,
 		Remark:   strings.Join(operationRemark, ""),

@@ -864,17 +864,9 @@ func UserCheckIn(c *gin.Context) {
 	fmt.Println(user, "user")
 
 	// 检查是否已经签到
-	//
-	operation, err := model.GetOperationCheckInByUserId(id)
-	fmt.Println(operation, "operation")
-
-	// 打印用户信息
-	if err != nil {
-		common.SysError(fmt.Sprintf("UserCheckIn: %s", err.Error()))
-	}
 	checkInTime, err := model.IsCheckInToday(user.Id)
 	if err != nil {
-		common.SysLog(fmt.Sprintf("UserCheckIn: %s", err.Error()))
+		common.SysLog(fmt.Sprintf("IsCheckInToday: %s", err.Error()))
 	}
 	if len(checkInTime) > 0 {
 		// 已签到
@@ -884,6 +876,7 @@ func UserCheckIn(c *gin.Context) {
 		})
 		return
 	}
+
 	// 插入一条数据
 	quota, err := model.InsertOperationCheckIn(user.Id)
 	if err != nil {
@@ -900,23 +893,4 @@ func UserCheckIn(c *gin.Context) {
 		"message": fmt.Sprintf("签到成功, 获得额度 %v", quota),
 	})
 
-}
-
-func UserIsCheckIn(c *gin.Context) {
-	// 是否已经签到
-	id := c.GetInt("id")
-	user, err := model.GetUserById(id, true)
-
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"success": false,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	//
-	operation, err := model.GetOperationCheckInByUserId(user.Id)
-	// 打印用户信息
-	fmt.Println(operation)
 }
