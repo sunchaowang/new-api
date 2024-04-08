@@ -117,7 +117,7 @@ func GetAllLogs(logType int, startTimestamp int64, endTimestamp int64, modelName
 	if channel != 0 {
 		tx = tx.Where("channel_id = ?", channel)
 	}
-	err = tx.Order("id desc").Limit(num).Offset(startIdx).Find(&logs).Error
+	err = tx.Order("created_at desc").Limit(num).Offset(startIdx).Find(&logs).Error
 	return logs, err
 }
 
