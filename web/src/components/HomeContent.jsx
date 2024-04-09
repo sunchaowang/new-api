@@ -1,4 +1,4 @@
-import { Button, Card, Space, Table, Tag } from '@douyinfe/semi-ui';
+import { Button, Card, Space, Table, Tag, List } from '@douyinfe/semi-ui';
 
 function renderModalTable(data, provider) {
   function renderSupportColumn(text, record, index) {
@@ -31,6 +31,10 @@ function renderModalTable(data, provider) {
 }
 
 function App() {
+  const changelog = [
+    '2024-4-8：迁移了数据库，提高了响应速度',
+    '2024-4-4：增加了每日签到功能，请前往钱包页查看',
+  ]
   return (
     <Card bordered={false} style={{width: '100%'}}>
         <Card
@@ -38,7 +42,15 @@ function App() {
                 "更新日志"
             }
         >
-            <Tag color={"blue"}>2024-4-4：增加了每日签到功能，请前往钱包页查看</Tag>
+          <List
+              bordered
+              dataSource={changelog}
+              renderItem={(item, index) => <List.Item>
+                {
+                  index === 0 ? <Tag color={"blue"} size={'large'}>{item}</Tag> : <Tag color={"white"} style={{border: 'none'}} size={'large'}>{item}</Tag>
+                }
+              </List.Item>}
+          />
         </Card>
       <h2>介绍</h2>
       <ul>
@@ -85,10 +97,10 @@ function App() {
       <h2>兑换码购买</h2>
       <ul>
         <li>
-          地址：<a href="https://www.zaofaka.com/links/F8373848">点击购买</a
-        >，购买完成后，在充值的地方输入兑换码
+          地址：<Button theme='solid' type='primary' onClick={() => window.open("https://shop.wochirou.com/")}>点击购买</Button>【<a href="https://www.zaofaka.com/links/F8373848">备用购买地址</a
+        >】购买完成后，在充值的地方输入兑换码
         </li>
-        <li>购买10美金以上额度的兑换换可升级为VIP用户</li>
+        <li>购买10美金以上额度可升级为VIP用户（需手工处理，会存在时间延迟，如出现问题请发邮件）</li>
       </ul>
 
       <h2>模型介绍</h2>
