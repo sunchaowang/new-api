@@ -547,7 +547,7 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	// 打印随机数
 	fmt.Printf("randomMultiplier %v", randomMultiplier)
 
-	quota = int(randomMultiplier * 168888.0)
+	quota = int(randomMultiplier * 98888.0)
 
 	operationRemark := []string{"签到", ",", fmt.Sprintf("获得额度 %v", quota)}
 
