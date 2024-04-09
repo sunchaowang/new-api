@@ -17,6 +17,7 @@ import {
   Space,
   Modal,
   Toast,
+  Tag,
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
@@ -292,8 +293,15 @@ const TopUp = () => {
                     >
                       {isSubmitting ? '兑换中...' : '兑换'}
                     </Button>
+                  </Space>
+                </Form>
+              </div>
+              <div style={{ marginTop: 20 }}>
+                <Divider>签到</Divider>
+                <Form>
+                  <Space vertical align={'start'}>
                     <Button
-                      type={'secondary'}
+                      type={'primary'}
                       theme={'solid'}
                       onClick={checkIn}
                       disabled={isChekced}
@@ -301,7 +309,7 @@ const TopUp = () => {
                     >
                       {isChekced ? "今日已签到" :isCheckIning ? '签到中...' : '签到'}
                     </Button>
-
+                    <Tag color={'red'}>每日8点重置签到状态</Tag>
                   </Space>
                 </Form>
               </div>
