@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"fmt"
-	"math"
 	"math/rand"
 	"one-api/common"
 	"strconv"
@@ -543,13 +542,10 @@ func insertOperation(user_operation UserOperation) (err error) {
 func InsertOperationCheckIn(userId int) (quota int, err error) {
 	// 获得随机额度
 	rand.Seed(time.Now().UnixNano())
-	randomMultiplier := math.Round(rand.Float64()*100) / 100
-	// 打印随机数
-	fmt.Printf("randomMultiplier %v", randomMultiplier)
 
-	quota = int(math.Pow(randomMultiplier, 2) * 98888.0)
+	quota = int(rand.Float64() * rand.Float64() * rand.Float64() * 268888.0)
 
-	operationRemark := []string{"签到", ",", fmt.Sprintf("获得额度 %v", quota)}
+	operationRemark := []string{"签到", ", ", fmt.Sprintf("获得额度 %v", quota)}
 
 	// 更新用户额度
 	err = increaseUserQuota(userId, quota)
