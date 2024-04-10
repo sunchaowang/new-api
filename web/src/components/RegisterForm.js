@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
-  Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
 } from 'semantic-ui-react';
+import {
+  Form,
+  Card,
+  Button, Space,
+} from '@douyinfe/semi-ui';
+import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import { Link, useNavigate } from 'react-router-dom';
 import { API, getLogo, showError, showInfo, showSuccess } from '../helpers';
 import Turnstile from 'react-turnstile';
@@ -106,96 +109,92 @@ const RegisterForm = () => {
   };
 
   return (
-    <Grid textAlign='center' style={{ marginTop: '48px' }}>
-      <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='' textAlign='center'>
-          <Image src={logo} /> 新用户注册
-        </Header>
-        <Form size='large'>
-          <Segment>
-            <Form.Input
-              fluid
-              icon='user'
-              iconPosition='left'
-              placeholder='输入用户名，最长 12 位'
-              onChange={handleChange}
-              name='username'
-            />
-            <Form.Input
-              fluid
-              icon='lock'
-              iconPosition='left'
-              placeholder='输入密码，最短 8 位，最长 20 位'
-              onChange={handleChange}
-              name='password'
-              type='password'
-            />
-            <Form.Input
-              fluid
-              icon='lock'
-              iconPosition='left'
-              placeholder='输入密码，最短 8 位，最长 20 位'
-              onChange={handleChange}
-              name='password2'
-              type='password'
-            />
-            {showEmailVerification ? (
-              <>
+    <Card >
+      <Title heading={2} style={{ textAlign: 'center' }}>
+        新用户注册
+      </Title>
+      <Form size='large'>
+          <Form.Input
+            icon='user'
+            iconPosition='left'
+            placeholder='输入用户名，最长 12 位'
+            onChange={handleChange}
+            name='username'
+            autoComplete={false}
+          />
+          <Form.Input
+            icon='lock'
+            iconPosition='left'
+            placeholder='输入密码，最短8位，最长20位'
+            onChange={handleChange}
+            name='password'
+            type='password'
+            autoComplete={false}
+          />
+          <Form.Input
+            icon='lock'
+            iconPosition='left'
+            placeholder='输入密码，最短8位，最长20位'
+            onChange={handleChange}
+            name='password2'
+            type='password'
+            autoComplete={false}
+          />
+          {showEmailVerification ? (
+            <>
+              <Space style={{width: '100%'}}>
                 <Form.Input
-                  fluid
                   icon='mail'
                   iconPosition='left'
                   placeholder='输入邮箱地址'
                   onChange={handleChange}
                   name='email'
                   type='email'
-                  action={
-                    <Button onClick={sendVerificationCode} disabled={loading}>
-                      获取验证码
-                    </Button>
-                  }
                 />
-                <Form.Input
-                  fluid
-                  icon='lock'
-                  iconPosition='left'
-                  placeholder='输入验证码'
-                  onChange={handleChange}
-                  name='verification_code'
-                />
-              </>
-            ) : (
-              <></>
-            )}
-            {turnstileEnabled ? (
-              <Turnstile
-                sitekey={turnstileSiteKey}
-                onVerify={(token) => {
-                  setTurnstileToken(token);
-                }}
+                <Button onClick={sendVerificationCode} disabled={loading}>
+                  获取验证码
+                </Button>
+              </Space>
+
+              <Form.Input
+                icon='lock'
+                iconPosition='left'
+                placeholder='输入验证码'
+                onChange={handleChange}
+                name='verification_code'
               />
-            ) : (
-              <></>
-            )}
-            <Button
-              color='green'
-              fluid
-              size='large'
-              onClick={handleSubmit}
-              loading={loading}
-            >
-              注册
-            </Button>
-          </Segment>
-        </Form>
-        <Message>
-          已有账户？
-          <Link to='/login' className='btn btn-link'>
-            点击登录
-          </Link>
-        </Message>
-      </Grid.Column>
-    </Grid>
+            </>
+          ) : (
+            <></>
+          )}
+          {turnstileEnabled ? (
+            <Turnstile
+              sitekey={turnstileSiteKey}
+              onVerify={(token) => {
+                setTurnstileToken(token);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          <Button
+            type={'primary'}
+            theme='solid'
+            style={{ width: '100%' }}
+            size='large'
+            onClick={handleSubmit}
+            loading={loading}
+          >
+            注册
+          </Button>
+      </Form>
+      <Card bordered={false}>
+        已有账户？
+        <Link to='/login' className='btn btn-link'>
+          点击登录
+        </Link>
+      </Card>
+    </Card>
   );
 };
 
