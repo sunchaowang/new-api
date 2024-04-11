@@ -52,7 +52,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'https://api.wochirou.com',//,'http://localhost:3000',
         changeOrigin: true,
       },
     },

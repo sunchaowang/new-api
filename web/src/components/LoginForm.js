@@ -5,14 +5,15 @@ import { API, getLogo, showError, showInfo, showSuccess } from '../helpers';
 import { onGitHubOAuthClicked } from './utils';
 import Turnstile from 'react-turnstile';
 import {
+  Form,
+} from '@douyinfe/semi-ui';
+import {
   Button,
   Card,
   Divider,
-  Form,
   Layout,
   Modal,
-  Icon,
-} from '@douyinfe/semi-ui';
+} from 'antd';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import TelegramLoginButton from 'react-telegram-login';
@@ -154,152 +155,69 @@ const LoginForm = () => {
 
   return (
     <div>
-      <Layout>
-        <Layout.Header></Layout.Header>
-        <Layout.Content>
-          <div
-            style={{
-              justifyContent: 'center',
-              display: 'flex',
-              marginTop: 120,
-            }}
-          >
-            <div style={{ width: 500 }}>
-              <Card>
-                <Title heading={2} style={{ textAlign: 'center' }}>
-                  用户登录
-                </Title>
-                <Form>
-                  <Form.Input
-                    field={'username'}
-                    label={'用户名'}
-                    placeholder='用户名'
-                    name='username'
-                    onChange={(value) => handleChange('username', value)}
-                  />
-                  <Form.Input
-                    field={'password'}
-                    label={'密码'}
-                    placeholder='密码'
-                    name='password'
-                    type='password'
-                    onChange={(value) => handleChange('password', value)}
-                  />
+      <div
+        style={{
+          justifyContent: 'center',
+          display: 'flex',
+          marginTop: 120,
+        }}
+      >
+        <div style={{ width: 500 }}>
+          <Card>
+            <Title heading={2} style={{ textAlign: 'center' }}>
+              用户登录
+            </Title>
+            <Form>
+              <Form.Input
+                field={'username'}
+                label={'用户名'}
+                placeholder='用户名'
+                name='username'
+                onChange={(value) => handleChange('username', value)}
+              />
+              <Form.Input
+                field={'password'}
+                label={'密码'}
+                placeholder='密码'
+                name='password'
+                type='password'
+                onChange={(value) => handleChange('password', value)}
+              />
 
-                  <Button
-                    theme='solid'
-                    style={{ width: '100%' }}
-                    type={'primary'}
-                    size='large'
-                    htmlType={'submit'}
-                    onClick={handleSubmit}
-                    disabled={loginDisabled}
-                    loading={loginLoading}
-                  >
-                    登录
-                  </Button>
-                </Form>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginTop: 20,
-                  }}
-                >
-                  <Text>
-                    没有账号请先 <Link to='/register'>注册账号</Link>
-                  </Text>
-                  <Text>
-                    忘记密码 <Link to='/reset'>点击重置</Link>
-                  </Text>
-                </div>
-                {status.github_oauth ||
-                status.wechat_login ||
-                status.telegram_oauth ? (
-                  <>
-                    <Divider margin='12px' align='center'>
-                      第三方登录
-                    </Divider>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginTop: 20,
-                      }}
-                    >
-                      {status.github_oauth ? (
-                        <Button
-                          type='primary'
-                          icon={<IconGithubLogo />}
-                          onClick={() =>
-                            onGitHubOAuthClicked(status.github_client_id)
-                          }
-                        />
-                      ) : (
-                        <></>
-                      )}
-                      {status.wechat_login ? (
-                        <Button
-                          type='primary'
-                          style={{ color: 'rgba(var(--semi-green-5), 1)' }}
-                          icon={<Icon svg={<WeChatIcon />} />}
-                          onClick={onWeChatLoginClicked}
-                        />
-                      ) : (
-                        <></>
-                      )}
-
-                      {status.telegram_oauth ? (
-                        <TelegramLoginButton
-                          dataOnauth={onTelegramLoginClicked}
-                          botName={status.telegram_bot_name}
-                        />
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-                <Modal
-                  title='微信扫码登录'
-                  visible={showWeChatLoginModal}
-                  maskClosable={true}
-                  onOk={onSubmitWeChatVerificationCode}
-                  onCancel={() => setShowWeChatLoginModal(false)}
-                  okText={'登录'}
-                  size={'small'}
-                  centered={true}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItem: 'center',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <img src={status.wechat_qrcode} />
-                  </div>
-                  <div style={{ textAlign: 'center' }}>
-                    <p>
-                      微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
-                    </p>
-                  </div>
-                  <Form size='large'>
-                    <Form.Input
-                      field={'wechat_verification_code'}
-                      placeholder='验证码'
-                      label={'验证码'}
-                      value={inputs.wechat_verification_code}
-                      onChange={(value) =>
-                        handleChange('wechat_verification_code', value)
-                      }
-                    />
-                  </Form>
-                </Modal>
-              </Card>
-              {turnstileEnabled ? (
+              <Button
+                theme='solid'
+                style={{ width: '100%' }}
+                type={'primary'}
+                size='large'
+                htmlType={'submit'}
+                onClick={handleSubmit}
+                disabled={loginDisabled}
+                loading={loginLoading}
+              >
+                登录
+              </Button>
+            </Form>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                marginTop: 20,
+              }}
+            >
+              <Text>
+                没有账号请先 <Link to='/register'>注册账号</Link>
+              </Text>
+              <Text>
+                忘记密码 <Link to='/reset'>点击重置</Link>
+              </Text>
+            </div>
+            {status.github_oauth ||
+            status.wechat_login ||
+            status.telegram_oauth ? (
+              <>
+                <Divider margin='12px' align='center'>
+                  第三方登录
+                </Divider>
                 <div
                   style={{
                     display: 'flex',
@@ -307,21 +225,99 @@ const LoginForm = () => {
                     marginTop: 20,
                   }}
                 >
-                  <Turnstile
-                    sitekey={turnstileSiteKey}
-                    onVerify={(token) => {
-                      setTurnstileToken(token);
-                      setLoginDisabled(false);
-                    }}
-                  />
+                  {status.github_oauth ? (
+                    <Button
+                      type='primary'
+                      icon={<IconGithubLogo />}
+                      onClick={() =>
+                        onGitHubOAuthClicked(status.github_client_id)
+                      }
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {status.wechat_login ? (
+                    <Button
+                      type='primary'
+                      style={{ color: 'rgba(var(--semi-green-5), 1)' }}
+                      icon={<Icon svg={<WeChatIcon />} />}
+                      onClick={onWeChatLoginClicked}
+                    />
+                  ) : (
+                    <></>
+                  )}
+
+                  {status.telegram_oauth ? (
+                    <TelegramLoginButton
+                      dataOnauth={onTelegramLoginClicked}
+                      botName={status.telegram_bot_name}
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </div>
-              ) : (
-                <></>
-              )}
+              </>
+            ) : (
+              <></>
+            )}
+            <Modal
+              title='微信扫码登录'
+              visible={showWeChatLoginModal}
+              maskClosable={true}
+              onOk={onSubmitWeChatVerificationCode}
+              onCancel={() => setShowWeChatLoginModal(false)}
+              okText={'登录'}
+              size={'small'}
+              centered={true}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItem: 'center',
+                  flexDirection: 'column',
+                }}
+              >
+                <img src={status.wechat_qrcode} />
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <p>
+                  微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
+                </p>
+              </div>
+              <Form size='large'>
+                <Form.Input
+                  field={'wechat_verification_code'}
+                  placeholder='验证码'
+                  label={'验证码'}
+                  value={inputs.wechat_verification_code}
+                  onChange={(value) =>
+                    handleChange('wechat_verification_code', value)
+                  }
+                />
+              </Form>
+            </Modal>
+          </Card>
+          {turnstileEnabled ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: 20,
+              }}
+            >
+              <Turnstile
+                sitekey={turnstileSiteKey}
+                onVerify={(token) => {
+                  setTurnstileToken(token);
+                  setLoginDisabled(false);
+                }}
+              />
             </div>
-          </div>
-        </Layout.Content>
-      </Layout>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

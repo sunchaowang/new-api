@@ -1,4 +1,4 @@
-import { Button, Card, Space, Table, Tag, List } from '@douyinfe/semi-ui';
+import { Button, Card, Space, Table, Tag, List } from 'antd';
 
 function renderModalTable(data, provider) {
   function renderSupportColumn(text, record, index) {
@@ -14,17 +14,18 @@ function renderModalTable(data, provider) {
 
   return (
     <Card title={
-      <Button>{provider}</Button>
+      <Tag color={'blue'}>{provider}</Tag>
     }
       style={{
         width: '100%'
       }}
     >
-      <Table dataSource={data} pagination={false}>
-        <Table.Column title="模型名称" dataIndex="name" key="name" width={'25%'} />
-        <Table.Column title="输入费率" dataIndex="inputTokens" key="inputTokens" width={'25%'}/>
-        <Table.Column title="输出费率" dataIndex="outputTokens" key="outputTokens" width={'25%'}/>
-        <Table.Column title="是否支持" dataIndex="isSupport" key="isSupport" render={renderSupportColumn} width={'25%'}/>
+      <Table dataSource={data} pagination={false} size={"small"} bordered>
+        <Table.Column title="模型名称" dataIndex="name" key="name" width={'20%'} />
+        <Table.Column title="官方费率" dataIndex="inputTokens" key="inputTokens" width={'20%'}/>
+        <Table.Column title="本站费率" dataIndex="outputTokens" key="outputTokens" width={'20%'}/>
+        <Table.Column title="折扣" dataIndex="discount" key="discount" width={'20%'}/>
+        <Table.Column title="备注" dataIndex="isSupport" key="isSupport" render={renderSupportColumn} width={'20%'}/>
       </Table>
     </Card>
   );
@@ -47,7 +48,7 @@ function App() {
               dataSource={changelog}
               renderItem={(item, index) => <List.Item>
                 {
-                  index === 0 ? <Tag color={"blue"} size={'large'}>{item}</Tag> : <Tag color={"white"} style={{border: 'none'}} size={'large'}>{item}</Tag>
+                  index === 0 ? <Tag color={"blue"} size={'large'}>{item}</Tag> : <Tag style={{border: 'none'}} size={'large'}>{item}</Tag>
                 }
               </List.Item>}
           />
@@ -97,14 +98,14 @@ function App() {
       <h2>兑换码购买</h2>
       <ul>
         <li>
-          地址：<Button theme='solid' type='primary' onClick={() => window.open("https://shop.wochirou.com/")}>点击购买</Button>【<a href="https://www.zaofaka.com/links/F8373848">备用购买地址</a
+          地址：<Button type='primary' onClick={() => window.open("https://shop.wochirou.com/")}>点击购买</Button>【<a href="https://www.zaofaka.com/links/F8373848">备用购买地址</a
         >】购买完成后，在充值的地方输入兑换码
         </li>
         <li>购买10美金以上额度可升级为VIP用户（需手工处理，会存在时间延迟，如出现问题请发邮件）</li>
       </ul>
 
       <h2>模型介绍</h2>
-      <Space vertical spacing={20} style={{width: '100%'}}>
+      <Space direction={"vertical"} spacing={20} style={{width: '100%'}}>
         {
           renderModalTable([
             {

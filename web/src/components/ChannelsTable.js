@@ -689,6 +689,7 @@ const ChannelsTable = () => {
             <Button
               label='查询'
               type='primary'
+              theme={'solid'}
               htmlType='submit'
               className='btn-margin-right'
               style={{ marginRight: 8 }}
@@ -764,7 +765,7 @@ const ChannelsTable = () => {
           style={{ pointerEvents: 'auto', marginTop: isMobile() ? 0 : 45 }}
         >
           <Button
-            theme='light'
+            theme='solid'
             type='primary'
             style={{ marginRight: 8 }}
             onClick={() => {

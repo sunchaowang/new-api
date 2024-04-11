@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Form, Grid, Header } from 'semantic-ui-react';
+import {Divider, Form, Grid, Header, Tab} from 'semantic-ui-react';
+import {Table, Button} from 'antd'
 import {
   API,
   showError,
@@ -7,6 +8,7 @@ import {
   timestamp2string,
   verifyJSON,
 } from '../helpers';
+import {Input} from "@douyinfe/semi-ui";
 
 const OperationSetting = () => {
   let now = new Date();
@@ -55,6 +57,11 @@ const OperationSetting = () => {
     { key: 'day', text: '天', value: 'day' },
     { key: 'week', text: '周', value: 'week' },
   ];
+
+  const [modelPriceList, setModelPriceList] = useState([]);
+  const [modelRatioList, setModelRatioList] = useState([]);
+  const [groupRatioList, setGroupRatioList] = useState([]);
+
   const getOptions = async () => {
     const res = await API.get('/api/option/');
     const { success, message, data } = res.data;
@@ -66,12 +73,39 @@ const OperationSetting = () => {
           item.key === 'GroupRatio' ||
           item.key === 'ModelPrice'
         ) {
+          if (item.key === 'ModelPrice') {
+            setModelPriceList(Object.entries(JSON.parse(item.value)).map((item) => {
+              return {
+                key: item[0],
+                value: item[1]
+              }
+            }))
+          }
+          if (item.key === 'ModelRatio') {
+            setModelRatioList(Object.entries(JSON.parse(item.value)).map((item) => {
+              return {
+                key: item[0],
+                value: item[1]
+              }
+            }))
+          }
+          if (item.key === 'GroupRatio') {
+            setGroupRatioList(Object.entries(JSON.parse(item.value)).map((item) => {
+              return {
+                key: item[0],
+                value: item[1]
+              }
+            }))
+          }
           item.value = JSON.stringify(JSON.parse(item.value), null, 2);
         }
         newInputs[item.key] = item.value;
       });
       setInputs(newInputs);
       setOriginInputs(newInputs);
+
+
+
     } else {
       showError(message);
     }
@@ -89,7 +123,6 @@ const OperationSetting = () => {
     if (key === 'DefaultCollapseSidebar') {
       value = inputs[key] === 'true' ? 'false' : 'true';
     }
-    console.log(key, value);
     const res = await API.put('/api/option/', {
       key,
       value,
@@ -216,6 +249,23 @@ const OperationSetting = () => {
     }
     showError('日志清理失败：' + message);
   };
+
+  // 倍率输入框事件
+  const handleModelPriceChange = (e, row, rowIndex, key) => {
+    const rows = modelPriceList;
+    rows.map((item, index) => {
+      if (index === rowIndex) {
+        item[key] = e.target.value
+      }
+    })
+    console.log('rows',rows)
+    setModelPriceList(rows)
+    const modelPrice = JSON.stringify(rows.reduce((prev, curr) => {
+      prev[curr.key] = curr.value;
+      return prev;
+    }, {}))
+    // setInputs((inputs) => ({ ...inputs, ModelPrice: modelPrice }));
+  }
   return (
     <Grid columns={1}>
       <Grid.Column>
@@ -291,13 +341,14 @@ const OperationSetting = () => {
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Form.Button
+          <Button
+            type={"primary"}
             onClick={() => {
               submitConfig('general').then();
             }}
           >
             保存通用设置
-          </Form.Button>
+          </Button>
           <Divider />
           <Header as='h3'>绘图设置</Header>
           <Form.Group inline>
@@ -373,13 +424,14 @@ const OperationSetting = () => {
               placeholder='一行一个屏蔽词'
             />
           </Form.Group>
-          <Form.Button
+          <Button
             onClick={() => {
               submitConfig('words').then();
             }}
+            type={"primary"}
           >
             保存屏蔽词设置
-          </Form.Button>
+          </Button>
           <Divider />
           <Header as='h3'>日志设置</Header>
           <Form.Group inline>
@@ -401,13 +453,14 @@ const OperationSetting = () => {
               }}
             />
           </Form.Group>
-          <Form.Button
+          <Button
             onClick={() => {
               deleteHistoryLogs().then();
             }}
+            type={"primary"}
           >
             清理历史日志
-          </Form.Button>
+          </Button>
           <Divider />
           <Header as='h3'>数据看板</Header>
           <Form.Checkbox
@@ -476,13 +529,14 @@ const OperationSetting = () => {
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Form.Button
+          <Button
             onClick={() => {
               submitConfig('monitor').then();
             }}
+            type={"primary"}
           >
             保存监控设置
-          </Form.Button>
+          </Button>
           <Divider />
           <Header as='h3'>额度设置</Header>
           <Form.Group widths={4}>
@@ -527,55 +581,132 @@ const OperationSetting = () => {
               placeholder='例如：1000'
             />
           </Form.Group>
-          <Form.Button
+          <Button
             onClick={() => {
               submitConfig('quota').then();
             }}
+            type={"primary"}
           >
             保存额度设置
-          </Form.Button>
+          </Button>
           <Divider />
           <Header as='h3'>倍率设置</Header>
           <Form.Group widths='equal'>
-            <Form.TextArea
-              label='模型固定价格（一次调用消耗多少刀，优先级大于模型倍率）'
-              name='ModelPrice'
-              onChange={handleInputChange}
-              style={{ minHeight: 250, fontFamily: 'JetBrains Mono, Consolas' }}
-              autoComplete='new-password'
-              value={inputs.ModelPrice}
-              placeholder='为一个 JSON 文本，键为模型名称，值为一次调用消耗多少刀，比如 "gpt-4-gizmo-*": 0.1，一次消耗0.1刀'
-            />
+            <Table
+              dataSource={modelPriceList}
+              pagination={false}
+              size={'small'}
+              columns={[
+                {
+                  key: 'key',
+                  dataIndex: 'key',
+                  title: '模型名称',
+                  render: (text, record, index) => {
+                    return <Input borderless defaultValue={text} onKeyPress={( e) => handleModelPriceChange(e, record, index, 'key')}></Input>
+                  }
+                },
+                {
+                  key: 'value',
+                  dataIndex: 'value',
+                  title: '倍率',
+                  render: (text, record, index) => {
+                    return <Input defaultValue={text} onKeyPress={( e) => handleModelPriceChange(e, record, index, 'value')}></Input>
+                  }
+                }
+              ]}
+              rowKey='key'
+            >
+            </Table>
+            {/*<Form.TextArea*/}
+            {/*  label='模型固定价格（一次调用消耗多少刀，优先级大于模型倍率）'*/}
+            {/*  name='ModelPrice'*/}
+            {/*  onChange={handleInputChange}*/}
+            {/*  style={{ minHeight: 250, fontFamily: 'JetBrains Mono, Consolas' }}*/}
+            {/*  autoComplete='new-password'*/}
+            {/*  value={inputs.ModelPrice}*/}
+            {/*  placeholder='为一个 JSON 文本，键为模型名称，值为一次调用消耗多少刀，比如 "gpt-4-gizmo-*": 0.1，一次消耗0.1刀'*/}
+            {/*/>*/}
           </Form.Group>
           <Form.Group widths='equal'>
-            <Form.TextArea
-              label='模型倍率'
-              name='ModelRatio'
-              onChange={handleInputChange}
-              style={{ minHeight: 250, fontFamily: 'JetBrains Mono, Consolas' }}
-              autoComplete='new-password'
-              value={inputs.ModelRatio}
-              placeholder='为一个 JSON 文本，键为模型名称，值为倍率'
-            />
+            {/*<Form.TextArea*/}
+            {/*  label='模型倍率'*/}
+            {/*  name='ModelRatio'*/}
+            {/*  onChange={handleInputChange}*/}
+            {/*  style={{ minHeight: 250, fontFamily: 'JetBrains Mono, Consolas' }}*/}
+            {/*  autoComplete='new-password'*/}
+            {/*  value={inputs.ModelRatio}*/}
+            {/*  placeholder='为一个 JSON 文本，键为模型名称，值为倍率'*/}
+            {/*/>*/}
+            <Table
+              dataSource={modelRatioList}
+              pagination={false}
+              size={'small'}
+              columns={[
+                {
+                  key: 'key',
+                  dataIndex: 'key',
+                  title: '模型名称',
+                  render: (text, record, index) => {
+                    return <Input borderless defaultValue={text} onKeyPress={( e) => handleModelPriceChange(e, record, index, 'key')}></Input>
+                  }
+                },
+                {
+                  key: 'value',
+                  dataIndex: 'value',
+                  title: '倍率',
+                  render: (text, record, index) => {
+                    return <Input defaultValue={text} onKeyPress={( e) => handleModelPriceChange(e, record, index, 'value')}></Input>
+                  }
+                }
+              ]}
+              rowKey='key'
+            >
+            </Table>
           </Form.Group>
           <Form.Group widths='equal'>
-            <Form.TextArea
-              label='分组倍率'
-              name='GroupRatio'
-              onChange={handleInputChange}
-              style={{ minHeight: 250, fontFamily: 'JetBrains Mono, Consolas' }}
-              autoComplete='new-password'
-              value={inputs.GroupRatio}
-              placeholder='为一个 JSON 文本，键为分组名称，值为倍率'
-            />
+            {/*<Form.TextArea*/}
+            {/*  label='分组倍率'*/}
+            {/*  name='GroupRatio'*/}
+            {/*  onChange={handleInputChange}*/}
+            {/*  style={{ minHeight: 250, fontFamily: 'JetBrains Mono, Consolas' }}*/}
+            {/*  autoComplete='new-password'*/}
+            {/*  value={inputs.GroupRatio}*/}
+            {/*  placeholder='为一个 JSON 文本，键为分组名称，值为倍率'*/}
+            {/*/>*/}
+            <Table
+                dataSource={groupRatioList}
+                pagination={false}
+                size={'small'}
+                columns={[
+                  {
+                    key: 'key',
+                    dataIndex: 'key',
+                    title: '模型名称',
+                    render: (text, record, index) => {
+                      return <Input borderless defaultValue={text} onKeyPress={( e) => handleModelPriceChange(e, record, index, 'key')}></Input>
+                    }
+                  },
+                  {
+                    key: 'value',
+                    dataIndex: 'value',
+                    title: '倍率',
+                    render: (text, record, index) => {
+                      return <Input defaultValue={text} onKeyPress={( e) => handleModelPriceChange(e, record, index, 'value')}></Input>
+                    }
+                  }
+                ]}
+                rowKey='key'
+            >
+            </Table>
           </Form.Group>
-          <Form.Button
+          <Button
             onClick={() => {
               submitConfig('ratio').then();
             }}
+            type={"primary"}
           >
             保存倍率设置
-          </Form.Button>
+          </Button>
         </Form>
       </Grid.Column>
     </Grid>

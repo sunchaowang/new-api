@@ -96,17 +96,17 @@ const RedemptionsTable = () => {
       },
     },
     {
-      title: '',
+      title: '操作',
       dataIndex: 'operate',
       render: (text, record, index) => (
         <div>
           <Popover content={record.key} style={{ padding: 20 }} position='top'>
-            <Button theme='light' type='tertiary' style={{ marginRight: 1 }}>
+            <Button theme='borderless' type='tertiary' style={{ marginRight: 1 }}>
               查看
             </Button>
           </Popover>
           <Button
-            theme='light'
+            theme='borderless'
             type='secondary'
             style={{ marginRight: 1 }}
             onClick={async (text) => {
@@ -126,13 +126,13 @@ const RedemptionsTable = () => {
               });
             }}
           >
-            <Button theme='light' type='danger' style={{ marginRight: 1 }}>
+            <Button theme='borderless' type='danger' style={{ marginRight: 1 }}>
               删除
             </Button>
           </Popconfirm>
           {record.status === 1 ? (
             <Button
-              theme='light'
+              theme='borderless'
               type='warning'
               style={{ marginRight: 1 }}
               onClick={async () => {
@@ -143,7 +143,7 @@ const RedemptionsTable = () => {
             </Button>
           ) : (
             <Button
-              theme='light'
+              theme='borderless'
               type='secondary'
               style={{ marginRight: 1 }}
               onClick={async () => {
@@ -155,7 +155,7 @@ const RedemptionsTable = () => {
             </Button>
           )}
           <Button
-            theme='light'
+            theme='borderless'
             type='tertiary'
             style={{ marginRight: 1 }}
             onClick={() => {
@@ -379,7 +379,7 @@ const RedemptionsTable = () => {
         visiable={showEdit}
         handleClose={closeEdit}
       ></EditRedemption>
-      <Form onSubmit={searchRedemptions}>
+      <Form>
         <Form.Input
           label='搜索关键字'
           field='keyword'
@@ -390,6 +390,11 @@ const RedemptionsTable = () => {
           loading={searching}
           onChange={handleKeywordChange}
         />
+        <Button
+          type={"primary"}
+          theme={"solid"}
+          onClick={searchRedemptions}
+        >查询</Button>
       </Form>
 
       <Table
@@ -415,7 +420,7 @@ const RedemptionsTable = () => {
         onRow={handleRow}
       ></Table>
       <Button
-        theme='light'
+        theme='solid'
         type='primary'
         style={{ marginRight: 8 }}
         onClick={() => {
@@ -429,6 +434,7 @@ const RedemptionsTable = () => {
       </Button>
       <Button
         label='复制所选兑换码'
+        theme={"borderless"}
         type='warning'
         onClick={async () => {
           if (selectedKeys.length === 0) {

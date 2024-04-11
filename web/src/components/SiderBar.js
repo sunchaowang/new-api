@@ -240,7 +240,7 @@ const SiderBar = () => {
             }}
             header={{
               logo: (
-                <img src={logo} alt='logo' style={{ marginRight: '0.75em' }} />
+                <img src={logo} alt='logo' style={{ borderRadius: '50%' }} />
               ),
               text: systemName,
             }}

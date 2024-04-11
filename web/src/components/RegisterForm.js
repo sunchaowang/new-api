@@ -29,6 +29,7 @@ const RegisterForm = () => {
   const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
   const [turnstileToken, setTurnstileToken] = useState('');
   const [loading, setLoading] = useState(false);
+  const [emailCodeSendLoading, setEmailCodeSendLoading] = useState(false);
   const logo = getLogo();
   let affCode = new URLSearchParams(window.location.search).get('aff');
   if (affCode) {
@@ -49,9 +50,9 @@ const RegisterForm = () => {
 
   let navigate = useNavigate();
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-    console.log(name, value);
+  function handleChange(name, value) {
+    // const { name, value } = e.target;
+    // console.log(name, value);
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   }
 
@@ -63,6 +64,16 @@ const RegisterForm = () => {
     if (password !== password2) {
       showInfo('两次输入的密码不一致');
       return;
+    }
+    if (showEmailVerification) {
+      if (inputs.email === '') {
+        showInfo('请先输入邮箱地址！');
+        return;
+      }
+      if (inputs.verification_code === '') {
+        showInfo('请先输入验证码！');
+        return;
+      }
     }
     if (username && password) {
       if (turnstileEnabled && turnstileToken === '') {
@@ -90,12 +101,15 @@ const RegisterForm = () => {
   }
 
   const sendVerificationCode = async () => {
-    if (inputs.email === '') return;
+    if (inputs.email === '') {
+      showInfo('请先输入邮箱地址！');
+      return
+    };
     if (turnstileEnabled && turnstileToken === '') {
       showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
     }
-    setLoading(true);
+    setEmailCodeSendLoading(true);
     const res = await API.get(
       `/api/verification?email=${inputs.email}&turnstile=${turnstileToken}`,
     );
@@ -105,7 +119,7 @@ const RegisterForm = () => {
     } else {
       showError(message);
     }
-    setLoading(false);
+    setEmailCodeSendLoading(false);
   };
 
   return (
@@ -118,52 +132,60 @@ const RegisterForm = () => {
             icon='user'
             iconPosition='left'
             placeholder='输入用户名，最长 12 位'
-            onChange={handleChange}
+            onChange={(value) => handleChange('username', value)}
             name='username'
-            autoComplete={false}
+            field={'username'}
+            label={'用户名'}
           />
           <Form.Input
             icon='lock'
             iconPosition='left'
             placeholder='输入密码，最短8位，最长20位'
-            onChange={handleChange}
+            onChange={(value) => handleChange('password', value)}
             name='password'
             type='password'
-            autoComplete={false}
+            field={'password'}
+            label={'密码'}
           />
           <Form.Input
             icon='lock'
             iconPosition='left'
             placeholder='输入密码，最短8位，最长20位'
-            onChange={handleChange}
+            onChange={(value) => handleChange('password2', value)}
             name='password2'
+            field={'password2'}
             type='password'
-            autoComplete={false}
+            label={'确认密码'}
           />
           {showEmailVerification ? (
-            <>
-              <Space style={{width: '100%'}}>
+            [<div style={{
+            }}>
                 <Form.Input
                   icon='mail'
                   iconPosition='left'
                   placeholder='输入邮箱地址'
-                  onChange={handleChange}
+                  onChange={(value) => handleChange('email', value)}
                   name='email'
+                  field='email'
                   type='email'
+                  label={'邮箱'}
                 />
-                <Button onClick={sendVerificationCode} disabled={loading}>
+                <Button onClick={sendVerificationCode} loading={emailCodeSendLoading}>
                   获取验证码
                 </Button>
-              </Space>
-
+            </div>
+            ,
               <Form.Input
                 icon='lock'
                 iconPosition='left'
                 placeholder='输入验证码'
-                onChange={handleChange}
+                onChange={(value) => handleChange('verification_code', value)}
                 name='verification_code'
+                field='verification_code'
+                label={'验证码'}
               />
-            </>
+            ]
+
           ) : (
             <></>
           )}

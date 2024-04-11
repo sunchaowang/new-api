@@ -622,6 +622,7 @@ const TokensTable = () => {
           value={searchKeyword}
           loading={searching}
           onChange={handleKeywordChange}
+          showClear
         />
         <Form.Input
           field='token'
@@ -630,14 +631,17 @@ const TokensTable = () => {
           value={searchToken}
           loading={searching}
           onChange={handleSearchTokenChange}
+          showClear
         />
         <Button
+          theme={"solid"}
           label='查询'
           type='primary'
           htmlType='submit'
           className='btn-margin-right'
           onClick={searchTokens}
           style={{ marginRight: 8 }}
+          loading={loading}
         >
           查询
         </Button>
@@ -661,12 +665,11 @@ const TokensTable = () => {
           },
           onPageChange: handlePageChange,
         }}
-        loading={loading}
         rowSelection={rowSelection}
         onRow={handleRow}
       ></Table>
       <Button
-        theme='light'
+        theme='solid'
         type='primary'
         style={{ marginRight: 8 }}
         onClick={() => {
@@ -680,6 +683,7 @@ const TokensTable = () => {
       </Button>
       <Button
         label='复制所选令牌'
+        theme={"borderless"}
         type='warning'
         onClick={async () => {
           if (selectedKeys.length === 0) {

@@ -554,6 +554,7 @@ const LogsTable = () => {
               placeholder={'可选值'}
               name='token_name'
               onChange={(value) => handleInputChange(value, 'token_name')}
+              showClear
             />
             <Form.Input
               field='model_name'
@@ -563,6 +564,7 @@ const LogsTable = () => {
               placeholder='可选值'
               name='model_name'
               onChange={(value) => handleInputChange(value, 'model_name')}
+              showClear
             />
             <Form.DatePicker
               field='start_timestamp'
@@ -573,6 +575,7 @@ const LogsTable = () => {
               type='dateTime'
               name='start_timestamp'
               onChange={(value) => handleInputChange(value, 'start_timestamp')}
+              showClear
             />
             <Form.DatePicker
               field='end_timestamp'
@@ -584,6 +587,7 @@ const LogsTable = () => {
               type='dateTime'
               name='end_timestamp'
               onChange={(value) => handleInputChange(value, 'end_timestamp')}
+              showClear
             />
             {isAdminUser && (
               <>
@@ -595,6 +599,7 @@ const LogsTable = () => {
                   placeholder='可选值'
                   name='channel'
                   onChange={(value) => handleInputChange(value, 'channel')}
+                  showClear
                 />
                 <Form.Input
                   field='username'
@@ -604,6 +609,7 @@ const LogsTable = () => {
                   placeholder={'可选值'}
                   name='username'
                   onChange={(value) => handleInputChange(value, 'username')}
+                  showClear
                 />
               </>
             )}
@@ -615,6 +621,7 @@ const LogsTable = () => {
                 className='btn-margin-right'
                 onClick={refresh}
                 loading={loading}
+                theme={"solid"}
               >
                 查询
               </Button>
