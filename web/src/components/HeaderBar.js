@@ -8,7 +8,8 @@ import '../index.css';
 import fireworks from 'react-fireworks';
 
 import { IconHelpCircle, IconKey, IconUser } from '@douyinfe/semi-icons';
-import { Avatar, Dropdown, Layout, Nav, Switch } from '@douyinfe/semi-ui';
+import {  Nav } from '@douyinfe/semi-ui';
+import { Avatar, Dropdown, Layout, Switch } from 'antd';
 import { stringToColor } from '../helpers/render';
 
 // HeaderBar Buttons
@@ -115,18 +116,20 @@ const HeaderBar = () => {
               <>
                 {isNewYear && (
                   // happy new year
-                  <Dropdown
-                    position='bottomRight'
-                    render={
-                      <Dropdown.Menu>
-                        <Dropdown.Item onClick={handleNewYearClick}>
-                          Happy New Year!!!
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    }
-                  >
-                    <Nav.Item itemKey={'new-year'} text={'🏮'} />
-                  </Dropdown>
+									// <Dropdown.Button>
+									//   <Dropdown.Item onClick={handleNewYearClick}>
+									//     Happy New Year!!!
+									//   </Dropdown.Item>
+									// </Dropdown.Button>
+
+									// <Dropdown
+                  //   menu={
+									//
+                  //   }
+                  // >
+                  //   <Nav.Item itemKey={'new-year'} text={'🏮'} />
+                  // </Dropdown>
+									[]
                 )}
                 <Nav.Item itemKey={'about'} icon={<IconHelpCircle />} />
                 <Switch
@@ -139,24 +142,30 @@ const HeaderBar = () => {
                 {userState.user ? (
                   <>
                     <Dropdown
-                      position='bottomRight'
-                      render={
-                        <Dropdown.Menu>
-                          <Dropdown.Item onClick={logout}>退出</Dropdown.Item>
-                        </Dropdown.Menu>
+                      menu={
+											[{
+												key: "logout",
+												label: "退出"
+											}]
+                        // <Dropdown.Menu>
+                        //   <Dropdown.Item onClick={logout}>退出</Dropdown.Item>
+                        // </Dropdown.Menu>
                       }
                     >
-                      <Avatar
-                        size='small'
-                        color={stringToColor(userState.user.username)}
-                        style={{ margin: 4 }}
-                      >
-                        {userState.user.username[0]}
-                      </Avatar>
-                      <span>{userState.user.username}</span>
-                    </Dropdown>
-                  </>
-                ) : (
+											<>
+												<Avatar
+													size="small"
+													color={stringToColor(userState.user.username)}
+													style={{ margin: 4 }}
+												>
+													{userState.user.username[0]}
+													<span>{userState.user.username}</span>
+
+												</Avatar>
+											</>
+										</Dropdown>
+									</>
+								) : (
                   <>
                     <Nav.Item
                       itemKey={'login'}

@@ -10,7 +10,7 @@ import { UserProvider } from './context/User';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { StatusProvider } from './context/Status';
-import { Layout } from '@douyinfe/semi-ui';
+import { Layout } from 'antd';
 import SiderBar from './components/SiderBar';
 
 // initialization
@@ -22,27 +22,42 @@ root.render(
     <StatusProvider>
       <UserProvider>
         <BrowserRouter>
-          <Layout>
-            <Sider>
-              <SiderBar />
-            </Sider>
-            <Layout>
-              <Header>
-                <HeaderBar />
-              </Header>
-              <Content
-                style={{
-                  padding: '24px',
-                }}
-              >
-                <App />
-              </Content>
-              <Layout.Footer>
-                <Footer></Footer>
-              </Layout.Footer>
-            </Layout>
-            <ToastContainer />
-          </Layout>
+          <Layout 	
+		  	style={{width: '100vw', height: '100vh', position: "relative"}}>
+						<Header style={
+							{
+								width: "100%",
+								height: '64px',
+								flex: 1,
+							}
+			}>
+				{/*<HeaderBar />*/}
+				<div className="demo-logo" />
+				<SiderBar />
+			</Header>
+				<Content
+					style={{
+						padding: '24px',
+						background: "#ffffff",
+						width: '100%',
+						height: '100%',
+								overflow: "scroll",
+					}}
+				>
+					<App />
+							
+				</Content>
+<Layout.Footer style={
+								{
+								width: "100%",
+									height: '64px',
+								flex: 1,
+							}
+					}>
+						<Footer></Footer>
+					</Layout.Footer>
+		</Layout>
+		<ToastContainer />
         </BrowserRouter>
       </UserProvider>
     </StatusProvider>

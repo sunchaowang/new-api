@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spin } from '@douyinfe/semi-ui';
+import { Spin } from 'antd';
 
 const Loading = ({ prompt: name = 'page' }) => {
   return (

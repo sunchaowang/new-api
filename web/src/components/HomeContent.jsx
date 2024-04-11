@@ -37,7 +37,7 @@ function App() {
     '2024-4-4：增加了每日签到功能，请前往钱包页查看',
   ]
   return (
-    <Card bordered={false} style={{width: '100%'}}>
+    <>
         <Card
             title={
                 "更新日志"
@@ -414,7 +414,7 @@ function App() {
       >《生成式人工智能服务管理暂行办法》</a
       >规定，本站严格遵守相关规定，请切勿用于非法用途。
       </p>
-    </Card>
+    </>
   )
 }
 

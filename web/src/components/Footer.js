@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
 import { getFooterHTML, getSystemName } from '../helpers';
-import { Layout } from '@douyinfe/semi-ui';
 
 const Footer = () => {
   const systemName = getSystemName();
@@ -28,8 +27,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <Layout>
-      <Layout.Content style={{ textAlign: 'center' }}>
+    <>
         {footer ? (
           <div
             className='custom-footer'
@@ -67,8 +65,7 @@ const Footer = () => {
             授权
           </div>
         )}
-      </Layout.Content>
-    </Layout>
+    </>
   );
 };
 

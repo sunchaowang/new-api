@@ -26,7 +26,8 @@ import {
   IconSetting,
   IconUser,
 } from '@douyinfe/semi-icons';
-import { Layout, Nav } from '@douyinfe/semi-ui';
+import { Nav } from '@douyinfe/semi-ui';
+import { Layout, Menu } from 'antd';
 
 // HeaderBar Buttons
 
@@ -37,7 +38,7 @@ const SiderBar = () => {
     isMobile() || localStorage.getItem('default_collapse_sidebar') === 'true';
 
   let navigate = useNavigate();
-  const [selectedKeys, setSelectedKeys] = useState(['home']);
+  const [selectedKeys, setSelectedKeys] = useState(['/']);
   const systemName = getSystemName();
   const logo = getLogo();
   const [isCollapsed, setIsCollapsed] = useState(defaultIsCollapsed);
@@ -62,7 +63,7 @@ const SiderBar = () => {
       {
         text: '首页',
         itemKey: 'home',
-        to: '/',
+        to: '/home',
         icon: <IconHome />,
       },
       {
@@ -194,6 +195,16 @@ const SiderBar = () => {
     }
   };
 
+  function getItem(label, key, icon, children, to) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+			to
+    };
+  }
+
   useEffect(() => {
     loadStatus().then(() => {
       setIsCollapsed(
@@ -210,48 +221,20 @@ const SiderBar = () => {
 
   return (
     <>
-      <Layout>
-        <div style={{ height: '100%' }}>
-          <Nav
-            // bodyStyle={{ maxWidth: 200 }}
-            style={{ maxWidth: 200 }}
-            defaultIsCollapsed={
-              isMobile() ||
-              localStorage.getItem('default_collapse_sidebar') === 'true'
-            }
-            isCollapsed={isCollapsed}
-            onCollapseChange={(collapsed) => {
-              setIsCollapsed(collapsed);
-            }}
-            selectedKeys={selectedKeys}
-            renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
-              return (
-                <Link
-                  style={{ textDecoration: 'none' }}
-                  to={routerMap[props.itemKey]}
-                >
-                  {itemElement}
-                </Link>
-              );
-            }}
-            items={headerButtons}
-            onSelect={(key) => {
-              setSelectedKeys([key.itemKey]);
-            }}
-            header={{
-              logo: (
-                <img src={logo} alt='logo' style={{ borderRadius: '50%' }} />
-              ),
-              text: systemName,
-            }}
-            // footer={{
-            //   text: '© 2021 NekoAPI',
-            // }}
-          >
-            <Nav.Footer collapseButton={true}></Nav.Footer>
-          </Nav>
-        </div>
-      </Layout>
+			<Menu
+				mode="horizontal"
+				theme={'dark'}
+				items={
+					headerButtons.map((menu) => getItem(menu.text, menu.itemKey, menu.icon, menu.children, menu.to))
+				}
+				onClick={(e) => {
+					navigate(e.key);
+					setSelectedKeys([e.key])
+				}}
+				selectedKeys={selectedKeys}
+
+			>
+			</Menu>
     </>
   );
 };

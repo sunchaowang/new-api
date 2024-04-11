@@ -1,0 +1,33 @@
+{
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:react-hooks/recommended",
+		"plugin:prettier/recommended"  // 确保这是数组中的最后一个
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 2020,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"env": {
+		"browser": true,
+		"es2020": true,
+		"node": true
+	},
+	"rules": {
+		"react/prop-types": "off",
+		"prettier/prettier": ["error", {}, {
+			"usePrettierrc": true
+		}]
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	}
+}
