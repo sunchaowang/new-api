@@ -543,7 +543,7 @@ func InsertOperationCheckIn(userId int) (quota int, err error) {
 	// 获得随机额度
 	rand.Seed(time.Now().UnixNano())
 
-	quota = int(rand.Float64() * rand.Float64() * rand.Float64() * 268888.0)
+	quota = int(rand.Float64() * rand.Float64() * rand.Float64() * rand.Float64() * 268888.0)
 
 	operationRemark := []string{"签到", ", ", fmt.Sprintf("获得额度 %v", quota)}
 
