@@ -683,6 +683,7 @@ const ChannelsTable = () => {
         </Space>
 
         <Table
+          size={'small'}
           className={'channel-table'}
           columns={columns}
           dataSource={pageData}
