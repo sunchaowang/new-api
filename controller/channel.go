@@ -19,7 +19,7 @@ func GetAllChannels(c *gin.Context) {
 		pageSize = common.ItemsPerPage
 	}
 	idSort, _ := strconv.ParseBool(c.Query("id_sort"))
-	channels, err := model.GetAllChannels(p*pageSize, pageSize, false, idSort)
+	channels, total, err := model.GetAllChannels(p*pageSize, pageSize, false, idSort)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -31,6 +31,7 @@ func GetAllChannels(c *gin.Context) {
 		"success": true,
 		"message": "",
 		"data":    channels,
+		"total":   total,
 	})
 	return
 }

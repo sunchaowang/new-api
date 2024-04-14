@@ -29,19 +29,22 @@ type Channel struct {
 	AutoBan            *int    `json:"auto_ban" gorm:"default:1"`
 }
 
-func GetAllChannels(startIdx int, num int, selectAll bool, idSort bool) ([]*Channel, error) {
+func GetAllChannels(startIdx int, num int, selectAll bool, idSort bool) ([]*Channel, int64, error) {
 	var channels []*Channel
 	var err error
+	var total int64
 	order := "priority desc"
 	if idSort {
 		order = "id desc"
 	}
+	// 查找所有的条数
+	err = DB.Model(&Channel{}).Count(&total).Error
 	if selectAll {
 		err = DB.Order(order).Find(&channels).Error
 	} else {
 		err = DB.Order(order).Limit(num).Offset(startIdx).Omit("key").Find(&channels).Error
 	}
-	return channels, err
+	return channels, total, err
 }
 
 func SearchChannels(keyword string, group string, model string) ([]*Channel, error) {

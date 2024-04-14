@@ -1,5 +1,4 @@
-import { Label } from 'semantic-ui-react';
-import { Tag } from '@douyinfe/semi-ui';
+import { Tag } from 'antd';
 
 export function renderText(text, limit) {
   if (text.length > limit) {
@@ -15,16 +14,13 @@ export function renderText(text, limit) {
  */
 export function renderGroup(group) {
   if (group === '') {
-    return (
-      <Tag size='large' key='default'>
-        unknown
-      </Tag>
-    );
+    return <Tag color={'blue'}>default</Tag>;
   }
 
   const tagColors = {
-    vip: 'yellow',
-    pro: 'yellow',
+    default: 'default',
+    vip: 'magenta',
+    pro: 'purple',
     svip: 'red',
     premium: 'red',
   };
@@ -34,11 +30,7 @@ export function renderGroup(group) {
   return (
     <span key={group}>
       {groups.map((group) => (
-        <Tag
-          size='large'
-          color={tagColors[group] || stringToColor(group)}
-          key={group}
-        >
+        <Tag color={tagColors[group] || stringToColor(group)} key={group}>
           {group}
         </Tag>
       ))}

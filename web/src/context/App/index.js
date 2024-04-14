@@ -3,13 +3,15 @@
 import React from 'react';
 import { reducer, initialState } from './reducer';
 
-export const UserContext = React.createContext({
+export const AppContext = React.createContext({
   state: initialState,
   dispatch: () => null,
 });
 
-export const UserProvider = ({ children }) => {
+export const AppProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  return <UserContext.Provider value={[state, dispatch]}>{children}</UserContext.Provider>;
+  return <AppContext.Provider value={[state, dispatch]}>{children}</AppContext.Provider>;
 };
+
+export * as AppActions from './actions';

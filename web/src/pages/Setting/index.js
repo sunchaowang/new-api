@@ -50,23 +50,15 @@ const Setting = () => {
     }
   }, [location.search]);
   return (
-    <div>
-      <Layout>
-        <Layout.Content>
-          <Tabs
-            type='line'
-            activeKey={tabActiveKey}
-            onChange={(key) => onChangeTab(key)}
-          >
-            {panes.map((pane) => (
-              <TabPane itemKey={pane.itemKey} tab={pane.tab} key={pane.itemKey}>
-                {tabActiveKey === pane.itemKey && pane.content}
-              </TabPane>
-            ))}
-          </Tabs>
-        </Layout.Content>
-      </Layout>
-    </div>
+    <>
+      <Tabs type="line" activeKey={tabActiveKey} onChange={(key) => onChangeTab(key)}>
+        {panes.map((pane) => (
+          <TabPane itemKey={pane.itemKey} tab={pane.tab} key={pane.itemKey}>
+            {tabActiveKey === pane.itemKey && pane.content}
+          </TabPane>
+        ))}
+      </Tabs>
+    </>
   );
 };
 

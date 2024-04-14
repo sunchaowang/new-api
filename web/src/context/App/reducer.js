@@ -1,21 +1,22 @@
+import { SET_GROUPS } from './actions';
 export const reducer = (state, action) => {
   switch (action.type) {
-    case 'login':
+    case SET_GROUPS:
       return {
         ...state,
-        user: action.payload,
+        app: {
+          ...state.app,
+          groups: action.payload,
+        },
       };
-    case 'logout':
-      return {
-        ...state,
-        user: undefined,
-      };
-
     default:
       return state;
   }
 };
 
 export const initialState = {
-  user: undefined,
+  app: {
+    groups: undefined,
+    options: undefined,
+  },
 };

@@ -7,6 +7,15 @@ export const API = axios.create({
     : '',
 });
 
+API.interceptors.request.use((config) => {
+  // config.headers
+  //   ? (config.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`)
+  //   : (config.headers = localStorage.getItem('token') && {
+  //       Authorization: `Bearer ${localStorage.getItem('token')}`,
+  //     });
+  return config;
+});
+
 API.interceptors.response.use(
   (response) => response,
   (error) => {

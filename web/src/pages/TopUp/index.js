@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { API, isMobile, showError, showInfo, showSuccess } from '../../helpers';
-import {
-  renderNumber,
-  renderQuota,
-  renderQuotaWithAmount,
-} from '../../helpers/render';
+import { renderNumber, renderQuota, renderQuotaWithAmount } from '../../helpers/render';
 import {
   Col,
   Layout,
@@ -35,7 +31,7 @@ const TopUp = () => {
   const [userQuota, setUserQuota] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckIning, setIsCheckIning] = useState(false);
-  const [isChekced, setIsChekced]= useState(false);
+  const [isChekced, setIsChekced] = useState(false);
   const [open, setOpen] = useState(false);
   const [payWay, setPayWay] = useState('');
 
@@ -80,16 +76,16 @@ const TopUp = () => {
       const { success, message, data } = res.data;
       if (success) {
         showSuccess(message);
-        getUserQuota()
-      }else {
-        showError(message)
+        getUserQuota();
+      } else {
+        showError(message);
       }
-      setIsCheckIning(false)
+      setIsCheckIning(false);
     } catch (error) {
       showError('请求失败');
-      setIsCheckIning(false)
+      setIsCheckIning(false);
     }
-  }
+  };
 
   const openTopUpLink = () => {
     if (!topUpLink) {
@@ -139,8 +135,7 @@ const TopUp = () => {
           form.method = 'POST';
           // 判断是否为safari浏览器
           let isSafari =
-            navigator.userAgent.indexOf('Safari') > -1 &&
-            navigator.userAgent.indexOf('Chrome') < 1;
+            navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') < 1;
           if (!isSafari) {
             form.target = '_blank';
           }
@@ -173,7 +168,7 @@ const TopUp = () => {
     const { success, message, data } = res.data;
     if (success) {
       setUserQuota(data.quota);
-      setIsChekced(!!data.check_in)
+      setIsChekced(!!data.check_in);
     } else {
       showError(message);
     }
@@ -242,7 +237,7 @@ const TopUp = () => {
         </Layout.Header>
         <Layout.Content>
           <Modal
-            title='确定要充值吗'
+            title="确定要充值吗"
             visible={open}
             onOk={onlineTopUp}
             onCancel={handleCancel}
@@ -254,9 +249,7 @@ const TopUp = () => {
             <p>实付金额：{renderAmount()}</p>
             <p>是否确认充值？</p>
           </Modal>
-          <div
-            style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}
-          >
+          <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}>
             <Card style={{ width: '500px', padding: '20px' }}>
               <Title level={3} style={{ textAlign: 'center' }}>
                 余额 {renderQuota(userQuota)}
@@ -267,8 +260,8 @@ const TopUp = () => {
                   <Form.Input
                     field={'redemptionCode'}
                     label={'兑换码'}
-                    placeholder='兑换码'
-                    name='redemptionCode'
+                    placeholder="兑换码"
+                    name="redemptionCode"
                     value={redemptionCode}
                     onChange={(value) => {
                       setRedemptionCode(value);
@@ -276,11 +269,7 @@ const TopUp = () => {
                   />
                   <Space>
                     {topUpLink ? (
-                      <Button
-                        type={'primary'}
-                        theme={'solid'}
-                        onClick={openTopUpLink}
-                      >
+                      <Button type={'primary'} theme={'solid'} onClick={openTopUpLink}>
                         获取兑换码
                       </Button>
                     ) : null}
@@ -307,7 +296,7 @@ const TopUp = () => {
                       disabled={isChekced}
                       loading={isCheckIning}
                     >
-                      {isChekced ? "今日已签到" :isCheckIning ? '签到中...' : '签到'}
+                      {isChekced ? '今日已签到' : isCheckIning ? '签到中...' : '签到'}
                     </Button>
                     <Tag color={'red'}>每日8点重置签到状态</Tag>
                   </Space>
@@ -320,10 +309,8 @@ const TopUp = () => {
                     disabled={!enableOnlineTopUp}
                     field={'redemptionCount'}
                     label={'实付金额：' + renderAmount()}
-                    placeholder={
-                      '充值数量，最低 ' + renderQuotaWithAmount(minTopUp)
-                    }
-                    name='redemptionCount'
+                    placeholder={'充值数量，最低 ' + renderQuotaWithAmount(minTopUp)}
+                    name="redemptionCount"
                     type={'number'}
                     value={topUpCount}
                     onChange={async (value) => {
