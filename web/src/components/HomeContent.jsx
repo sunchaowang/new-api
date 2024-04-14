@@ -1,4 +1,4 @@
-import { Button, Card, Space, Table, Tag, List } from 'antd';
+import { Button, Card, Space, Table, Tag, List, Divider } from 'antd';
 
 function renderModalTable(data, provider) {
   function renderSupportColumn(text, record, index) {
@@ -10,6 +10,25 @@ function renderModalTable(data, provider) {
     ];
   }
 
+  function renderReplayTokensColumn(text, record, index) {
+    return record.timesPrice ? (
+      <div>{record.timesPrice}</div>
+    ) : record.characterPrice ? (
+      <div>{record.characterPrice}</div>
+    ) : (
+      <Space direction={'vertical'}>
+        <div>
+          <Tag>输入</Tag>
+          {record.inputTokens}
+        </div>
+        <div>
+          <Tag>输出</Tag>
+          {record.outputTokens}
+        </div>
+      </Space>
+    );
+  }
+
   return (
     <Card
       title={<Tag color={'blue'}>{provider}</Tag>}
@@ -19,9 +38,15 @@ function renderModalTable(data, provider) {
     >
       <Table dataSource={data} pagination={false} size={'small'} bordered>
         <Table.Column title="模型名称" dataIndex="name" key="name" width={'20%'} />
-        <Table.Column title="官方费率" dataIndex="inputTokens" key="inputTokens" width={'20%'} />
-        <Table.Column title="本站费率" dataIndex="outputTokens" key="outputTokens" width={'20%'} />
-        <Table.Column title="折扣" dataIndex="discount" key="discount" width={'20%'} />
+        {/*<Table.Column title="官方费率" dataIndex="inputTokens" key="inputTokens" width={'20%'} />*/}
+        <Table.Column
+          title="本站费率"
+          dataIndex="outputTokens"
+          key="outputTokens"
+          width={'20%'}
+          render={renderReplayTokensColumn}
+        />
+        {/*<Table.Column title="折扣" dataIndex="discount" key="discount" width={'20%'} />*/}
         <Table.Column
           title="备注"
           dataIndex="isSupport"
@@ -72,16 +97,17 @@ function App() {
             </li>
             <li>
               每位注册用户都将获得 <Tag color={'red'}>$1</Tag> 的初始使用额度,
-              填写邀请码可以再额外获得 <Tag color={'red'}>$0.5</Tag> 的使用额度
+              填写邀请码可以再额外获得 <Tag color={'red'}>$1</Tag> 的使用额度
             </li>
             <li>
-              当前注册仅支持 <Tag color={'red'}>Github</Tag> 和<Tag color={'red'}>QQ</Tag>{' '}
-              邮箱，谢谢🙏
+              当前注册仅支持 <Tag color={'red'}>Github</Tag> 和邮箱为<Tag color={'red'}>QQ</Tag>
+              <Tag color={'red'}>Gmail</Tag>
+              ，谢谢🙏
             </li>
             <li>为了维持转发服务正常使用，将不定期清除非法用户，请使用真实邮箱注册</li>
             <li>
-              受上游以及OpenAI政策影响，价格会随时调整，当前价格
-              <Tag color={'red'}>1元/刀</Tag>
+              受上游以及OpenAI政策影响，价格会随时调整，本站汇率为
+              <Tag color={'red'}>1元=1刀</Tag>
             </li>
           </ul>
         </Card>
@@ -184,6 +210,12 @@ function App() {
                   isSupport: '支持',
                 },
                 {
+                  name: 'gpt-4-turbo-2024-04-09',
+                  inputTokens: '¥0.02 / 1k tokens',
+                  outputTokens: '¥0.06 / 1k tokens',
+                  isSupport: '支持',
+                },
+                {
                   name: 'gpt-4-turbo-preview',
                   inputTokens: '¥0.01 / 1k tokens',
                   outputTokens: '¥0.03 / 1k tokens',
@@ -212,64 +244,55 @@ function App() {
                 },
                 {
                   name: 'dall-e-3 1024x1024',
-                  inputTokens: '¥0.3每次',
-                  outputTokens: '',
+                  timesPrice: '¥0.3每次',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'dall-e-3 1024x1792',
-                  inputTokens: '¥0.6每次',
-                  outputTokens: '',
+                  timesPrice: '¥0.6每次',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'dall-e-3 hd 1024x1024',
-                  inputTokens: '¥0.6每次',
-                  outputTokens: '',
+                  timesPrice: '¥0.6每次',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'dall-e-3 hd 1024x1792',
-                  inputTokens: '¥0.9每次',
-                  outputTokens: '',
+                  timesPrice: '¥0.9每次',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'gpt-4-v',
-                  inputTokens: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
-                  outputTokens: '',
+                  timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '测试中',
                   isVip: true,
                 },
                 {
                   name: 'gpt-4-dalle',
-                  inputTokens: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
-                  outputTokens: '',
+                  timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '测试中',
                   isVip: true,
                 },
                 {
                   name: 'gpt-4-all',
-                  inputTokens: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
-                  outputTokens: '',
+                  timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'tts-1',
-                  inputTokens: '¥0.03 / 1k characters',
-                  outputTokens: '',
+                  characterPrice: '¥0.03 / 1k characters',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'tts-1-hd',
-                  inputTokens: '¥0.06 / 1k characters',
-                  outputTokens: '',
+                  characterPrice: '¥0.06 / 1k characters',
                   isSupport: '支持',
                   isVip: true,
                 },
@@ -281,49 +304,49 @@ function App() {
                 {
                   name: 'chatglm_lite',
                   inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '',
+                  outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '即将废弃',
                   isVip: true,
                 },
                 {
                   name: 'chatglm_pro',
                   inputTokens: '¥0.01 / 1k tokens',
-                  outputTokens: '',
+                  outputTokens: '¥0.01 / 1k tokens',
                   isSupport: '即将废弃',
                   isVip: true,
                 },
                 {
                   name: 'chatglm_std',
                   inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '',
+                  outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '即将废弃',
                   isVip: true,
                 },
                 {
                   name: 'chatglm_turbo',
                   inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '',
+                  outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'glm-3-turbo',
                   inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '',
+                  outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'glm-4',
                   inputTokens: '¥0.1 / 1k tokens',
-                  outputTokens: '',
+                  outputTokens: '¥0.1 / 1k tokens',
                   isSupport: '支持',
                   isVip: true,
                 },
                 {
                   name: 'glm-4v',
                   inputTokens: '¥0.1 / 1k tokens',
-                  outputTokens: '',
+                  outputTokens: '¥0.1 / 1k tokens',
                   isSupport: '支持',
                   isVip: true,
                 },
