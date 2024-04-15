@@ -69,6 +69,7 @@ const SiderBar = () => {
         to: '/channel',
         icon: <IconLayers />,
         className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
+        adminPermission: true,
         loginPermission: true,
       },
       {
@@ -93,6 +94,7 @@ const SiderBar = () => {
         to: '/redemption',
         icon: <IconGift />,
         className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
+        adminPermission: true,
         loginPermission: true,
       },
       {
@@ -108,7 +110,8 @@ const SiderBar = () => {
         to: '/user',
         icon: <IconUser />,
         className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
-        loginPermission: true,
+        adminPermission: true,
+        loginPermission: true
       },
       {
         text: '日志',
@@ -209,6 +212,9 @@ const SiderBar = () => {
     return headerButtons
       .filter((menu) => {
         if (menu.loginPermission) {
+          if (menu.adminPermission) {
+            return isAdmin();
+          }
           return localStorage.getItem('user') && !!userState.user;
         }
         return true;
