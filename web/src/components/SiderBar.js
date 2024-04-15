@@ -111,7 +111,7 @@ const SiderBar = () => {
         icon: <IconUser />,
         className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
         adminPermission: true,
-        loginPermission: true
+        loginPermission: true,
       },
       {
         text: '日志',
@@ -277,7 +277,7 @@ const SiderBar = () => {
                       items: [
                         {
                           key: 'logout',
-                          label: '退出',
+                          label: '退出登录',
                         },
                       ],
                       onClick: (e) => {

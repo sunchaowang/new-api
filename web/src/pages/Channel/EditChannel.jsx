@@ -101,9 +101,9 @@ const EditChannel = (props) => {
             'text-embedding-v1',
           ];
           break;
-        case 16:
-          localModels = ['chatglm_pro', 'chatglm_std', 'chatglm_lite'];
-          break;
+        // case 16:
+        //   localModels = ['chatglm_pro', 'chatglm_std', 'chatglm_lite'];
+        //   break;
         case 18:
           localModels = [
             'SparkDesk',
@@ -131,7 +131,14 @@ const EditChannel = (props) => {
           localModels = ['moonshot-v1-8k', 'moonshot-v1-32k', 'moonshot-v1-128k'];
           break;
         case 26:
-          localModels = ['glm-4', 'glm-4v', 'glm-3-turbo'];
+          localModels = [
+            'glm-4',
+            'glm-4v',
+            'glm-3-turbo',
+            'chatglm_pro',
+            'chatglm_std',
+            'chatglm_lite',
+          ];
           break;
         case 31:
           localModels = ['yi-34b-chat-0205', 'yi-34b-chat-200k', 'yi-vl-plus'];

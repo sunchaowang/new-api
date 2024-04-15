@@ -1,4 +1,4 @@
-import { Button, Card, Space, Table, Tag, List } from 'antd';
+import { Button, Card, Space, Table, Tag, List, Typography } from 'antd';
 
 function renderModalTable(data, provider) {
   function renderSupportColumn(text, record, index) {
@@ -35,8 +35,13 @@ function renderModalTable(data, provider) {
       style={{
         width: '100%',
       }}
+      styles={{
+        body: {
+          padding: 0,
+        },
+      }}
     >
-      <Table dataSource={data} pagination={false} size={'small'} bordered>
+      <Table dataSource={data} pagination={false} size={'small'} bordered={false}>
         <Table.Column title="模型名称" dataIndex="name" key="name" width={'33%'} />
         {/*<Table.Column title="官方费率" dataIndex="inputTokens" key="inputTokens" width={'20%'} />*/}
         <Table.Column
@@ -67,26 +72,52 @@ function App() {
   return (
     <>
       <Space direction={'vertical'} size={10} style={{ width: '100%' }}>
-        <Card title={'更新日志'} bordered={false} style={{ boxShadow: 'none' }}>
+        <Card
+          title={'更新日志'}
+          bordered={false}
+          style={{ boxShadow: 'none' }}
+          styles={{
+            body: {
+              padding: 0,
+            },
+            header: {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+          }}
+        >
           <List
             bordered
             dataSource={changelog}
             renderItem={(item, index) => (
               <List.Item>
                 {index === 0 ? (
-                  <Tag color={'blue'} size={'large'}>
+                  <Typography.Text type="primary" strong={true}>
                     {item}
-                  </Tag>
+                  </Typography.Text>
                 ) : (
-                  <Tag style={{ border: 'none' }} size={'large'}>
+                  <Typography.Text style={{ border: 'none' }} size={'large'}>
                     {item}
-                  </Tag>
+                  </Typography.Text>
                 )}
               </List.Item>
             )}
           />
         </Card>
-        <Card title={'介绍'} bordered={false} style={{ boxShadow: 'none' }}>
+        <Card
+          title={'介绍'}
+          bordered={false}
+          style={{ boxShadow: 'none' }}
+          styles={{
+            body: {
+              padding: 0,
+            },
+            header: {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+          }}
+        >
           <ul>
             <li>OpenAI 接口转发站</li>
             <li>本站渠道来源：官网正规渠道 、 逆向解析渠道 、 上游代理渠道</li>
@@ -111,7 +142,20 @@ function App() {
           </ul>
         </Card>
 
-        <Card title={'使用'} bordered={false} style={{ boxShadow: 'none' }}>
+        <Card
+          title={'使用'}
+          bordered={false}
+          style={{ boxShadow: 'none' }}
+          styles={{
+            body: {
+              padding: 0,
+            },
+            header: {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+          }}
+        >
           <ul>
             <li>注册完成后，创建一个令牌，复制令牌的 key 填写到对应的地方</li>
             <li>
@@ -122,7 +166,20 @@ function App() {
           </ul>
         </Card>
 
-        <Card title={'兑换码购买'} bordered={false} style={{ boxShadow: 'none' }}>
+        <Card
+          title={'兑换码购买'}
+          bordered={false}
+          style={{ boxShadow: 'none' }}
+          styles={{
+            body: {
+              padding: 0,
+            },
+            header: {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+          }}
+        >
           <ul>
             <li>
               地址：
@@ -138,7 +195,20 @@ function App() {
           </ul>
         </Card>
 
-        <Card title={'模型介绍'} bordered={false} style={{ boxShadow: 'none' }}>
+        <Card
+          title={'模型介绍'}
+          bordered={false}
+          style={{ boxShadow: 'none' }}
+          styles={{
+            body: {
+              padding: 0,
+            },
+            header: {
+              paddingLeft: 0,
+              paddingRight: 0,
+            },
+          }}
+        >
           <Space direction={'vertical'} size={10} style={{ width: '100%' }}>
             {renderModalTable(
               [
@@ -412,13 +482,13 @@ function App() {
         </Card>
       </Space>
 
-      <p>
-        根据
+      <Typography>
+        最后说一句，根据
         <a href="https://www.gov.cn/zhengce/zhengceku/202307/content_6891752.htm">
           《生成式人工智能服务管理暂行办法》
         </a>
         规定，本站严格遵守相关规定，请切勿用于非法用途。
-      </p>
+      </Typography>
     </>
   );
 }

@@ -1,25 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  API,
-  copy,
-  isAdmin,
-  showError,
-  showSuccess,
-  timestamp2string,
-} from '../helpers';
+import { API, copy, isAdmin, showError, showSuccess, timestamp2string } from '../helpers';
 
-import {
-  Avatar,
-  Button,
-  Form,
-  Layout,
-  Modal,
-  Select,
-  Space,
-  Spin,
-  Table,
-  Tag,
-} from '@douyinfe/semi-ui';
+import { Avatar, Form, Layout, Modal, Select, Space, Spin } from '@douyinfe/semi-ui';
+import { Tag, Button, Table } from 'antd';
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderNumber, renderQuota, stringToColor } from '../helpers/render';
 import Paragraph from '@douyinfe/semi-ui/lib/es/typography/paragraph';
@@ -56,89 +39,36 @@ const colors = [
 function renderType(type) {
   switch (type) {
     case 1:
-      return (
-        <Tag color='cyan' size='large'>
-          {' '}
-          充值{' '}
-        </Tag>
-      );
+      return <Tag color="cyan"> 充值 </Tag>;
     case 2:
-      return (
-        <Tag color='lime' size='large'>
-          {' '}
-          消费{' '}
-        </Tag>
-      );
+      return <Tag color="lime"> 消费 </Tag>;
     case 3:
-      return (
-        <Tag color='orange' size='large'>
-          {' '}
-          管理{' '}
-        </Tag>
-      );
+      return <Tag color="orange"> 管理 </Tag>;
     case 4:
-      return (
-        <Tag color='purple' size='large'>
-          {' '}
-          系统{' '}
-        </Tag>
-      );
+      return <Tag color="purple"> 系统 </Tag>;
     case 5:
-      return (
-        <Tag size='large'>
-          {' '}
-          签到{' '}
-        </Tag>
-      );
+      return <Tag> 签到 </Tag>;
     default:
-      return (
-        <Tag color='black' size='large'>
-          {' '}
-          未知{' '}
-        </Tag>
-      );
+      return <Tag color="black"> 未知 </Tag>;
   }
 }
 
 function renderIsStream(bool) {
   if (bool) {
-    return (
-      <Tag color='blue' size='large'>
-        流
-      </Tag>
-    );
+    return <Tag color="blue">流</Tag>;
   } else {
-    return (
-      <Tag color='purple' size='large'>
-        非流
-      </Tag>
-    );
+    return <Tag color="purple">非流</Tag>;
   }
 }
 
 function renderUseTime(type) {
   const time = parseInt(type);
   if (time < 101) {
-    return (
-      <Tag color='green' size='large'>
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
+    return <Tag color="green"> {time} s </Tag>;
   } else if (time < 300) {
-    return (
-      <Tag color='orange' size='large'>
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
+    return <Tag color="orange"> {time} s </Tag>;
   } else {
-    return (
-      <Tag color='red' size='large'>
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
+    return <Tag color="red"> {time} s </Tag>;
   }
 }
 
@@ -155,17 +85,7 @@ const LogsTable = () => {
       render: (text, record, index) => {
         return isAdminUser ? (
           record.type === 0 || record.type === 2 ? (
-            <div>
-              {
-                <Tag
-                  color={colors[parseInt(text) % colors.length]}
-                  size='large'
-                >
-                  {' '}
-                  {text}{' '}
-                </Tag>
-              }
-            </div>
+            <div>{<Tag color={'blue'}> {text} </Tag>}</div>
           ) : (
             <></>
           )
@@ -182,7 +102,7 @@ const LogsTable = () => {
         return isAdminUser ? (
           <div>
             <Avatar
-              size='small'
+              size="small"
               color={stringToColor(text)}
               style={{ marginRight: 4 }}
               onClick={() => showUserInfo(record.user_id)}
@@ -203,8 +123,7 @@ const LogsTable = () => {
         return record.type === 0 || record.type === 2 ? (
           <div>
             <Tag
-              color='grey'
-              size='large'
+              color="blue"
               onClick={() => {
                 copyText(text);
               }}
@@ -233,7 +152,6 @@ const LogsTable = () => {
           <div>
             <Tag
               color={stringToColor(text)}
-              size='large'
               onClick={() => {
                 copyText(text);
               }}
@@ -265,19 +183,14 @@ const LogsTable = () => {
       title: '提示',
       dataIndex: 'prompt_tokens',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? (
-          <div>{<span> {text} </span>}</div>
-        ) : (
-          <></>
-        );
+        return record.type === 0 || record.type === 2 ? <div>{<span> {text} </span>}</div> : <></>;
       },
     },
     {
       title: '补全',
       dataIndex: 'completion_tokens',
       render: (text, record, index) => {
-        return parseInt(text) > 0 &&
-          (record.type === 0 || record.type === 2) ? (
+        return parseInt(text) > 0 && (record.type === 0 || record.type === 2) ? (
           <div>{<span> {text} </span>}</div>
         ) : (
           <></>
@@ -288,11 +201,7 @@ const LogsTable = () => {
       title: '花费',
       dataIndex: 'quota',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? (
-          <div>{renderQuota(text, 6)}</div>
-        ) : (
-          <></>
-        );
+        return record.type === 0 || record.type === 2 ? <div>{renderQuota(text, 6)}</div> : <></>;
       },
     },
     {
@@ -335,14 +244,7 @@ const LogsTable = () => {
     end_timestamp: timestamp2string(now.getTime() / 1000 + 3600),
     channel: '',
   });
-  const {
-    username,
-    token_name,
-    model_name,
-    start_timestamp,
-    end_timestamp,
-    channel,
-  } = inputs;
+  const { username, token_name, model_name, start_timestamp, end_timestamp, channel } = inputs;
 
   const [stat, setStat] = useState({
     quota: 0,
@@ -454,10 +356,7 @@ const LogsTable = () => {
     setLoading(false);
   };
 
-  const pageData = logs.slice(
-    (activePage - 1) * pageSize,
-    activePage * pageSize,
-  );
+  const pageData = logs.slice((activePage - 1) * pageSize, activePage * pageSize);
 
   const handlePageChange = (page) => {
     setActivePage(page);
@@ -495,8 +394,7 @@ const LogsTable = () => {
 
   useEffect(() => {
     // console.log('default effect')
-    const localPageSize =
-      parseInt(localStorage.getItem('page-size')) || ITEMS_PER_PAGE;
+    const localPageSize = parseInt(localStorage.getItem('page-size')) || ITEMS_PER_PAGE;
     setPageSize(localPageSize);
     loadLogs(0, localPageSize)
       .then()
@@ -544,70 +442,70 @@ const LogsTable = () => {
             </h3>
           </Spin>
         </Header>
-        <Form layout='horizontal' style={{ marginTop: 10 }}>
+        <Form layout="horizontal" style={{ marginTop: 10 }}>
           <>
             <Form.Input
-              field='token_name'
-              label='令牌名称'
+              field="token_name"
+              label="令牌名称"
               style={{ width: 176 }}
               value={token_name}
               placeholder={'可选值'}
-              name='token_name'
+              name="token_name"
               onChange={(value) => handleInputChange(value, 'token_name')}
               showClear
             />
             <Form.Input
-              field='model_name'
-              label='模型名称'
+              field="model_name"
+              label="模型名称"
               style={{ width: 176 }}
               value={model_name}
-              placeholder='可选值'
-              name='model_name'
+              placeholder="可选值"
+              name="model_name"
               onChange={(value) => handleInputChange(value, 'model_name')}
               showClear
             />
             <Form.DatePicker
-              field='start_timestamp'
-              label='起始时间'
+              field="start_timestamp"
+              label="起始时间"
               style={{ width: 272 }}
               initValue={start_timestamp}
               value={start_timestamp}
-              type='dateTime'
-              name='start_timestamp'
+              type="dateTime"
+              name="start_timestamp"
               onChange={(value) => handleInputChange(value, 'start_timestamp')}
               showClear
             />
             <Form.DatePicker
-              field='end_timestamp'
+              field="end_timestamp"
               fluid
-              label='结束时间'
+              label="结束时间"
               style={{ width: 272 }}
               initValue={end_timestamp}
               value={end_timestamp}
-              type='dateTime'
-              name='end_timestamp'
+              type="dateTime"
+              name="end_timestamp"
               onChange={(value) => handleInputChange(value, 'end_timestamp')}
               showClear
             />
             {isAdminUser && (
               <>
                 <Form.Input
-                  field='channel'
-                  label='渠道 ID'
+                  field="channel"
+                  label="渠道 ID"
                   style={{ width: 176 }}
                   value={channel}
-                  placeholder='可选值'
-                  name='channel'
+                  placeholder="可选值"
+                  name="channel"
                   onChange={(value) => handleInputChange(value, 'channel')}
                   showClear
                 />
                 <Form.Input
-                  field='username'
-                  label='用户名称'
+                  field="username"
+                  label="用户名称"
                   style={{ width: 176 }}
                   value={username}
                   placeholder={'可选值'}
-                  name='username'
+                  name="username"
                   onChange={(value) => handleInputChange(value, 'username')}
                   showClear
                 />
@@ -615,13 +513,13 @@ const LogsTable = () => {
             )}
             <Form.Section>
               <Button
-                label='查询'
-                type='primary'
-                htmlType='submit'
-                className='btn-margin-right'
+                label="查询"
+                type="primary"
+                htmlType="submit"
+                className="btn-margin-right"
                 onClick={refresh}
                 loading={loading}
-                theme={"solid"}
+                theme={'solid'}
               >
                 查询
               </Button>
@@ -638,25 +536,27 @@ const LogsTable = () => {
             total: logCount,
             pageSizeOpts: [10, 20, 50, 100],
             showSizeChanger: true,
-            onPageSizeChange: (size) => {
+            onShowSizeChange: (current, size) => {
               handlePageSizeChange(size).then();
             },
-            onPageChange: handlePageChange,
+            onChange: handlePageChange,
           }}
+          loading={loading}
+          size="small"
         />
         <Select
-          defaultValue='0'
+          defaultValue="0"
           style={{ width: 120 }}
           onChange={(value) => {
             setLogType(parseInt(value));
             loadLogs(0, pageSize, parseInt(value));
           }}
         >
-          <Select.Option value='0'>全部</Select.Option>
-          <Select.Option value='1'>充值</Select.Option>
-          <Select.Option value='2'>消费</Select.Option>
-          <Select.Option value='3'>管理</Select.Option>
-          <Select.Option value='4'>系统</Select.Option>
+          <Select.Option value="0">全部</Select.Option>
+          <Select.Option value="1">充值</Select.Option>
+          <Select.Option value="2">消费</Select.Option>
+          <Select.Option value="3">管理</Select.Option>
+          <Select.Option value="4">系统</Select.Option>
         </Select>
       </Layout>
     </>
