@@ -61,6 +61,7 @@ function renderModalTable(data, provider) {
 
 function App() {
   const changelog = [
+    '2024-4-15：赠送的额度可直接使用全模型',
     '2024-4-8：迁移了数据库，提高了响应速度',
     '2024-4-4：增加了每日签到功能，请前往钱包页查看',
   ];
@@ -96,17 +97,16 @@ function App() {
               <a href="mailto:chirou.api@outlook.com">chirou.api@outlook.com</a>
             </li>
             <li>
-              每位注册用户都将获得 <Tag color={'red'}>$1</Tag> 的初始使用额度,
-              填写邀请码可以再额外获得 <Tag color={'red'}>$1</Tag> 的使用额度
+              每位注册用户都将获得 <Tag color={'red'}>$1</Tag> 的初始使用额度, 邀请新用户奖励
+              <Tag color={'red'}>$0.5</Tag>的额度, 可使用全模型
             </li>
             <li>
-              当前注册仅支持 <Tag color={'red'}>Github</Tag> 和邮箱为<Tag color={'red'}>QQ</Tag>
-              <Tag color={'red'}>Gmail</Tag>
-              ，谢谢🙏
+              当前仅支持 <Tag color={'red'}>Github</Tag> 和邮箱为<Tag color={'red'}>QQ</Tag>
+              <Tag color={'red'}>Gmail</Tag>的账号注册 ，谢谢🙏
             </li>
             <li>为了维持转发服务正常使用，将不定期清除非法用户，请使用真实邮箱注册</li>
             <li>
-              受上游以及OpenAI政策影响，价格会随时调整，本站汇率为
+              受供应商和OpenAI政策影响，价格会随时调整，本站汇率为
               <Tag color={'red'}>1元=1刀</Tag>
             </li>
           </ul>
@@ -133,9 +133,9 @@ function App() {
               【<a href="https://www.zaofaka.com/links/F8373848">备用购买地址</a>
               】购买完成后，在充值的地方输入兑换码
             </li>
-            <li>
-              购买10美金以上额度可升级为VIP用户（需手工处理，会存在时间延迟，如出现问题请发邮件）
-            </li>
+            {/*<li>*/}
+            {/*  购买10美金以上额度可升级为VIP用户（需手工处理，会存在时间延迟，如出现问题请发邮件）*/}
+            {/*</li>*/}
           </ul>
         </Card>
 
@@ -226,75 +226,63 @@ function App() {
                   inputTokens: '¥0.06 / 1k tokens',
                   outputTokens: '¥0.12 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'gpt-4-32k-0613',
                   inputTokens: '¥0.06 / 1k tokens',
                   outputTokens: '¥0.12 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'gpt-4-32k-0314',
                   inputTokens: '¥0.06 / 1k tokens',
                   outputTokens: '¥0.12 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'dall-e-3 1024x1024',
                   timesPrice: '¥0.3每次',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'dall-e-3 1024x1792',
                   timesPrice: '¥0.6每次',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'dall-e-3 hd 1024x1024',
                   timesPrice: '¥0.6每次',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'dall-e-3 hd 1024x1792',
                   timesPrice: '¥0.9每次',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'gpt-4-v',
                   timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '测试中',
-                  isVip: true,
                 },
                 {
                   name: 'gpt-4-dalle',
                   timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '测试中',
-                  isVip: true,
                 },
                 {
                   name: 'gpt-4-all',
                   timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'tts-1',
                   characterPrice: '¥0.03 / 1k characters',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'tts-1-hd',
                   characterPrice: '¥0.06 / 1k characters',
                   isSupport: '支持',
-                  isVip: true,
                 },
               ],
               'OpenAI',
@@ -306,49 +294,42 @@ function App() {
                   inputTokens: '¥0.005 / 1k tokens',
                   outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '即将废弃',
-                  isVip: true,
                 },
                 {
                   name: 'chatglm_pro',
                   inputTokens: '¥0.01 / 1k tokens',
                   outputTokens: '¥0.01 / 1k tokens',
                   isSupport: '即将废弃',
-                  isVip: true,
                 },
                 {
                   name: 'chatglm_std',
                   inputTokens: '¥0.005 / 1k tokens',
                   outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '即将废弃',
-                  isVip: true,
                 },
                 {
                   name: 'chatglm_turbo',
                   inputTokens: '¥0.005 / 1k tokens',
                   outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'glm-3-turbo',
                   inputTokens: '¥0.005 / 1k tokens',
                   outputTokens: '¥0.005 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'glm-4',
                   inputTokens: '¥0.1 / 1k tokens',
                   outputTokens: '¥0.1 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'glm-4v',
                   inputTokens: '¥0.1 / 1k tokens',
                   outputTokens: '¥0.1 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
               ],
               'ChatGLM 智谱清言',
@@ -360,35 +341,30 @@ function App() {
                   inputTokens: '¥0.08 / 1k tokens',
                   outputTokens: '¥0.27 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'claude-2',
                   inputTokens: '¥0.08 / 1k tokens',
                   outputTokens: '¥0.27 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'claude-3-opus-20240229',
                   inputTokens: '¥0.11 / 1k tokens',
                   outputTokens: '¥0.55 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'claude-3-sonnet-20240229',
                   inputTokens: '¥0.022 / 1k tokens',
                   outputTokens: '¥0.11 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
                 {
                   name: 'claude-3-haiku-20240307',
                   inputTokens: '¥0.001825 / 1k tokens',
                   outputTokens: '¥0.009125 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
               ],
               'Claude',
@@ -400,28 +376,24 @@ function App() {
                   inputTokens: '¥0.02 / 1k tokens',
                   outputTokens: '¥0.02 / 1k tokens',
                   isSupport: '即将废弃',
-                  isVip: true,
                 },
                 {
                   name: 'qwen-plus-net',
                   inputTokens: '¥0.02 / 1k tokens',
                   outputTokens: '¥0.02 / 1k tokens',
                   isSupport: '即将废弃',
-                  isVip: true,
                 },
                 {
                   name: 'qwen-turbo',
                   inputTokens: '¥0.008 / 1k tokens',
                   outputTokens: '¥0.008 / 1k tokens',
                   isSupport: '即将废弃',
-                  isVip: true,
                 },
                 {
                   name: 'qwen-turbo-net',
                   inputTokens: '¥0.008 / 1k tokens',
                   outputTokens: '¥0.008 / 1k tokens',
                   isSupport: '支持',
-                  isVip: true,
                 },
               ],
               'DashScope 通义千问',

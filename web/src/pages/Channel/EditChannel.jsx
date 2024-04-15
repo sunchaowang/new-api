@@ -69,6 +69,7 @@ const EditChannel = (props) => {
   const [basicModels, setBasicModels] = useState([]);
   const [fullModels, setFullModels] = useState([]);
   const [customModel, setCustomModel] = useState('');
+  const [submitLoading, setSubmitLoading] = useState(false);
   const handleInputChange = (name, value) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
     if (name === 'type' && inputs.models.length === 0) {
@@ -306,6 +307,10 @@ const EditChannel = (props) => {
     localInputs.auto_ban = autoBan ? 1 : 0;
     localInputs.models = localInputs.models.join(',');
     localInputs.group = localInputs.groups.join(',');
+    if (typeof localInputs.test_model !== 'string') {
+      localInputs.test_model = localInputs.test_model.value;
+    }
+    setSubmitLoading(true);
     if (isEdit) {
       res = await API.put(`/api/channel/`, {
         ...localInputs,
@@ -315,6 +320,7 @@ const EditChannel = (props) => {
       res = await API.post(`/api/channel/`, localInputs);
     }
     const { success, message } = res.data;
+    setSubmitLoading(false);
     if (success) {
       if (isEdit) {
         showSuccess('渠道更新成功！');
@@ -356,7 +362,7 @@ const EditChannel = (props) => {
         footer={
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Space>
-              <Button type={'primary'} onClick={submit}>
+              <Button type={'primary'} onClick={submit} loading={submitLoading}>
                 提交
               </Button>
               <Button onClick={handleCancel}>取消</Button>
@@ -643,7 +649,7 @@ const EditChannel = (props) => {
                   name="test_model"
                   placeholder="不填则为模型列表第一个"
                   onChange={(e) => {
-                    handleInputChange('test_model', e.target.value);
+                    handleInputChange('test_model', e);
                   }}
                   value={inputs.test_model}
                   options={inputs.models.map((model) => ({
