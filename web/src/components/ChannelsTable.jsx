@@ -594,8 +594,8 @@ const ChannelsTable = () => {
               placeholder="ID，名称和密钥 ..."
               value={searchKeyword}
               loading={searching}
-              onChange={(v) => {
-                setSearchKeyword(v.trim());
+              onChange={(e) => {
+                setSearchKeyword(e.target.value.trim());
               }}
             />
           </Form.Item>
@@ -606,8 +606,8 @@ const ChannelsTable = () => {
               placeholder="模型关键字"
               value={searchModel}
               loading={searching}
-              onChange={(v) => {
-                setSearchModel(v.trim());
+              onChange={(e) => {
+                setSearchModel(e.target.value.trim());
               }}
             />
           </Form.Item>

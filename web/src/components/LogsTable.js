@@ -448,8 +448,8 @@ const LogsTable = () => {
             value={token_name}
             placeholder={'可选值'}
             name="token_name"
-            onChange={(value) => handleInputChange(value, 'token_name')}
-            showClear
+            onChange={(e) => handleInputChange(e.target.value, 'token_name')}
+            allowClear
           />
         </Form.Item>
         <Form.Item label="模型名称">
@@ -458,8 +458,8 @@ const LogsTable = () => {
             value={model_name}
             placeholder="可选值"
             name="model_name"
-            onChange={(value) => handleInputChange(value, 'model_name')}
-            showClear
+            onChange={(e) => handleInputChange(e.target.value, 'model_name')}
+            allowClear
           />
         </Form.Item>
         <Form.Item label={'时间'}>
@@ -469,7 +469,7 @@ const LogsTable = () => {
             type="dateTime"
             name="start_timestamp"
             onChange={(value, dateStrings) => handleInputChange(dateStrings, 'start_timestamp')}
-            showClear
+            allowClear
             locale={zhCN}
           />
         </Form.Item>
@@ -481,8 +481,8 @@ const LogsTable = () => {
                 value={channel}
                 placeholder="可选值"
                 name="channel"
-                onChange={(value) => handleInputChange(value, 'channel')}
-                showClear
+                onChange={(e) => handleInputChange(e.target.value, 'channel')}
+                allowClear
               />
             </Form.Item>
             <Form.Item label="用户名称">
@@ -491,8 +491,8 @@ const LogsTable = () => {
                 value={username}
                 placeholder={'可选值'}
                 name="username"
-                onChange={(value) => handleInputChange(value, 'username')}
-                showClear
+                onChange={(e) => handleInputChange(e.target.value, 'username')}
+                allowClear
               />
             </Form.Item>
           </>
