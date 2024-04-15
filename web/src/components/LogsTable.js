@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { API, copy, isAdmin, showError, showSuccess, timestamp2string } from '../helpers';
 
-import { Avatar, Form, Layout, Modal, Select, Space, Spin } from '@douyinfe/semi-ui';
-import { Tag, Button, Table } from 'antd';
+import { Avatar } from '@douyinfe/semi-ui';
+import {
+  Tag,
+  Button,
+  Table,
+  Modal,
+  Layout,
+  Form,
+  Input,
+  DatePicker,
+  Space,
+  Select,
+  Row,
+} from 'antd';
+import zhCN from 'antd/lib/locale/zh_CN';
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderNumber, renderQuota, stringToColor } from '../helpers/render';
 import Paragraph from '@douyinfe/semi-ui/lib/es/typography/paragraph';
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+
+dayjs.locale('zh-cn');
 
 const { Header } = Layout;
 
@@ -17,25 +34,6 @@ const MODE_OPTIONS = [
   { key: 'all', text: '全部用户', value: 'all' },
   { key: 'self', text: '当前用户', value: 'self' },
 ];
-
-const colors = [
-  'amber',
-  'blue',
-  'cyan',
-  'green',
-  'grey',
-  'indigo',
-  'light-blue',
-  'lime',
-  'orange',
-  'pink',
-  'purple',
-  'red',
-  'teal',
-  'violet',
-  'yellow',
-];
-
 function renderType(type) {
   switch (type) {
     case 1:
@@ -252,6 +250,10 @@ const LogsTable = () => {
   });
 
   const handleInputChange = (value, name) => {
+    if (name === 'start_timestamp') {
+      setInputs({ ...inputs, start_timestamp: value[0], end_timestamp: value[1] });
+      return;
+    }
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   };
 
@@ -423,143 +425,127 @@ const LogsTable = () => {
   };
 
   return (
-    <>
-      <Layout>
-        <Header>
-          <Spin spinning={loadingStat}>
-            <h3>
-              使用明细（总消耗额度：
-              <span
-                onClick={handleEyeClick}
-                style={{
-                  cursor: 'pointer',
-                  color: 'gray',
-                }}
-              >
-                {showStat ? renderQuota(stat.quota) : '点击查看'}
-              </span>
-              ）
-            </h3>
-          </Spin>
-        </Header>
-        <Form layout="horizontal" style={{ marginTop: 10 }}>
-          <>
-            <Form.Input
-              field="token_name"
-              label="令牌名称"
-              style={{ width: 176 }}
-              value={token_name}
-              placeholder={'可选值'}
-              name="token_name"
-              onChange={(value) => handleInputChange(value, 'token_name')}
-              showClear
-            />
-            <Form.Input
-              field="model_name"
-              label="模型名称"
-              style={{ width: 176 }}
-              value={model_name}
-              placeholder="可选值"
-              name="model_name"
-              onChange={(value) => handleInputChange(value, 'model_name')}
-              showClear
-            />
-            <Form.DatePicker
-              field="start_timestamp"
-              label="起始时间"
-              style={{ width: 272 }}
-              initValue={start_timestamp}
-              value={start_timestamp}
-              type="dateTime"
-              name="start_timestamp"
-              onChange={(value) => handleInputChange(value, 'start_timestamp')}
-              showClear
-            />
-            <Form.DatePicker
-              field="end_timestamp"
-              fluid
-              label="结束时间"
-              style={{ width: 272 }}
-              initValue={end_timestamp}
-              value={end_timestamp}
-              type="dateTime"
-              name="end_timestamp"
-              onChange={(value) => handleInputChange(value, 'end_timestamp')}
-              showClear
-            />
-            {isAdminUser && (
-              <>
-                <Form.Input
-                  field="channel"
-                  label="渠道 ID"
-                  style={{ width: 176 }}
-                  value={channel}
-                  placeholder="可选值"
-                  name="channel"
-                  onChange={(value) => handleInputChange(value, 'channel')}
-                  showClear
-                />
-                <Form.Input
-                  field="username"
-                  label="用户名称"
-                  style={{ width: 176 }}
-                  value={username}
-                  placeholder={'可选值'}
-                  name="username"
-                  onChange={(value) => handleInputChange(value, 'username')}
-                  showClear
-                />
-              </>
-            )}
-            <Form.Section>
-              <Button
-                label="查询"
-                type="primary"
-                htmlType="submit"
-                className="btn-margin-right"
-                onClick={refresh}
-                loading={loading}
-                theme={'solid'}
-              >
-                查询
-              </Button>
-            </Form.Section>
-          </>
-        </Form>
-        <Table
-          style={{ marginTop: 5 }}
-          columns={columns}
-          dataSource={pageData}
-          pagination={{
-            currentPage: activePage,
-            pageSize: pageSize,
-            total: logCount,
-            pageSizeOpts: [10, 20, 50, 100],
-            showSizeChanger: true,
-            onShowSizeChange: (current, size) => {
-              handlePageSizeChange(size).then();
-            },
-            onChange: handlePageChange,
+    <Space direction={'vertical'} size={20} style={{ width: '100%' }}>
+      <h3>
+        使用明细（总消耗额度：
+        <Button
+          type="link"
+          onClick={handleEyeClick}
+          style={{
+            cursor: 'pointer',
+            color: 'gray',
           }}
-          loading={loading}
-          size="small"
-        />
-        <Select
-          defaultValue="0"
-          style={{ width: 120 }}
-          onChange={(value) => {
-            setLogType(parseInt(value));
-            loadLogs(0, pageSize, parseInt(value));
-          }}
+          loading={loadingStat}
         >
-          <Select.Option value="0">全部</Select.Option>
-          <Select.Option value="1">充值</Select.Option>
-          <Select.Option value="2">消费</Select.Option>
-          <Select.Option value="3">管理</Select.Option>
-          <Select.Option value="4">系统</Select.Option>
-        </Select>
-      </Layout>
-    </>
+          {showStat ? renderQuota(stat.quota) : '点击查看'}
+        </Button>
+        ）
+      </h3>
+      <Form layout={'inline'}>
+        <Form.Item label="令牌名称">
+          <Input
+            field="token_name"
+            value={token_name}
+            placeholder={'可选值'}
+            name="token_name"
+            onChange={(value) => handleInputChange(value, 'token_name')}
+            showClear
+          />
+        </Form.Item>
+        <Form.Item label="模型名称">
+          <Input
+            field="model_name"
+            value={model_name}
+            placeholder="可选值"
+            name="model_name"
+            onChange={(value) => handleInputChange(value, 'model_name')}
+            showClear
+          />
+        </Form.Item>
+        <Form.Item label={'时间'}>
+          <DatePicker.RangePicker
+            field="start_timestamp"
+            value={[dayjs(start_timestamp), dayjs(end_timestamp)]}
+            type="dateTime"
+            name="start_timestamp"
+            onChange={(value, dateStrings) => handleInputChange(dateStrings, 'start_timestamp')}
+            showClear
+            locale={zhCN}
+          />
+        </Form.Item>
+        {isAdminUser && (
+          <>
+            <Form.Item label="渠道 ID">
+              <Input
+                field="channel"
+                value={channel}
+                placeholder="可选值"
+                name="channel"
+                onChange={(value) => handleInputChange(value, 'channel')}
+                showClear
+              />
+            </Form.Item>
+            <Form.Item label="用户名称">
+              <Input
+                field="username"
+                value={username}
+                placeholder={'可选值'}
+                name="username"
+                onChange={(value) => handleInputChange(value, 'username')}
+                showClear
+              />
+            </Form.Item>
+          </>
+        )}
+        <Form.Item label="类型">
+          <Select
+            defaultValue="0"
+            style={{ width: 120 }}
+            onChange={(value) => {
+              setLogType(parseInt(value));
+              loadLogs(0, pageSize, parseInt(value));
+            }}
+          >
+            <Select.Option value="0">全部</Select.Option>
+            <Select.Option value="1">充值</Select.Option>
+            <Select.Option value="2">消费</Select.Option>
+            <Select.Option value="3">管理</Select.Option>
+            <Select.Option value="4">系统</Select.Option>
+            <Select.Option value="5">签到</Select.Option>
+          </Select>
+        </Form.Item>
+      </Form>
+      <Row>
+        <Button
+          label="查询"
+          type="primary"
+          htmlType="submit"
+          className="btn-margin-right"
+          onClick={refresh}
+          loading={loading}
+          theme={'solid'}
+        >
+          查询
+        </Button>
+      </Row>
+      <Table
+        columns={columns}
+        dataSource={pageData}
+        pagination={{
+          currentPage: activePage,
+          pageSize: pageSize,
+          total: logCount,
+          pageSizeOpts: [10, 20, 50, 100],
+          showSizeChanger: true,
+          onShowSizeChange: (current, size) => {
+            handlePageSizeChange(size).then();
+          },
+          onChange: handlePageChange,
+        }}
+        loading={loading}
+        size="small"
+      />
+    </Space>
   );
 };
 
