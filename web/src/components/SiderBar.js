@@ -257,6 +257,7 @@ const SiderBar = () => {
             style={{
               flex: 1,
               minWidth: 0,
+              backgroundColor: 'transparent',
             }}
           ></Menu>
         </Col>

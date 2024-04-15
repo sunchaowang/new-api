@@ -73,7 +73,6 @@ export function Index() {
                 width: '100%',
                 height: '64px',
                 padding: 0,
-                backgroundColor: '#fff',
               }}
             >
               {/* <HeaderBar /> */}
@@ -81,7 +80,6 @@ export function Index() {
             </Header>
             <Content
               style={{
-                padding: '24px',
                 width: '100%',
                 height: '100%',
               }}

@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Grid,
-  Header,
-  Message,
-  Segment,
-} from 'semantic-ui-react';
-import {
-  Form,
-  Card,
-  Button, Space,
-} from '@douyinfe/semi-ui';
+import { Form } from '@douyinfe/semi-ui';
+import { Card, Button, Flex } from 'antd';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import { Link, useNavigate } from 'react-router-dom';
 import { API, getLogo, showError, showInfo, showSuccess } from '../helpers';
@@ -85,10 +76,7 @@ const RegisterForm = () => {
         affCode = localStorage.getItem('aff');
       }
       inputs.aff_code = affCode;
-      const res = await API.post(
-        `/api/user/register?turnstile=${turnstileToken}`,
-        inputs,
-      );
+      const res = await API.post(`/api/user/register?turnstile=${turnstileToken}`, inputs);
       const { success, message } = res.data;
       if (success) {
         navigate('/login');
@@ -103,8 +91,8 @@ const RegisterForm = () => {
   const sendVerificationCode = async () => {
     if (inputs.email === '') {
       showInfo('请先输入邮箱地址！');
-      return
-    };
+      return;
+    }
     if (turnstileEnabled && turnstileToken === '') {
       showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
@@ -123,69 +111,72 @@ const RegisterForm = () => {
   };
 
   return (
-    <Card >
-      <Title heading={2} style={{ textAlign: 'center' }}>
-        新用户注册
-      </Title>
-      <Form size='large'>
+    <Flex justify={'center'}>
+      <Card style={{ width: '500px' }}>
+        <Title heading={2} style={{ textAlign: 'center' }}>
+          新用户注册
+        </Title>
+        <Form size="large">
           <Form.Input
-            icon='user'
-            iconPosition='left'
-            placeholder='输入用户名，最长 12 位'
+            icon="user"
+            iconPosition="left"
+            placeholder="输入用户名，最长 12 位"
             onChange={(value) => handleChange('username', value)}
-            name='username'
+            name="username"
             field={'username'}
             label={'用户名'}
           />
           <Form.Input
-            icon='lock'
-            iconPosition='left'
-            placeholder='输入密码，最短8位，最长20位'
+            icon="lock"
+            iconPosition="left"
+            placeholder="输入密码，最短8位，最长20位"
             onChange={(value) => handleChange('password', value)}
-            name='password'
-            type='password'
+            name="password"
+            type="password"
             field={'password'}
             label={'密码'}
           />
           <Form.Input
-            icon='lock'
-            iconPosition='left'
-            placeholder='输入密码，最短8位，最长20位'
+            icon="lock"
+            iconPosition="left"
+            placeholder="输入密码，最短8位，最长20位"
             onChange={(value) => handleChange('password2', value)}
-            name='password2'
+            name="password2"
             field={'password2'}
-            type='password'
+            type="password"
             label={'确认密码'}
           />
           {showEmailVerification ? (
-            [<div style={{
-            }}>
+            [
+              <div style={{}}>
                 <Form.Input
-                  icon='mail'
-                  iconPosition='left'
-                  placeholder='输入邮箱地址'
+                  icon="mail"
+                  iconPosition="left"
+                  placeholder="输入邮箱地址"
                   onChange={(value) => handleChange('email', value)}
-                  name='email'
-                  field='email'
-                  type='email'
+                  name="email"
+                  field="email"
+                  type="email"
                   label={'邮箱'}
                 />
-                <Button onClick={sendVerificationCode} loading={emailCodeSendLoading}>
+                <Button
+                  type={'primary'}
+                  onClick={sendVerificationCode}
+                  loading={emailCodeSendLoading}
+                >
                   获取验证码
                 </Button>
-            </div>
-            ,
+              </div>,
               <Form.Input
-                icon='lock'
-                iconPosition='left'
-                placeholder='输入验证码'
+                icon="lock"
+                iconPosition="left"
+                placeholder="输入验证码"
                 onChange={(value) => handleChange('verification_code', value)}
-                name='verification_code'
-                field='verification_code'
+                name="verification_code"
+                field="verification_code"
                 label={'验证码'}
-              />
+              />,
             ]
-
           ) : (
             <></>
           )}
@@ -201,22 +192,23 @@ const RegisterForm = () => {
           )}
           <Button
             type={'primary'}
-            theme='solid'
+            theme="solid"
             style={{ width: '100%' }}
-            size='large'
+            size="large"
             onClick={handleSubmit}
             loading={loading}
           >
             注册
           </Button>
-      </Form>
-      <Card bordered={false}>
-        已有账户？
-        <Link to='/login' className='btn btn-link'>
-          点击登录
-        </Link>
+        </Form>
+        <Card bordered={false}>
+          已有账户？
+          <Link to="/login" className="btn btn-link">
+            点击登录
+          </Link>
+        </Card>
       </Card>
-    </Card>
+    </Flex>
   );
 };
 

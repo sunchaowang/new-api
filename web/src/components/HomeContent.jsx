@@ -1,4 +1,4 @@
-import { Button, Card, Space, Table, Tag, List, Divider } from 'antd';
+import { Button, Card, Space, Table, Tag, List } from 'antd';
 
 function renderModalTable(data, provider) {
   function renderSupportColumn(text, record, index) {
@@ -19,11 +19,11 @@ function renderModalTable(data, provider) {
       <Space direction={'vertical'}>
         <div>
           <Tag>输入</Tag>
-          {record.inputTokens}
+          {record.inputTokens + ' / 1k tokens'}
         </div>
         <div>
           <Tag>输出</Tag>
-          {record.outputTokens}
+          {record.outputTokens + ' / 1k tokens'}
         </div>
       </Space>
     );
@@ -37,13 +37,13 @@ function renderModalTable(data, provider) {
       }}
     >
       <Table dataSource={data} pagination={false} size={'small'} bordered>
-        <Table.Column title="模型名称" dataIndex="name" key="name" width={'20%'} />
+        <Table.Column title="模型名称" dataIndex="name" key="name" width={'33%'} />
         {/*<Table.Column title="官方费率" dataIndex="inputTokens" key="inputTokens" width={'20%'} />*/}
         <Table.Column
           title="本站费率"
           dataIndex="outputTokens"
           key="outputTokens"
-          width={'20%'}
+          width={'33%'}
           render={renderReplayTokensColumn}
         />
         {/*<Table.Column title="折扣" dataIndex="discount" key="discount" width={'20%'} />*/}
@@ -52,7 +52,6 @@ function renderModalTable(data, provider) {
           dataIndex="isSupport"
           key="isSupport"
           render={renderSupportColumn}
-          width={'20%'}
         />
       </Table>
     </Card>
@@ -107,7 +106,7 @@ function App() {
             <li>为了维持转发服务正常使用，将不定期清除非法用户，请使用真实邮箱注册</li>
             <li>
               受供应商和OpenAI政策影响，价格会随时调整，本站汇率为
-              <Tag color={'red'}>1元=1刀</Tag>
+              <Tag color={'red'}>3.5元=1刀</Tag>（部分模型除外，详情请查看下方表格）
             </li>
           </ul>
         </Card>
@@ -145,143 +144,173 @@ function App() {
               [
                 {
                   name: 'gpt-3.5-turbo',
-                  inputTokens: '¥0.0015 / 1k tokens',
-                  outputTokens: '¥0.002 / 1k tokens',
+                  inputTokens: '$0.003',
+                  outputTokens: '$0.006',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-3.5-turbo-0125',
-                  inputTokens: '¥0.0005 / 1k tokens',
-                  outputTokens: '¥0.0015 / 1k tokens',
+                  inputTokens: '$0.0005',
+                  outputTokens: '$0.0015',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-3.5-turbo-0301',
-                  inputTokens: '¥0.001 / 1k tokens',
-                  outputTokens: '¥0.002 / 1k tokens',
+                  inputTokens: '$0.0015',
+                  outputTokens: '$0.002',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-3.5-turbo-0613',
-                  inputTokens: '¥0.0015 / 1k tokens',
-                  outputTokens: '¥0.002 / 1k tokens',
+                  inputTokens: '$0.0015',
+                  outputTokens: '$0.002',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-3.5-turbo-1106',
-                  inputTokens: '¥0.001 / 1k tokens',
-                  outputTokens: '¥0.002 / 1k tokens',
+                  inputTokens: '$0.001',
+                  outputTokens: '$0.002',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-3.5-turbo-16k',
-                  inputTokens: '¥0.003 / 1k tokens',
-                  outputTokens: '¥0.004 / 1k tokens',
+                  inputTokens: '$0.003',
+                  outputTokens: '$0.004',
+                  isSupport: '支持',
+                },
+                {
+                  name: 'gpt-3.5-turbo-16k-0613',
+                  inputTokens: '$0.003',
+                  outputTokens: '$0.004',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4',
-                  inputTokens: '¥0.04 / 1k tokens',
-                  outputTokens: '¥0.08 / 1k tokens',
+                  inputTokens: '$0.03',
+                  outputTokens: '$0.06',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-0613',
-                  inputTokens: '¥0.03 / 1k tokens',
-                  outputTokens: '¥0.06 / 1k tokens',
+                  inputTokens: '$0.03',
+                  outputTokens: '$0.06',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-0125-preview',
-                  inputTokens: '¥0.01 / 1k tokens',
-                  outputTokens: '¥0.03 / 1k tokens',
+                  inputTokens: '$0.01',
+                  outputTokens: '$0.03',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-1106-preview',
-                  inputTokens: '¥0.01 / 1k tokens',
-                  outputTokens: '¥0.03 / 1k tokens',
+                  inputTokens: '$0.01',
+                  outputTokens: '$0.03',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-vision-preview',
-                  inputTokens: '¥0.02 / 1k tokens',
-                  outputTokens: '¥0.06 / 1k tokens',
+                  inputTokens: '$0.01',
+                  outputTokens: '$0.03',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-turbo-2024-04-09',
-                  inputTokens: '¥0.02 / 1k tokens',
-                  outputTokens: '¥0.06 / 1k tokens',
+                  inputTokens: '$0.01',
+                  outputTokens: '$0.03',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-turbo-preview',
-                  inputTokens: '¥0.01 / 1k tokens',
-                  outputTokens: '¥0.03 / 1k tokens',
+                  inputTokens: '$0.01',
+                  outputTokens: '$0.03',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-32k',
-                  inputTokens: '¥0.06 / 1k tokens',
-                  outputTokens: '¥0.12 / 1k tokens',
+                  inputTokens: '$0.06',
+                  outputTokens: '$0.12',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-32k-0613',
-                  inputTokens: '¥0.06 / 1k tokens',
-                  outputTokens: '¥0.12 / 1k tokens',
+                  inputTokens: '$0.06',
+                  outputTokens: '$0.12',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-32k-0314',
-                  inputTokens: '¥0.06 / 1k tokens',
-                  outputTokens: '¥0.12 / 1k tokens',
+                  inputTokens: '$0.06',
+                  outputTokens: '$0.12',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 1024x1024',
-                  timesPrice: '¥0.3每次',
+                  timesPrice: '$0.04每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 1024x1792',
-                  timesPrice: '¥0.6每次',
+                  timesPrice: '$0.08每次',
+                  isSupport: '支持',
+                },
+                {
+                  name: 'dall-e-3 1792x1792',
+                  timesPrice: '$0.08每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 hd 1024x1024',
-                  timesPrice: '¥0.6每次',
+                  timesPrice: '$0.08每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 hd 1024x1792',
-                  timesPrice: '¥0.9每次',
+                  timesPrice: '$0.24每次',
+                  isSupport: '支持',
+                },
+                {
+                  name: 'dall-e-3 hd 1792x1792',
+                  timesPrice: '$0.24每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'gpt-4-v',
-                  timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
+                  timesPrice: '$0.15每次, 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '测试中',
                 },
                 {
                   name: 'gpt-4-dalle',
-                  timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
+                  timesPrice: '$0.15每次, 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '测试中',
                 },
                 {
                   name: 'gpt-4-all',
-                  timesPrice: '¥0.15每次 轻度 GPT-4 用户性价比远超官网',
+                  timesPrice: '$0.15每次, 轻度 GPT-4 用户性价比远超官网',
                   isSupport: '支持',
                 },
                 {
+                  name: 'gpt-4-gizmo-*',
+                  timesPrice: '$0.15每次, 轻度 GPT-4 用户性价比远超官网',
+                },
+                {
                   name: 'tts-1',
-                  characterPrice: '¥0.03 / 1k characters',
+                  characterPrice: '$0.03 / 1k characters',
+                  isSupport: '支持',
+                },
+                {
+                  name: 'tts-1-1106',
+                  characterPrice: '$0.03 / 1k characters',
                   isSupport: '支持',
                 },
                 {
                   name: 'tts-1-hd',
-                  characterPrice: '¥0.06 / 1k characters',
+                  characterPrice: '$0.06 / 1k characters',
+                  isSupport: '支持',
+                },
+                {
+                  name: 'tts-1-hd-1106',
+                  characterPrice: '$0.06 / 1k characters',
                   isSupport: '支持',
                 },
               ],
@@ -290,45 +319,21 @@ function App() {
             {renderModalTable(
               [
                 {
-                  name: 'chatglm_lite',
-                  inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '¥0.005 / 1k tokens',
-                  isSupport: '即将废弃',
-                },
-                {
-                  name: 'chatglm_pro',
-                  inputTokens: '¥0.01 / 1k tokens',
-                  outputTokens: '¥0.01 / 1k tokens',
-                  isSupport: '即将废弃',
-                },
-                {
-                  name: 'chatglm_std',
-                  inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '¥0.005 / 1k tokens',
-                  isSupport: '即将废弃',
-                },
-                {
-                  name: 'chatglm_turbo',
-                  inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '¥0.005 / 1k tokens',
-                  isSupport: '支持',
-                },
-                {
                   name: 'glm-3-turbo',
-                  inputTokens: '¥0.005 / 1k tokens',
-                  outputTokens: '¥0.005 / 1k tokens',
+                  inputTokens: '$0.0015',
+                  outputTokens: '$0.0015',
                   isSupport: '支持',
                 },
                 {
                   name: 'glm-4',
-                  inputTokens: '¥0.1 / 1k tokens',
-                  outputTokens: '¥0.1 / 1k tokens',
+                  inputTokens: '$0.03',
+                  outputTokens: '$0.03',
                   isSupport: '支持',
                 },
                 {
                   name: 'glm-4v',
-                  inputTokens: '¥0.1 / 1k tokens',
-                  outputTokens: '¥0.1 / 1k tokens',
+                  inputTokens: '$0.03',
+                  outputTokens: '$0.03',
                   isSupport: '支持',
                 },
               ],
@@ -337,33 +342,21 @@ function App() {
             {renderModalTable(
               [
                 {
-                  name: 'claude-2.1',
-                  inputTokens: '¥0.08 / 1k tokens',
-                  outputTokens: '¥0.27 / 1k tokens',
-                  isSupport: '支持',
-                },
-                {
-                  name: 'claude-2',
-                  inputTokens: '¥0.08 / 1k tokens',
-                  outputTokens: '¥0.27 / 1k tokens',
-                  isSupport: '支持',
-                },
-                {
                   name: 'claude-3-opus-20240229',
-                  inputTokens: '¥0.11 / 1k tokens',
-                  outputTokens: '¥0.55 / 1k tokens',
+                  inputTokens: '$0.15',
+                  outputTokens: '$0.75',
                   isSupport: '支持',
                 },
                 {
                   name: 'claude-3-sonnet-20240229',
-                  inputTokens: '¥0.022 / 1k tokens',
-                  outputTokens: '¥0.11 / 1k tokens',
+                  inputTokens: '$0.003',
+                  outputTokens: '$0.015',
                   isSupport: '支持',
                 },
                 {
                   name: 'claude-3-haiku-20240307',
-                  inputTokens: '¥0.001825 / 1k tokens',
-                  outputTokens: '¥0.009125 / 1k tokens',
+                  inputTokens: '$0.00025',
+                  outputTokens: '$0.009125',
                   isSupport: '支持',
                 },
               ],
@@ -373,26 +366,26 @@ function App() {
               [
                 {
                   name: 'qwen-plus',
-                  inputTokens: '¥0.02 / 1k tokens',
-                  outputTokens: '¥0.02 / 1k tokens',
+                  inputTokens: '$0.02',
+                  outputTokens: '$0.02',
                   isSupport: '即将废弃',
                 },
                 {
                   name: 'qwen-plus-net',
-                  inputTokens: '¥0.02 / 1k tokens',
-                  outputTokens: '¥0.02 / 1k tokens',
+                  inputTokens: '$0.02',
+                  outputTokens: '$0.02',
                   isSupport: '即将废弃',
                 },
                 {
                   name: 'qwen-turbo',
-                  inputTokens: '¥0.008 / 1k tokens',
-                  outputTokens: '¥0.008 / 1k tokens',
+                  inputTokens: '$0.008',
+                  outputTokens: '$0.008',
                   isSupport: '即将废弃',
                 },
                 {
                   name: 'qwen-turbo-net',
-                  inputTokens: '¥0.008 / 1k tokens',
-                  outputTokens: '¥0.008 / 1k tokens',
+                  inputTokens: '$0.008',
+                  outputTokens: '$0.008',
                   isSupport: '支持',
                 },
               ],
