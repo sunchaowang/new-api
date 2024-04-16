@@ -4,6 +4,7 @@
   "private": true,
   "type": "commonjs",
   "dependencies": {
+    "@ant-design/pro-components": "^2.7.0",
     "@douyinfe/semi-icons": "^2.46.1",
     "@douyinfe/semi-ui": "^2.46.1",
     "@visactor/react-vchart": "~1.8.8",

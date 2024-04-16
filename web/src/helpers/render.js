@@ -137,21 +137,21 @@ export function renderQuotaWithPrompt(quota, digits) {
 }
 
 const colors = [
-  'amber',
-  'blue',
-  'cyan',
-  'green',
-  'grey',
-  'indigo',
-  'light-blue',
-  'lime',
-  'orange',
-  'pink',
-  'purple',
+  'processing',
+  'success',
+  'error',
+  'warning',
+  'magenta',
   'red',
-  'teal',
-  'violet',
-  'yellow',
+  'volcano',
+  'orange',
+  'gold',
+  'lime',
+  'green',
+  'cyan',
+  'blue',
+  'geekblue',
+  'purple',
 ];
 
 export const modelColorMap = {

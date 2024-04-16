@@ -27,6 +27,8 @@ import {
   Select,
   Dropdown,
   Tooltip,
+  Card,
+  Flex,
 } from 'antd';
 
 function renderTimestamp(timestamp) {
@@ -167,8 +169,9 @@ const ChannelsTable = () => {
     {
       title: '操作',
       dataIndex: 'operate',
+      fixed: 'right',
       render: (text, record, index) => (
-        <div>
+        <Space>
           <>
             <Dropdown.Button
               type="primary"
@@ -182,6 +185,7 @@ const ChannelsTable = () => {
               onClick={() => {
                 testChannel(record, '');
               }}
+              size={'small'}
             >
               测试
             </Dropdown.Button>
@@ -198,7 +202,7 @@ const ChannelsTable = () => {
               });
             }}
           >
-            <Button type={'link'} danger>
+            <Button size={'small'} type={'link'} danger>
               删除
             </Button>
           </Popconfirm>
@@ -234,7 +238,7 @@ const ChannelsTable = () => {
           >
             编辑
           </Button>
-        </div>
+        </Space>
       ),
     },
   ];
@@ -587,131 +591,146 @@ const ChannelsTable = () => {
         editingChannel={editingChannel}
       />
       <Space direction={'vertical'} size={20} style={{ width: '100%' }}>
-        <Form layout={'inline'}>
-          <Form.Item label="搜索渠道关键词">
-            <Input
-              field="search_keyword"
-              placeholder="ID，名称和密钥 ..."
-              value={searchKeyword}
-              loading={searching}
-              onChange={(e) => {
-                setSearchKeyword(e.target.value.trim());
-              }}
-            />
-          </Form.Item>
-          <Form.Item label="模型">
-            <Input
-              field="search_model"
-              label="模型"
-              placeholder="模型关键字"
-              value={searchModel}
-              loading={searching}
-              onChange={(e) => {
-                setSearchModel(e.target.value.trim());
-              }}
-            />
-          </Form.Item>
-          <Form.Item label="分组">
-            <Select
-              field="group"
-              label="分组"
-              onChange={(v) => {
-                setSearchGroup(v);
-                searchChannels(searchKeyword, v, searchModel);
-              }}
-            >
-              {groupOptions.map((option) => (
-                <Select.Option
-                  title={option.label}
-                  value={option.value}
-                  children={option.label}
-                ></Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Form>
-        <Space>
-          <Button
-            label="查询"
-            type="primary"
-            onClick={() => searchChannels(searchKeyword, searchGroup, searchModel)}
-            loading={loading}
-          >
-            查询
-          </Button>
-          <Button
-            theme="solid"
-            type="primary"
-            onClick={() => {
-              setEditingChannel({
-                id: undefined,
-              });
-              setShowEdit(true);
-            }}
-          >
-            添加渠道
-          </Button>
-          <Popconfirm
-            title="确定是否要修复数据库一致性？"
-            content="进行该操作时，可能导致渠道访问错误，请仅在数据库出现问题时使用"
-            okType={'primary'}
-            onConfirm={fixChannelsAbilities}
-          >
-            <Button type="link">修复数据库一致性</Button>
-          </Popconfirm>
-          <Popconfirm
-            title="确定？"
-            okType={'warning'}
-            onConfirm={testAllChannels}
-            position={isMobile() ? 'top' : 'top'}
-          >
-            <Button type="link">测试所有通道</Button>
-          </Popconfirm>
-          <Popconfirm title="确定？" okType={'primary'} onConfirm={updateAllChannelsBalance}>
-            <Button type="link">更新所有已启用通道余额</Button>
-          </Popconfirm>
-          <Popconfirm
-            title="确定是否要删除禁用通道？"
-            content="此修改将不可逆"
-            okType={'danger'}
-            onConfirm={deleteAllDisabledChannels}
-          >
-            <Button danger type="dashed">
-              删除禁用通道
-            </Button>
-          </Popconfirm>
-        </Space>
+        <Card>
+          <Space direction={'vertical'}>
+            <Form layout={'inline'}>
+              <Form.Item label="搜索渠道关键词">
+                <Input
+                  field="search_keyword"
+                  placeholder="ID，名称和密钥 ..."
+                  value={searchKeyword}
+                  loading={searching}
+                  onChange={(e) => {
+                    setSearchKeyword(e.target.value.trim());
+                  }}
+                />
+              </Form.Item>
+              <Form.Item label="模型">
+                <Input
+                  field="search_model"
+                  label="模型"
+                  placeholder="模型关键字"
+                  value={searchModel}
+                  loading={searching}
+                  onChange={(e) => {
+                    setSearchModel(e.target.value.trim());
+                  }}
+                />
+              </Form.Item>
+              <Form.Item label="分组">
+                <Select
+                  field="group"
+                  label="分组"
+                  onChange={(v) => {
+                    setSearchGroup(v);
+                    searchChannels(searchKeyword, v, searchModel);
+                  }}
+                >
+                  {groupOptions.map((option) => (
+                    <Select.Option
+                      title={option.label}
+                      value={option.value}
+                      children={option.label}
+                    ></Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Form>
+            <Space>
+              <Button
+                label="查询"
+                type="primary"
+                onClick={() => searchChannels(searchKeyword, searchGroup, searchModel)}
+                loading={loading}
+              >
+                查询
+              </Button>
+              <Button
+                type="link"
+                size={'small'}
+                onClick={() => {
+                  setEditingChannel({
+                    id: undefined,
+                  });
+                  setShowEdit(true);
+                }}
+              >
+                添加渠道
+              </Button>
+              <Popconfirm
+                title="确定是否要修复数据库一致性？"
+                content="进行该操作时，可能导致渠道访问错误，请仅在数据库出现问题时使用"
+                okType={'primary'}
+                onConfirm={fixChannelsAbilities}
+              >
+                <Button type="link" size={'small'}>
+                  修复数据库一致性
+                </Button>
+              </Popconfirm>
+              <Popconfirm
+                title="确定？"
+                okType={'warning'}
+                onConfirm={testAllChannels}
+                position={isMobile() ? 'top' : 'top'}
+              >
+                <Button type="link" size={'small'}>
+                  测试所有通道
+                </Button>
+              </Popconfirm>
+              <Popconfirm title="确定？" okType={'primary'} onConfirm={updateAllChannelsBalance}>
+                <Button type="link" size={'small'}>
+                  更新所有已启用通道余额
+                </Button>
+              </Popconfirm>
+              <Popconfirm
+                title="确定是否要删除禁用通道？"
+                content="此修改将不可逆"
+                okType={'danger'}
+                onConfirm={deleteAllDisabledChannels}
+              >
+                <Button danger type="dashed">
+                  删除禁用通道
+                </Button>
+              </Popconfirm>
+            </Space>
+          </Space>
+        </Card>
 
-        <Table
-          size={'small'}
-          className={'channel-table'}
-          columns={columns}
-          dataSource={pageData}
-          pagination={{
-            currentPage: activePage,
-            pageSize: pageSize,
-            total: channelTotal,
-            pageSizeOpts: [10, 20, 50, 100],
-            showSizeChanger: true,
-            formatPageText: (page) => '',
-            onShowSizeChange: (current, size) => {
-              handlePageSizeChange(size).then();
-            },
-            onChange: handlePageChange,
-          }}
-          loading={loading}
-          onRow={handleRow}
-          rowSelection={
-            enableBatchDelete
-              ? {
-                  onChange: (selectedRowKeys, selectedRows) => {
-                    // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-                    setSelectedChannels(selectedRows);
-                  },
-                }
-              : null
-          }
-        />
+        <Card>
+          <Table
+            size={'small'}
+            className={'channel-table'}
+            columns={columns}
+            dataSource={pageData}
+            pagination={{
+              currentPage: activePage,
+              pageSize: pageSize,
+              total: channelTotal,
+              pageSizeOpts: [10, 20, 50, 100],
+              showSizeChanger: true,
+              formatPageText: (page) => '',
+              onShowSizeChange: (current, size) => {
+                handlePageSizeChange(size).then();
+              },
+              onChange: handlePageChange,
+            }}
+            loading={loading}
+            onRow={handleRow}
+            rowSelection={
+              enableBatchDelete
+                ? {
+                    onChange: (selectedRowKeys, selectedRows) => {
+                      // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                      setSelectedChannels(selectedRows);
+                    },
+                  }
+                : null
+            }
+            scroll={{
+              x: 'max-content',
+            }}
+          />
+        </Card>
       </Space>
     </>
   );

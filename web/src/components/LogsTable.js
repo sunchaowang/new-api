@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { API, copy, isAdmin, showError, showSuccess, timestamp2string } from '../helpers';
 
-import { Avatar } from '@douyinfe/semi-ui';
 import {
   Tag,
   Button,
@@ -14,6 +13,9 @@ import {
   Space,
   Select,
   Row,
+  Card,
+  Typography,
+  Descriptions,
 } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import { ITEMS_PER_PAGE } from '../constants';
@@ -37,17 +39,17 @@ const MODE_OPTIONS = [
 function renderType(type) {
   switch (type) {
     case 1:
-      return <Tag color="cyan"> 充值 </Tag>;
+      return <Tag color="purple"> 充值 </Tag>;
     case 2:
-      return <Tag color="lime"> 消费 </Tag>;
+      return <Tag color="geekblue"> 消费 </Tag>;
     case 3:
-      return <Tag color="orange"> 管理 </Tag>;
+      return <Tag color="blue"> 管理 </Tag>;
     case 4:
-      return <Tag color="purple"> 系统 </Tag>;
+      return <Tag color="red"> 系统 </Tag>;
     case 5:
-      return <Tag> 签到 </Tag>;
+      return <Tag color={'volcano'}> 签到 </Tag>;
     default:
-      return <Tag color="black"> 未知 </Tag>;
+      return <Tag color="warning"> 未知 </Tag>;
   }
 }
 
@@ -98,17 +100,7 @@ const LogsTable = () => {
       className: isAdmin() ? 'tableShow' : 'tableHiddle',
       render: (text, record, index) => {
         return isAdminUser ? (
-          <div>
-            <Avatar
-              size="small"
-              color={stringToColor(text)}
-              style={{ marginRight: 4 }}
-              onClick={() => showUserInfo(record.user_id)}
-            >
-              {typeof text === 'string' && text.slice(0, 1)}
-            </Avatar>
-            {text}
-          </div>
+          <Typography onClick={() => showUserInfo(record.user_id)}>{text}</Typography>
         ) : (
           <></>
         );
@@ -119,7 +111,7 @@ const LogsTable = () => {
       dataIndex: 'token_name',
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? (
-          <div>
+          <>
             <Tag
               color="blue"
               onClick={() => {
@@ -129,19 +121,19 @@ const LogsTable = () => {
               {' '}
               {text}{' '}
             </Tag>
-          </div>
+          </>
         ) : (
           <></>
         );
       },
     },
-    {
-      title: '类型',
-      dataIndex: 'type',
-      render: (text, record, index) => {
-        return <div>{renderType(text)}</div>;
-      },
-    },
+    // {
+    //   title: '类型',
+    //   dataIndex: 'type',
+    //   render: (text, record, index) => {
+    //     return <div>{renderType(text)}</div>;
+    //   },
+    // },
     {
       title: '模型',
       dataIndex: 'model_name',
@@ -168,12 +160,12 @@ const LogsTable = () => {
       dataIndex: 'use_time',
       render: (text, record, index) => {
         return (
-          <div>
+          <>
             <Space>
               {renderUseTime(text)}
               {renderIsStream(record.is_stream)}
             </Space>
-          </div>
+          </>
         );
       },
     },
@@ -207,15 +199,20 @@ const LogsTable = () => {
       dataIndex: 'content',
       render: (text, record, index) => {
         return (
-          <Paragraph
-            ellipsis={{
-              rows: 2,
-              showTooltip: { type: 'popover', opts: { style: { width: 240 } } },
-            }}
-            style={{ maxWidth: 240 }}
-          >
-            {text}
-          </Paragraph>
+          <Space direction={'vertical'} size={5}>
+            {[
+              renderType(record.type),
+              <Paragraph
+                ellipsis={{
+                  rows: 2,
+                  showTooltip: { type: 'popover', opts: { style: { width: 240 } } },
+                }}
+                style={{ maxWidth: 240 }}
+              >
+                {text}
+              </Paragraph>,
+            ]}
+          </Space>
         );
       },
     },
@@ -304,14 +301,19 @@ const LogsTable = () => {
     const { success, message, data } = res.data;
     if (success) {
       Modal.info({
-        title: '用户信息',
+        icon: null,
+        type: '',
+        maskClosable: true,
+        closable: true,
         content: (
-          <div style={{ padding: 12 }}>
-            <p>用户名: {data.username}</p>
-            <p>余额: {renderQuota(data.quota)}</p>
-            <p>已用额度：{renderQuota(data.used_quota)}</p>
-            <p>请求次数：{renderNumber(data.request_count)}</p>
-          </div>
+          <Descriptions title={'用户信息'} column={1}>
+            <Descriptions.Item label={'用户名'}>{data.username}</Descriptions.Item>
+            <Descriptions.Item label={'余额'}> {renderQuota(data.quota)}</Descriptions.Item>
+            <Descriptions.Item label={'已用额度'}>{renderQuota(data.used_quota)}</Descriptions.Item>
+            <Descriptions.Item label={'请求次数'}>
+              {renderNumber(data.request_count)}
+            </Descriptions.Item>
+          </Descriptions>
         ),
         centered: true,
       });
@@ -426,125 +428,135 @@ const LogsTable = () => {
 
   return (
     <Space direction={'vertical'} size={20} style={{ width: '100%' }}>
-      <h3>
-        使用明细（总消耗额度：
-        <Button
-          type="link"
-          onClick={handleEyeClick}
-          style={{
-            cursor: 'pointer',
-            color: 'gray',
-          }}
-          loading={loadingStat}
-        >
-          {showStat ? renderQuota(stat.quota) : '点击查看'}
-        </Button>
-        ）
-      </h3>
-      <Form layout={'inline'}>
-        <Form.Item label="令牌名称">
-          <Input
-            field="token_name"
-            value={token_name}
-            placeholder={'可选值'}
-            name="token_name"
-            onChange={(e) => handleInputChange(e.target.value, 'token_name')}
-            allowClear
-          />
-        </Form.Item>
-        <Form.Item label="模型名称">
-          <Input
-            field="model_name"
-            value={model_name}
-            placeholder="可选值"
-            name="model_name"
-            onChange={(e) => handleInputChange(e.target.value, 'model_name')}
-            allowClear
-          />
-        </Form.Item>
-        <Form.Item label={'时间'}>
-          <DatePicker.RangePicker
-            field="start_timestamp"
-            value={[dayjs(start_timestamp), dayjs(end_timestamp)]}
-            type="dateTime"
-            name="start_timestamp"
-            onChange={(value, dateStrings) => handleInputChange(dateStrings, 'start_timestamp')}
-            allowClear
-            locale={zhCN}
-          />
-        </Form.Item>
-        {isAdminUser && (
-          <>
-            <Form.Item label="渠道 ID">
-              <Input
-                field="channel"
-                value={channel}
-                placeholder="可选值"
-                name="channel"
-                onChange={(e) => handleInputChange(e.target.value, 'channel')}
-                allowClear
-              />
-            </Form.Item>
-            <Form.Item label="用户名称">
-              <Input
-                field="username"
-                value={username}
-                placeholder={'可选值'}
-                name="username"
-                onChange={(e) => handleInputChange(e.target.value, 'username')}
-                allowClear
-              />
-            </Form.Item>
-          </>
-        )}
-        <Form.Item label="类型">
-          <Select
-            defaultValue="0"
-            style={{ width: 120 }}
-            onChange={(value) => {
-              setLogType(parseInt(value));
-              loadLogs(0, pageSize, parseInt(value));
-            }}
+      <Card
+        title={
+          <h3>
+            总消耗额度
+            <Button
+              type="link"
+              onClick={handleEyeClick}
+              style={{
+                cursor: 'pointer',
+                color: 'gray',
+              }}
+              loading={loadingStat}
+            >
+              {showStat ? renderQuota(stat.quota) : '点击查看'}
+            </Button>
+          </h3>
+        }
+      >
+        <Form layout={'inline'}>
+          <Form.Item label="令牌名称">
+            <Input
+              field="token_name"
+              value={token_name}
+              placeholder={'可选值'}
+              name="token_name"
+              onChange={(e) => handleInputChange(e.target.value, 'token_name')}
+              allowClear
+            />
+          </Form.Item>
+          <Form.Item label="模型名称">
+            <Input
+              field="model_name"
+              value={model_name}
+              placeholder="可选值"
+              name="model_name"
+              onChange={(e) => handleInputChange(e.target.value, 'model_name')}
+              allowClear
+            />
+          </Form.Item>
+          <Form.Item label={'时间'}>
+            <DatePicker.RangePicker
+              field="start_timestamp"
+              value={[dayjs(start_timestamp), dayjs(end_timestamp)]}
+              type="dateTime"
+              name="start_timestamp"
+              onChange={(value, dateStrings) => handleInputChange(dateStrings, 'start_timestamp')}
+              allowClear
+              locale={zhCN}
+            />
+          </Form.Item>
+          {isAdminUser && (
+            <>
+              <Form.Item label="渠道 ID">
+                <Input
+                  field="channel"
+                  value={channel}
+                  placeholder="可选值"
+                  name="channel"
+                  onChange={(e) => handleInputChange(e.target.value, 'channel')}
+                  allowClear
+                />
+              </Form.Item>
+              <Form.Item label="用户名称">
+                <Input
+                  field="username"
+                  value={username}
+                  placeholder={'可选值'}
+                  name="username"
+                  onChange={(e) => handleInputChange(e.target.value, 'username')}
+                  allowClear
+                />
+              </Form.Item>
+            </>
+          )}
+          <Form.Item label="类型">
+            <Select
+              defaultValue="0"
+              style={{ width: 120 }}
+              onChange={(value) => {
+                setLogType(parseInt(value));
+                loadLogs(0, pageSize, parseInt(value));
+              }}
+            >
+              <Select.Option value="0">全部</Select.Option>
+              <Select.Option value="1">充值</Select.Option>
+              <Select.Option value="2">消费</Select.Option>
+              <Select.Option value="3">管理</Select.Option>
+              <Select.Option value="4">系统</Select.Option>
+              <Select.Option value="5">签到</Select.Option>
+            </Select>
+          </Form.Item>
+        </Form>
+        <Row>
+          <Button
+            label="查询"
+            type="primary"
+            htmlType="submit"
+            className="btn-margin-right"
+            onClick={refresh}
+            loading={loading}
+            theme={'solid'}
           >
-            <Select.Option value="0">全部</Select.Option>
-            <Select.Option value="1">充值</Select.Option>
-            <Select.Option value="2">消费</Select.Option>
-            <Select.Option value="3">管理</Select.Option>
-            <Select.Option value="4">系统</Select.Option>
-            <Select.Option value="5">签到</Select.Option>
-          </Select>
-        </Form.Item>
-      </Form>
-      <Row>
-        <Button
-          label="查询"
-          type="primary"
-          htmlType="submit"
-          className="btn-margin-right"
-          onClick={refresh}
+            查询
+          </Button>
+        </Row>
+      </Card>
+
+      <Card>
+        <Table
+          columns={columns}
+          dataSource={pageData}
+          pagination={{
+            currentPage: activePage,
+            pageSize: pageSize,
+            total: logCount,
+            pageSizeOpts: [10, 20, 50, 100],
+            showSizeChanger: true,
+            onShowSizeChange: (current, size) => {
+              handlePageSizeChange(size).then();
+            },
+            onChange: handlePageChange,
+          }}
           loading={loading}
-          theme={'solid'}
-        >
-          查询
-        </Button>
-      </Row>
-      <Table
-        columns={columns}
-        dataSource={pageData}
-        pagination={{
-          currentPage: activePage,
-          pageSize: pageSize,
-          total: logCount,
-          pageSizeOpts: [10, 20, 50, 100],
-          showSizeChanger: true,
-          onShowSizeChange: (current, size) => {
-            handlePageSizeChange(size).then();
-          },
-          onChange: handlePageChange,
-        }}
-        loading={loading}
-        size="small"
-      />
+          size="small"
+          scroll={{
+            x: 'max-content',
+          }}
+        />
+      </Card>
     </Space>
   );
 };
