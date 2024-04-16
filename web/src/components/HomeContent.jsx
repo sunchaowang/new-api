@@ -64,11 +64,7 @@ function renderModalTable(data, provider) {
 }
 
 function App() {
-  const changelog = [
-    '2024-4-15：赠送的额度可直接使用全模型',
-    '2024-4-8：迁移了数据库，提高了响应速度',
-    '2024-4-4：增加了每日签到功能，请前往钱包页查看',
-  ];
+  const changelog = ['2024-4-15：赠送的额度可直接使用全模型'];
   return (
     <>
       <Space direction={'vertical'} size={10} style={{ width: '100%' }}>
@@ -439,26 +435,26 @@ function App() {
               [
                 {
                   name: 'qwen-plus',
-                  inputTokens: '¥0.2',
-                  outputTokens: '¥0.2',
+                  inputTokens: '$0.1',
+                  outputTokens: '$0.1',
                   isSupport: '支持',
                 },
                 {
                   name: 'qwen-plus-net',
-                  inputTokens: '¥0.2',
-                  outputTokens: '¥0.2',
+                  inputTokens: '$0.1',
+                  outputTokens: '$0.1',
                   isSupport: '支持',
                 },
                 {
                   name: 'qwen-turbo',
-                  inputTokens: '¥0.08',
-                  outputTokens: '¥0.08',
+                  inputTokens: '$0.04',
+                  outputTokens: '$0.04',
                   isSupport: '支持',
                 },
                 {
                   name: 'qwen-turbo-net',
-                  inputTokens: '¥0.08',
-                  outputTokens: '¥0.08',
+                  inputTokens: '$0.04',
+                  outputTokens: '$0.04',
                   isSupport: '支持',
                 },
               ],
@@ -468,14 +464,14 @@ function App() {
               [
                 {
                   name: 'llama2-70b-4096',
-                  inputTokens: '¥0.0014',
-                  outputTokens: '¥0.0014',
+                  inputTokens: '$0.0007',
+                  outputTokens: '$0.0007',
                   isSupport: '支持',
                 },
                 {
                   name: 'mixtral-8x7b-32768',
-                  inputTokens: '¥0.00081',
-                  outputTokens: '¥0.00081',
+                  inputTokens: '$0.000405',
+                  outputTokens: '$0.000405',
                   isSupport: '支持',
                 },
               ],
