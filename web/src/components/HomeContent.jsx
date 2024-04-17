@@ -133,7 +133,7 @@ function App() {
             <li>为了维持转发服务正常使用，将不定期清除非法用户，请使用真实邮箱注册</li>
             <li>
               受供应商和OpenAI政策影响，价格会随时调整，本站充值汇率为
-              <Tag color={'red'}>2元=1刀</Tag>（部分模型除外，详情请查看下方表格）
+              <Tag color={'red'}>2元=1刀</Tag>（模型计费详情请查看下方表格）
             </li>
           </ul>
         </Card>
@@ -315,32 +315,32 @@ function App() {
                 },
                 {
                   name: 'dall-e-3 1024x1024',
-                  timesPrice: '$0.15 每次',
+                  timesPrice: '$0.1 每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 1024x1792',
-                  timesPrice: '$0.3 每次',
+                  timesPrice: '$0.2 每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 1792x1792',
-                  timesPrice: '$0.3 每次',
+                  timesPrice: '$0.2 每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 hd 1024x1024',
-                  timesPrice: '$0.3 每次',
+                  timesPrice: '$0.2 每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 hd 1024x1792',
-                  timesPrice: '$0.45 每次',
+                  timesPrice: '$0.3 每次',
                   isSupport: '支持',
                 },
                 {
                   name: 'dall-e-3 hd 1792x1792',
-                  timesPrice: '$0.45 每次',
+                  timesPrice: '$0.3 每次',
                   isSupport: '支持',
                 },
                 {
