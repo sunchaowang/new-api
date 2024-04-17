@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Divider, Form, Grid, Header, Message, Modal } from 'semantic-ui-react';
 import { API, removeTrailingSlash, showError, verifyJSON } from '../helpers';
 
+import { useTheme } from '../context/Theme';
+
 const SystemSetting = () => {
   let [inputs, setInputs] = useState({
     PasswordLoginEnabled: '',
@@ -51,6 +53,9 @@ const SystemSetting = () => {
   const [EmailDomainWhitelist, setEmailDomainWhitelist] = useState([]);
   const [restrictedDomainInput, setRestrictedDomainInput] = useState('');
   const [showPasswordWarningModal, setShowPasswordWarningModal] = useState(false);
+
+  const theme = useTheme();
+  const isDark = theme === 'dark';
 
   const getOptions = async () => {
     const res = await API.get('/api/option/');

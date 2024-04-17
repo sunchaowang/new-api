@@ -4,6 +4,8 @@ import { Table, Button, Row, Col, Card } from 'antd';
 import { API, showError, showSuccess, timestamp2string, verifyJSON } from '../helpers';
 import { Input } from '@douyinfe/semi-ui';
 
+import { useTheme } from '../context/Theme';
+
 const OperationSetting = () => {
   let now = new Date();
   let [inputs, setInputs] = useState({
@@ -103,6 +105,9 @@ const OperationSetting = () => {
       showError(message);
     }
   };
+
+  const theme = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     getOptions().then();
