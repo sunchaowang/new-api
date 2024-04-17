@@ -10,6 +10,10 @@ const SystemSetting = () => {
     GitHubOAuthEnabled: '',
     GitHubClientId: '',
     GitHubClientSecret: '',
+    LinuxDoOAuthEnabled: '',
+    LinuxDoClientId: '',
+    LinuxDoClientSecret: '',
+    LinuxDoMinLevel: 0,
     Notice: '',
     SMTPServer: '',
     SMTPPort: '',
@@ -87,6 +91,7 @@ const SystemSetting = () => {
       case 'PasswordRegisterEnabled':
       case 'EmailVerificationEnabled':
       case 'GitHubOAuthEnabled':
+      case 'LinuxDoOAuthEnabled':
       case 'WeChatAuthEnabled':
       case 'TelegramOAuthEnabled':
       case 'TurnstileCheckEnabled':
@@ -137,6 +142,9 @@ const SystemSetting = () => {
       name === 'PayAddress' ||
       name === 'GitHubClientId' ||
       name === 'GitHubClientSecret' ||
+      name === 'LinuxDoClientId' ||
+      name === 'LinuxDoClientSecret' ||
+      name === 'LinuxDoMinLevel' ||
       name === 'WeChatServerAddress' ||
       name === 'WeChatServerToken' ||
       name === 'WeChatAccountQRCodeImageURL' ||
@@ -232,6 +240,21 @@ const SystemSetting = () => {
       inputs.GitHubClientSecret !== ''
     ) {
       await updateOption('GitHubClientSecret', inputs.GitHubClientSecret);
+    }
+  };
+
+  const submitLinuxDoOAuth = async () => {
+    if (originInputs['LinuxDoClientId'] !== inputs.LinuxDoClientId) {
+      await updateOption('LinuxDoClientId', inputs.LinuxDoClientId);
+    }
+    if (
+      originInputs['LinuxDoClientSecret'] !== inputs.LinuxDoClientSecret &&
+      inputs.LinuxDoClientSecret !== ''
+    ) {
+      await updateOption('LinuxDoClientSecret', inputs.LinuxDoClientSecret);
+    }
+    if (originInputs['LinuxDoMinLevel'] !== inputs.LinuxDoMinLevel) {
+      await updateOption('LinuxDoMinLevel', inputs.LinuxDoMinLevel);
     }
   };
 
@@ -403,6 +426,12 @@ const SystemSetting = () => {
               checked={inputs.GitHubOAuthEnabled === 'true'}
               label="允许通过 GitHub 账户登录 & 注册"
               name="GitHubOAuthEnabled"
+              onChange={handleInputChange}
+            />
+            <Form.Checkbox
+              checked={inputs.LinuxDoOAuthEnabled === 'true'}
+              label="允许通过 LINUX DO 账户登录 & 注册"
+              name="LinuxDoOAuthEnabled"
               onChange={handleInputChange}
             />
             <Form.Checkbox
@@ -587,6 +616,51 @@ const SystemSetting = () => {
             />
           </Form.Group>
           <Form.Button onClick={submitGitHubOAuth}>保存 GitHub OAuth 设置</Form.Button>
+          <Divider />
+          <Header as="h3">
+            配置 LINUX DO Oauth
+            <Header.Subheader>
+              用以支持通过 LINUX DO 进行登录注册，
+              <a href="https://connect.linux.do" target="_blank" rel="noreferrer">
+                点击此处
+              </a>
+              管理你的 LINUX DO OAuth
+            </Header.Subheader>
+          </Header>
+          <Message>
+            Homepage URL 填 <code>{inputs.ServerAddress}</code>
+            ，Authorization callback URL 填 <code>{`${inputs.ServerAddress}/oauth/linuxdo`}</code>
+          </Message>
+          <Form.Group widths={3}>
+            <Form.Input
+              label="LINUX DO Client ID"
+              name="LinuxDoClientId"
+              onChange={handleInputChange}
+              autoComplete="new-password"
+              value={inputs.LinuxDoClientId}
+              placeholder="输入你注册的 LINUX DO OAuth 的 ID"
+            />
+            <Form.Input
+              label="LINUX DO Client Secret"
+              name="LinuxDoClientSecret"
+              onChange={handleInputChange}
+              type="password"
+              autoComplete="new-password"
+              value={inputs.LinuxDoClientSecret}
+              placeholder="敏感信息不会发送到前端显示"
+            />
+            <Form.Input
+              label="限制最低信任等级"
+              name="LinuxDoMinLevel"
+              onChange={handleInputChange}
+              type="number"
+              min={0}
+              max={4}
+              value={inputs.LinuxDoMinLevel}
+              placeholder="输入允许使用的最低 LINUX DO 信任等级"
+            />
+          </Form.Group>
+          <Form.Button onClick={submitLinuxDoOAuth}>保存 LINUX DO OAuth 设置</Form.Button>
           <Divider />
           <Header as="h3">
             配置 WeChat Server

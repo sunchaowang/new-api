@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { UserContext } from '../context/User';
 import { API, getLogo, showError, showInfo, showSuccess } from '../helpers';
-import { onGitHubOAuthClicked } from './utils';
+import { onGitHubOAuthClicked, onLinuxDoOAuthClicked } from './utils';
 import Turnstile from 'react-turnstile';
 import { Form } from '@douyinfe/semi-ui';
 import { Button, Card, Divider, Flex, Modal } from 'antd';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import TelegramLoginButton from 'react-telegram-login';
+import LinuxDoIcon from './LinuxDoIcon';
 
 import { IconGithubLogo } from '@douyinfe/semi-icons';
 import WeChatIcon from './WeChatIcon';
@@ -191,7 +192,10 @@ const LoginForm = () => {
             忘记密码 <Link to="/reset">点击重置</Link>
           </Text>
         </div>
-        {status.github_oauth || status.wechat_login || status.telegram_oauth ? (
+        {status.github_oauth ||
+        status.wechat_login ||
+        status.telegram_oauth ||
+        status.linuxdo_oauth ? (
           <>
             <Divider margin="12px" align="center">
               第三方登录
@@ -208,6 +212,16 @@ const LoginForm = () => {
                   type="primary"
                   icon={<IconGithubLogo />}
                   onClick={() => onGitHubOAuthClicked(status.github_client_id)}
+                />
+              ) : (
+                <></>
+              )}
+              {status.linuxdo_oauth ? (
+                <Button
+                  type="primary"
+                  icon={<LinuxDoIcon />}
+                  style={{ color: '#000', margin: '0 5px' }}
+                  onClick={() => onLinuxDoOAuthClicked(status.linuxdo_client_id)}
                 />
               ) : (
                 <></>
