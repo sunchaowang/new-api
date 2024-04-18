@@ -30,6 +30,10 @@ const (
 
 func Path2RelayMode(path string) int {
 	relayMode := RelayModeUnknown
+	// 去掉 path 的 api 前缀
+	// 去掉路径中的 API 前缀
+	path = strings.TrimPrefix(path, "/api")
+
 	if strings.HasPrefix(path, "/v1/chat/completions") {
 		relayMode = RelayModeChatCompletions
 	} else if strings.HasPrefix(path, "/v1/completions") {
