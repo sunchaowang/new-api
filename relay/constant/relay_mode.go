@@ -31,28 +31,26 @@ const (
 func Path2RelayMode(path string) int {
 	relayMode := RelayModeUnknown
 	// 去掉 path 的 api 前缀
-	// 去掉路径中的 API 前缀
-	path = strings.TrimPrefix(path, "/api")
 
-	if strings.HasPrefix(path, "/v1/chat/completions") {
+	if strings.Contains(path, "/v1/chat/completions") {
 		relayMode = RelayModeChatCompletions
-	} else if strings.HasPrefix(path, "/v1/completions") {
+	} else if strings.Contains(path, "/v1/completions") {
 		relayMode = RelayModeCompletions
-	} else if strings.HasPrefix(path, "/v1/embeddings") {
+	} else if strings.Contains(path, "/v1/embeddings") {
 		relayMode = RelayModeEmbeddings
-	} else if strings.HasSuffix(path, "embeddings") {
+	} else if strings.Contains(path, "embeddings") {
 		relayMode = RelayModeEmbeddings
-	} else if strings.HasPrefix(path, "/v1/moderations") {
+	} else if strings.Contains(path, "/v1/moderations") {
 		relayMode = RelayModeModerations
-	} else if strings.HasPrefix(path, "/v1/images/generations") {
+	} else if strings.Contains(path, "/v1/images/generations") {
 		relayMode = RelayModeImagesGenerations
-	} else if strings.HasPrefix(path, "/v1/edits") {
+	} else if strings.Contains(path, "/v1/edits") {
 		relayMode = RelayModeEdits
-	} else if strings.HasPrefix(path, "/v1/audio/speech") {
+	} else if strings.Contains(path, "/v1/audio/speech") {
 		relayMode = RelayModeAudioSpeech
-	} else if strings.HasPrefix(path, "/v1/audio/transcriptions") {
+	} else if strings.Contains(path, "/v1/audio/transcriptions") {
 		relayMode = RelayModeAudioTranscription
-	} else if strings.HasPrefix(path, "/v1/audio/translations") {
+	} else if strings.Contains(path, "/v1/audio/translations") {
 		relayMode = RelayModeAudioTranslation
 	}
 	return relayMode
@@ -60,35 +58,35 @@ func Path2RelayMode(path string) int {
 
 func Path2RelayModeMidjourney(path string) int {
 	relayMode := RelayModeUnknown
-	if strings.HasSuffix(path, "/mj/submit/action") {
+	if strings.Contains(path, "/mj/submit/action") {
 		// midjourney plus
 		relayMode = RelayModeMidjourneyAction
-	} else if strings.HasSuffix(path, "/mj/submit/modal") {
+	} else if strings.Contains(path, "/mj/submit/modal") {
 		// midjourney plus
 		relayMode = RelayModeMidjourneyModal
-	} else if strings.HasSuffix(path, "/mj/submit/shorten") {
+	} else if strings.Contains(path, "/mj/submit/shorten") {
 		// midjourney plus
 		relayMode = RelayModeMidjourneyShorten
-	} else if strings.HasSuffix(path, "/mj/insight-face/swap") {
+	} else if strings.Contains(path, "/mj/insight-face/swap") {
 		// midjourney plus
 		relayMode = RelayModeSwapFace
-	} else if strings.HasSuffix(path, "/mj/submit/imagine") {
+	} else if strings.Contains(path, "/mj/submit/imagine") {
 		relayMode = RelayModeMidjourneyImagine
-	} else if strings.HasSuffix(path, "/mj/submit/blend") {
+	} else if strings.Contains(path, "/mj/submit/blend") {
 		relayMode = RelayModeMidjourneyBlend
-	} else if strings.HasSuffix(path, "/mj/submit/describe") {
+	} else if strings.Contains(path, "/mj/submit/describe") {
 		relayMode = RelayModeMidjourneyDescribe
-	} else if strings.HasSuffix(path, "/mj/notify") {
+	} else if strings.Contains(path, "/mj/notify") {
 		relayMode = RelayModeMidjourneyNotify
-	} else if strings.HasSuffix(path, "/mj/submit/change") {
+	} else if strings.Contains(path, "/mj/submit/change") {
 		relayMode = RelayModeMidjourneyChange
-	} else if strings.HasSuffix(path, "/mj/submit/simple-change") {
+	} else if strings.Contains(path, "/mj/submit/simple-change") {
 		relayMode = RelayModeMidjourneyChange
-	} else if strings.HasSuffix(path, "/fetch") {
+	} else if strings.Contains(path, "/fetch") {
 		relayMode = RelayModeMidjourneyTaskFetch
-	} else if strings.HasSuffix(path, "/image-seed") {
+	} else if strings.Contains(path, "/image-seed") {
 		relayMode = RelayModeMidjourneyTaskImageSeed
-	} else if strings.HasSuffix(path, "/list-by-condition") {
+	} else if strings.Contains(path, "/list-by-condition") {
 		relayMode = RelayModeMidjourneyTaskFetchByCondition
 	}
 	return relayMode
