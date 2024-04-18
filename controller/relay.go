@@ -3,7 +3,6 @@ package controller
 import (
 	"bytes"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"net/http"
@@ -15,6 +14,9 @@ import (
 	"one-api/relay/constant"
 	relayconstant "one-api/relay/constant"
 	"one-api/service"
+	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode {
@@ -35,7 +37,8 @@ func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode 
 }
 
 func Relay(c *gin.Context) {
-	relayMode := constant.Path2RelayMode(c.Request.URL.Path)
+	relayMode := constant.Path2RelayMode(strings.Replace(c.Request.URL.Path, "/api/v1", "/v1", 1))
+
 	retryTimes := common.RetryTimes
 	requestId := c.GetString(common.RequestIdKey)
 	channelId := c.GetInt("channel_id")

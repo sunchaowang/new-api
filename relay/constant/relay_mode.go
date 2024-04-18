@@ -1,6 +1,8 @@
 package constant
 
-import "strings"
+import (
+	"strings"
+)
 
 const (
 	RelayModeUnknown = iota
@@ -31,25 +33,25 @@ const (
 func Path2RelayMode(path string) int {
 	relayMode := RelayModeUnknown
 
-	if strings.HasPrefix(path, "/v1/chat/completions") || strings.HasPrefix(path, "/api/v1/chat/completions") {
+	if strings.HasPrefix(path, "/v1/chat/completions") {
 		relayMode = RelayModeChatCompletions
-	} else if strings.HasPrefix(path, "/v1/completions") || strings.HasPrefix(path, "/api/v1/completions") {
+	} else if strings.HasPrefix(path, "/v1/completions") {
 		relayMode = RelayModeCompletions
-	} else if strings.HasPrefix(path, "/v1/embeddings") || strings.HasPrefix(path, "/api/v1/embeddings") {
+	} else if strings.HasPrefix(path, "/v1/embeddings") {
 		relayMode = RelayModeEmbeddings
-	} else if strings.HasSuffix(path, "embeddings") || strings.HasSuffix(path, "api/embeddings") {
+	} else if strings.HasSuffix(path, "embeddings") {
 		relayMode = RelayModeEmbeddings
-	} else if strings.HasPrefix(path, "/v1/moderations") || strings.HasPrefix(path, "/api/v1/moderations") {
+	} else if strings.HasPrefix(path, "/v1/moderations") {
 		relayMode = RelayModeModerations
-	} else if strings.HasPrefix(path, "/v1/images/generations") || strings.HasPrefix(path, "/api/v1/images/generations") {
+	} else if strings.HasPrefix(path, "/v1/images/generations") {
 		relayMode = RelayModeImagesGenerations
-	} else if strings.HasPrefix(path, "/v1/edits") || strings.HasPrefix(path, "/api/v1/edits") {
+	} else if strings.HasPrefix(path, "/v1/edits") {
 		relayMode = RelayModeEdits
-	} else if strings.HasPrefix(path, "/v1/audio/speech") || strings.HasPrefix(path, "/api/v1/audio/speech") {
+	} else if strings.HasPrefix(path, "/v1/audio/speech") {
 		relayMode = RelayModeAudioSpeech
-	} else if strings.HasPrefix(path, "/v1/audio/transcriptions") || strings.HasPrefix(path, "/api/v1/audio/transcriptions") {
+	} else if strings.HasPrefix(path, "/v1/audio/transcriptions") {
 		relayMode = RelayModeAudioTranscription
-	} else if strings.HasPrefix(path, "/v1/audio/translations") || strings.HasPrefix(path, "/api/v1/audio/translations") {
+	} else if strings.HasPrefix(path, "/v1/audio/translations") {
 		relayMode = RelayModeAudioTranslation
 	}
 	return relayMode
@@ -57,35 +59,35 @@ func Path2RelayMode(path string) int {
 
 func Path2RelayModeMidjourney(path string) int {
 	relayMode := RelayModeUnknown
-	if strings.HasSuffix(path, "/mj/submit/action") || strings.HasSuffix(path, "/api/v1/mj/submit/action") {
+	if strings.HasSuffix(path, "/mj/submit/action") {
 		// midjourney plus
 		relayMode = RelayModeMidjourneyAction
-	} else if strings.HasSuffix(path, "/mj/submit/modal") || strings.HasSuffix(path, "/api/v1/mj/submit/modal") {
+	} else if strings.HasSuffix(path, "/mj/submit/modal") {
 		// midjourney plus
 		relayMode = RelayModeMidjourneyModal
-	} else if strings.HasSuffix(path, "/mj/submit/shorten") || strings.HasSuffix(path, "/api/v1/mj/submit/shorten") {
+	} else if strings.HasSuffix(path, "/mj/submit/shorten") {
 		// midjourney plus
 		relayMode = RelayModeMidjourneyShorten
-	} else if strings.HasSuffix(path, "/mj/insight-face/swap") || strings.HasSuffix(path, "/api/v1/mj/insight-face/swap") {
+	} else if strings.HasSuffix(path, "/mj/insight-face/swap") {
 		// midjourney plus
 		relayMode = RelayModeSwapFace
-	} else if strings.HasSuffix(path, "/mj/submit/imagine") || strings.HasSuffix(path, "/api/v1/mj/submit/imagine") {
+	} else if strings.HasSuffix(path, "/mj/submit/imagine") {
 		relayMode = RelayModeMidjourneyImagine
-	} else if strings.HasSuffix(path, "/mj/submit/blend") || strings.HasSuffix(path, "/api/v1/mj/submit/blend") {
+	} else if strings.HasSuffix(path, "/mj/submit/blend") {
 		relayMode = RelayModeMidjourneyBlend
-	} else if strings.HasSuffix(path, "/mj/submit/describe") || strings.HasSuffix(path, "/api/v1/mj/submit/describe") {
+	} else if strings.HasSuffix(path, "/mj/submit/describe") {
 		relayMode = RelayModeMidjourneyDescribe
-	} else if strings.HasSuffix(path, "/mj/notify") || strings.HasSuffix(path, "/api/v1/mj/notify") {
+	} else if strings.HasSuffix(path, "/mj/notify") {
 		relayMode = RelayModeMidjourneyNotify
-	} else if strings.HasSuffix(path, "/mj/submit/change") || strings.HasSuffix(path, "/api/v1/mj/submit/change") {
+	} else if strings.HasSuffix(path, "/mj/submit/change") {
 		relayMode = RelayModeMidjourneyChange
-	} else if strings.HasSuffix(path, "/mj/submit/simple-change") || strings.HasSuffix(path, "/api/v1/mj/submit/simple-change") {
+	} else if strings.HasSuffix(path, "/mj/submit/simple-change") {
 		relayMode = RelayModeMidjourneyChange
-	} else if strings.HasSuffix(path, "/fetch") || strings.HasSuffix(path, "/api/v1/mj/fetch") {
+	} else if strings.HasSuffix(path, "/fetch") {
 		relayMode = RelayModeMidjourneyTaskFetch
-	} else if strings.HasSuffix(path, "/image-seed") || strings.HasSuffix(path, "/api/v1/mj/image-seed") {
+	} else if strings.HasSuffix(path, "/image-seed") {
 		relayMode = RelayModeMidjourneyTaskImageSeed
-	} else if strings.HasSuffix(path, "/list-by-condition") || strings.HasSuffix(path, "/api/v1/mj/list-by-condition") {
+	} else if strings.HasSuffix(path, "/list-by-condition") {
 		relayMode = RelayModeMidjourneyTaskFetchByCondition
 	}
 	return relayMode

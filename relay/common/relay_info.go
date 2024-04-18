@@ -1,11 +1,12 @@
 package common
 
 import (
-	"github.com/gin-gonic/gin"
 	"one-api/common"
 	"one-api/relay/constant"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type RelayInfo struct {
@@ -41,9 +42,9 @@ func GenRelayInfo(c *gin.Context) *RelayInfo {
 	apiType := constant.ChannelType2APIType(channelType)
 
 	info := &RelayInfo{
-		RelayMode:      constant.Path2RelayMode(c.Request.URL.Path),
+		RelayMode:      constant.Path2RelayMode(strings.Replace(c.Request.URL.Path, "/api/v1", "/v1", 1)),
 		BaseUrl:        c.GetString("base_url"),
-		RequestURLPath: c.Request.URL.String(),
+		RequestURLPath: strings.Replace(c.Request.URL.Path, "/api/v1", "/v1", 1),
 		ChannelType:    channelType,
 		ChannelId:      channelId,
 		TokenId:        tokenId,
