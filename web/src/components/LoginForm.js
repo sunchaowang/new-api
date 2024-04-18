@@ -34,10 +34,10 @@ const LoginForm = () => {
   const logo = getLogo();
 
   useEffect(() => {
-    if (searchParams.get('expired')) {
-      localStorage.removeItem('user');
-      showError('未登录或登录已过期，请重新登录！');
-    }
+    // if (searchParams.get('expired')) {
+    //   localStorage.removeItem('user');
+    //   showError('未登录或登录已过期，请重新登录！');
+    // }
     let status = localStorage.getItem('status');
     if (status) {
       status = JSON.parse(status);
@@ -145,9 +145,6 @@ const LoginForm = () => {
   return (
     <Flex justify={'center'}>
       <Card style={{ width: '500px' }}>
-        <Title heading={2} style={{ textAlign: 'center' }}>
-          用户登录
-        </Title>
         <Form>
           <Form.Input
             field={'username'}
@@ -185,9 +182,9 @@ const LoginForm = () => {
             marginTop: 20,
           }}
         >
-          <Text>
-            没有账号请先 <Link to="/register">注册账号</Link>
-          </Text>
+          {/*<Text>*/}
+          {/*  没有账号请先 <Link to="/register">注册账号</Link>*/}
+          {/*</Text>*/}
           <Text>
             忘记密码 <Link to="/reset">点击重置</Link>
           </Text>
@@ -209,7 +206,6 @@ const LoginForm = () => {
             >
               {status.github_oauth ? (
                 <Button
-                  type="primary"
                   icon={<IconGithubLogo />}
                   onClick={() => onGitHubOAuthClicked(status.github_client_id)}
                 />
@@ -218,7 +214,6 @@ const LoginForm = () => {
               )}
               {status.linuxdo_oauth ? (
                 <Button
-                  type="primary"
                   icon={<LinuxDoIcon />}
                   style={{ color: '#000', margin: '0 5px' }}
                   onClick={() => onLinuxDoOAuthClicked(status.linuxdo_client_id)}
@@ -228,7 +223,6 @@ const LoginForm = () => {
               )}
               {status.wechat_login ? (
                 <Button
-                  type="primary"
                   style={{ color: 'rgba(var(--semi-green-5), 1)' }}
                   icon={<Icon svg={<WeChatIcon />} />}
                   onClick={onWeChatLoginClicked}

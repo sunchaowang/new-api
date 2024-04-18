@@ -113,9 +113,6 @@ const RegisterForm = () => {
   return (
     <Flex justify={'center'}>
       <Card style={{ width: '500px' }}>
-        <Title heading={2} style={{ textAlign: 'center' }}>
-          新用户注册
-        </Title>
         <Form size="large">
           <Form.Input
             icon="user"
@@ -201,12 +198,6 @@ const RegisterForm = () => {
             注册
           </Button>
         </Form>
-        <Card bordered={false}>
-          已有账户？
-          <Link to="/login" className="btn btn-link">
-            点击登录
-          </Link>
-        </Card>
       </Card>
     </Flex>
   );

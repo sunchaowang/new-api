@@ -46,7 +46,7 @@ func (a *Adaptor) DoRequest(c *gin.Context, info *relaycommon.RelayInfo, request
 func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, info *relaycommon.RelayInfo) (usage *dto.Usage, err *dto.OpenAIErrorWithStatusCode) {
 	splits := strings.Split(info.ApiKey, "|")
 	if len(splits) != 3 {
-		return nil, service.OpenAIErrorWrapper(errors.New("invalid auth"), "invalid_auth", http.StatusBadRequest)
+		return nil, service.OpenAIErrorWrapper(errors.New("invalid Auth"), "invalid_auth", http.StatusBadRequest)
 	}
 	if a.request == nil {
 		return nil, service.OpenAIErrorWrapper(errors.New("request is nil"), "request_is_nil", http.StatusBadRequest)

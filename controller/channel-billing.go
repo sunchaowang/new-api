@@ -78,7 +78,7 @@ type APGC2DGPTUsageResponse struct {
 	TotalUsed      float64 `json:"total_used"`
 }
 
-// GetAuthHeader get auth header
+// GetAuthHeader get Auth header
 func GetAuthHeader(token string) http.Header {
 	h := http.Header{}
 	h.Add("Authorization", fmt.Sprintf("Bearer %s", token))

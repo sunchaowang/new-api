@@ -267,43 +267,37 @@ const SiderBar = () => {
             }}
           ></Menu>
         </Col>
-        <Col flex={'150px'}>
-          <Space style={{ float: 'right', padding: '0 24px' }}>
-            {userState.user
-              ? [
-                  // 显示头像和退出按钮
-                  <Dropdown
-                    menu={{
-                      items: [
-                        {
-                          key: 'logout',
-                          label: '退出登录',
-                        },
-                      ],
-                      onClick: (e) => {
-                        if (e.key === 'logout') {
-                          userDispatch({ type: 'logout' });
-                          localStorage.removeItem('user');
-                          navigate('/login');
-                        }
-                      },
-                    }}
-                  >
-                    <Space>
-                      <Typography.Title level={5}>
-                        {/*<Avatar src={userState.user.avatar} />*/}
-                        {userState.user.username}
-                      </Typography.Title>
-                    </Space>
-                  </Dropdown>,
-                ]
-              : [
-                  <Link to="/login">登录</Link>,
-                  <Divider type="vertical"></Divider>,
-                  <Link to="/register">注册</Link>,
-                ]}
-          </Space>
-        </Col>
+        {userState.user && (
+          <Col flex={'150px'}>
+            <Space style={{ float: 'right', padding: '0 24px' }}>
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      key: 'logout',
+                      label: '退出登录',
+                    },
+                  ],
+                  onClick: (e) => {
+                    if (e.key === 'logout') {
+                      userDispatch({ type: 'logout' });
+                      localStorage.removeItem('user');
+                      navigate('/login');
+                    }
+                  },
+                }}
+              >
+                <Space>
+                  <Typography.Title level={5}>
+                    {/*<Avatar src={userState.user.avatar} />*/}
+                    {userState.user.username}
+                  </Typography.Title>
+                </Space>
+              </Dropdown>
+              ,
+            </Space>
+          </Col>
+        )}
       </Row>
     </>
   );

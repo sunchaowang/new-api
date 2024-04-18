@@ -14,7 +14,7 @@ import { AppContext, AppProvider, AppActions } from './context/App';
 import { Layout, ConfigProvider, Card, theme } from 'antd';
 import SiderBar from './components/SiderBar';
 import zhCN from 'antd/lib/locale/zh_CN';
-import { API, showError } from './helpers';
+import { API, isMobile, showError } from './helpers';
 import Provider from './prodiver';
 
 // initialization
@@ -57,7 +57,7 @@ export function Index() {
       <ConfigProvider
         locale={zhCN}
         theme={{
-          algorithm: [theme.defaultAlgorithm],
+          algorithm: isMobile() ? theme.compactAlgorithm : theme.defaultAlgorithm,
           components: {
             Layout: {
               headerBg: 'transparent',

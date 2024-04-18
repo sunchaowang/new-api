@@ -1,10 +1,11 @@
 import React, { lazy, Suspense, useContext, useEffect } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Loading from './components/Loading';
 import User from './pages/User';
 import { PrivateRoute } from './components/PrivateRoute';
-import RegisterForm from './components/RegisterForm';
-import LoginForm from './components/LoginForm';
+import AuthPage from './pages/Auth';
+// import RegisterForm from './components/RegisterForm';
+// import LoginForm from './components/LoginForm';
 import NotFound from './pages/NotFound';
 import Setting from './pages/Setting';
 import EditUser from './pages/User/EditUser';
@@ -27,6 +28,18 @@ import Midjourney from './pages/Midjourney';
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
 const About = lazy(() => import('./pages/About'));
+
+const AuthRedirect = () => {
+  const location = useLocation();
+
+  // 构建一个带有当前查询参数的路径
+  const redirectTo = {
+    pathname: '/auth',
+    search: location.search, // 保持当前的查询参数
+  };
+
+  return <Navigate replace to={redirectTo} />;
+};
 
 function App() {
   const [userState, userDispatch] = useContext(UserContext);
@@ -139,19 +152,21 @@ function App() {
         }
       />
       <Route
-        path="/login"
+        path="/auth"
         element={
           <Suspense fallback={<Loading></Loading>}>
-            <LoginForm />
+            <AuthPage />
           </Suspense>
         }
       />
+      <Route path="/login" element={AuthRedirect()} />
       <Route
         path="/register"
         element={
-          <Suspense fallback={<Loading></Loading>}>
-            <RegisterForm />
-          </Suspense>
+          // <Suspense fallback={<Loading></Loading>}>
+          //   <RegisterForm />
+          // </Suspense>
+          AuthRedirect()
         }
       />
       <Route
