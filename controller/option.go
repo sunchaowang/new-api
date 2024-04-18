@@ -31,6 +31,38 @@ func GetOptions(c *gin.Context) {
 	return
 }
 
+func GetOptionByKey(c *gin.Context) {
+	var options []*model.Option
+	common.OptionMapRWMutex.Lock()
+	key := string(c.Param("key"))
+
+	for k, v := range common.OptionMap {
+		if strings.HasSuffix(k, "Token") || strings.HasSuffix(k, "Secret") {
+			continue
+		}
+		if k == key {
+			options = append(options, &model.Option{
+				Key:   k,
+				Value: common.Interface2String(v),
+			})
+			break
+		}
+		continue
+	}
+	common.OptionMapRWMutex.Unlock()
+	// len(options) == 0 return []
+	if len(options) == 0 {
+		options = []*model.Option{}
+	}
+	//
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    options,
+	})
+	return
+}
+
 func UpdateOption(c *gin.Context) {
 	var option model.Option
 	err := json.NewDecoder(c.Request.Body).Decode(&option)
