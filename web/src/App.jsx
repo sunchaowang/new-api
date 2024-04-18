@@ -166,7 +166,7 @@ function App() {
         path="/oauth/github"
         element={
           <Suspense fallback={<Loading></Loading>}>
-            <LinuxDoOAuth />
+            <GitHubOAuth />
           </Suspense>
         }
       />
@@ -174,7 +174,7 @@ function App() {
         path="/oauth/linuxdo"
         element={
           <Suspense fallback={<Loading></Loading>}>
-            <GitHubOAuth />
+            <LinuxDoOAuth />
           </Suspense>
         }
       />
