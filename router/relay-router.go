@@ -1,10 +1,11 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"one-api/controller"
 	"one-api/middleware"
 	"one-api/relay"
+
+	"github.com/gin-gonic/gin"
 )
 
 func SetRelayRouter(router *gin.Engine) {
@@ -16,6 +17,34 @@ func SetRelayRouter(router *gin.Engine) {
 		modelsRouter.GET("", controller.ListModels)
 		modelsRouter.GET("/:model", controller.RetrieveModel)
 	}
+	relayAPIV1Router := router.Group("/api/v1")
+	relayAPIV1Router.Use(middleware.TokenAuth(), middleware.Distribute())
+	{
+		relayAPIV1Router.POST("/completions", controller.Relay)
+		relayAPIV1Router.POST("/chat/completions", controller.Relay)
+		relayAPIV1Router.POST("/edits", controller.Relay)
+		relayAPIV1Router.POST("/images/generations", controller.Relay)
+		relayAPIV1Router.POST("/images/edits", controller.RelayNotImplemented)
+		relayAPIV1Router.POST("/images/variations", controller.RelayNotImplemented)
+		relayAPIV1Router.POST("/embeddings", controller.Relay)
+		relayAPIV1Router.POST("/engines/:model/embeddings", controller.Relay)
+		relayAPIV1Router.POST("/audio/transcriptions", controller.Relay)
+		relayAPIV1Router.POST("/audio/translations", controller.Relay)
+		relayAPIV1Router.POST("/audio/speech", controller.Relay)
+		relayAPIV1Router.GET("/files", controller.RelayNotImplemented)
+		relayAPIV1Router.POST("/files", controller.RelayNotImplemented)
+		relayAPIV1Router.DELETE("/files/:id", controller.RelayNotImplemented)
+		relayAPIV1Router.GET("/files/:id", controller.RelayNotImplemented)
+		relayAPIV1Router.GET("/files/:id/content", controller.RelayNotImplemented)
+		relayAPIV1Router.POST("/fine-tunes", controller.RelayNotImplemented)
+		relayAPIV1Router.GET("/fine-tunes", controller.RelayNotImplemented)
+		relayAPIV1Router.GET("/fine-tunes/:id", controller.RelayNotImplemented)
+		relayAPIV1Router.POST("/fine-tunes/:id/cancel", controller.RelayNotImplemented)
+		relayAPIV1Router.GET("/fine-tunes/:id/events", controller.RelayNotImplemented)
+		relayAPIV1Router.DELETE("/models/:model", controller.RelayNotImplemented)
+		relayAPIV1Router.POST("/moderations", controller.Relay)
+	}
+
 	relayV1Router := router.Group("/v1")
 	relayV1Router.Use(middleware.TokenAuth(), middleware.Distribute())
 	{
