@@ -50,6 +50,14 @@ func UpdateOption(c *gin.Context) {
 			})
 			return
 		}
+	case "LinuxDoOAuthEnabled":
+		if option.Value == "true" && common.LinuxDoClientId == "" {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "无法启用 Linux Do OAuth，请先填入 Linux Do Client Id 以及 Linux Do Client Secret！",
+			})
+			return
+		}
 	case "EmailDomainRestrictionEnabled":
 		if option.Value == "true" && len(common.EmailDomainWhitelist) == 0 {
 			c.JSON(http.StatusOK, gin.H{
