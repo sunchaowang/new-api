@@ -1,13 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { UserContext } from '../context/User';
-<<<<<<< HEAD
-import { API, getLogo, showError, showInfo, showSuccess } from '../helpers';
-import { onGitHubOAuthClicked, onLinuxDoOAuthClicked } from './utils';
-=======
 import { API, getLogo, showError, showInfo, showSuccess, updateAPI } from '../helpers';
 import { onGitHubOAuthClicked } from './utils';
->>>>>>> origin/main
 import Turnstile from 'react-turnstile';
 import { Form } from '@douyinfe/semi-ui';
 import { Button, Card, Divider, Flex, Modal } from 'antd';
@@ -238,13 +233,6 @@ const LoginForm = () => {
                 <></>
               )}
 
-<<<<<<< HEAD
-              {status.telegram_oauth ? (
-                <TelegramLoginButton
-                  dataOnauth={onTelegramLoginClicked}
-                  botName={status.telegram_bot_name}
-                />
-=======
                   <Button
                     theme='solid'
                     style={{ width: '100%' }}
@@ -255,7 +243,7 @@ const LoginForm = () => {
                   >
                     登录
                   </Button>
-                </Form>
+                </div>
                 <div
                   style={{
                     display: 'flex',
@@ -328,6 +316,24 @@ const LoginForm = () => {
                 ) : (
                   <></>
                 )}
+                {turnstileEnabled ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: 20,
+                  }}
+                >
+                  <Turnstile
+                    sitekey={turnstileSiteKey}
+                    onVerify={(token) => {
+                      setTurnstileToken(token);
+                    }}
+                  />
+                </div>
+              ) : (
+                <></>
+              )}
                 <Modal
                   title='微信扫码登录'
                   visible={showWeChatLoginModal}
@@ -364,28 +370,8 @@ const LoginForm = () => {
                     />
                   </Form>
                 </Modal>
-              </Card>
-              {turnstileEnabled ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: 20,
-                  }}
-                >
-                  <Turnstile
-                    sitekey={turnstileSiteKey}
-                    onVerify={(token) => {
-                      setTurnstileToken(token);
-                    }}
-                  />
-                </div>
->>>>>>> origin/main
-              ) : (
-                <></>
-              )}
-            </div>
-          </>
+              </>
+                
         ) : (
           <></>
         )}

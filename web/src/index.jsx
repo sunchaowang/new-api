@@ -11,7 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { StatusProvider } from './context/Status';
 import { AppContext, AppProvider, AppActions } from './context/App';
-import { Layout, ConfigProvider, Card, theme } from 'antd';
+import { Layout, ConfigProvider, Card } from '@douyinfe/semi-ui';
 import SiderBar from './components/SiderBar';
 import zhCN from 'antd/lib/locale/zh_CN';
 import { API, isMobile, showError } from './helpers';
@@ -54,18 +54,7 @@ export function Index() {
 
   return (
     <>
-      <ConfigProvider
-        locale={zhCN}
-        theme={{
-          algorithm: isMobile() ? theme.compactAlgorithm : theme.defaultAlgorithm,
-          components: {
-            Layout: {
-              headerBg: 'transparent',
-            },
-          },
-          token: {},
-        }}
-      >
+      <ConfigProvider locale={zhCN}>
         <Provider>
           <Layout style={{ width: '100vw', height: '100vh', position: 'relative' }}>
             <Header
@@ -75,28 +64,33 @@ export function Index() {
                 padding: 0,
               }}
             >
-              {/* <HeaderBar /> */}
-              <SiderBar></SiderBar>
+              <HeaderBar></HeaderBar>
             </Header>
-            <Content
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-            >
-              <Card
-                bordered={false}
+            <Layout>
+              <Sider style={{ width: 220, height: '100%' }}>
+                <SiderBar></SiderBar>
+              </Sider>
+
+              <Content
                 style={{
                   width: '100%',
                   height: '100%',
-                  overflowY: 'scroll',
-                  boxShadow: 'none',
                 }}
               >
-                <MyApp />
-              </Card>
-            </Content>
-            <Layout.Footer
+                <Card
+                  bordered={false}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    overflowY: 'scroll',
+                    boxShadow: 'none',
+                  }}
+                >
+                  <MyApp />
+                </Card>
+              </Content>
+            </Layout>
+            {/* <Layout.Footer
               style={{
                 width: '100%',
                 height: '64px',
@@ -104,7 +98,7 @@ export function Index() {
               }}
             >
               <Footer></Footer>
-            </Layout.Footer>
+            </Layout.Footer> */}
           </Layout>
         </Provider>
       </ConfigProvider>

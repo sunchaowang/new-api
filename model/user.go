@@ -92,14 +92,6 @@ func (user *User) FillUserByLinuxDoId() error {
 	return nil
 }
 
-func (user *User) FillUserByLinuxDoId() error {
-	if user.LinuxDoId == "" {
-		return errors.New("LINUX DO id 为空！")
-	}
-	DB.Where(User{LinuxDoId: user.LinuxDoId}).First(user)
-	return nil
-}
-
 func SearchUsers(keyword string, group string) ([]*User, error) {
 	var users []*User
 	var err error
