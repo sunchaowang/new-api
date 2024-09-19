@@ -23,6 +23,7 @@ const SystemSetting = () => {
     LinuxDoOAuthEnabled: '',
     LinuxDoClientId: '',
     LinuxDoClientSecret: '',
+    LinuxDoMinLevel: '',
     Notice: '',
     SMTPServer: '',
     SMTPPort: '',
@@ -296,6 +297,9 @@ const SystemSetting = () => {
       inputs.LinuxDoClientSecret !== ''
     ) {
       await updateOption('LinuxDoClientSecret', inputs.LinuxDoClientSecret);
+    }
+    if (originInputs['LinuxDoMinLevel'] !== inputs.LinuxDoMinLevel) {
+      await updateOption('LinuxDoMinLevel', inputs.LinuxDoMinLevel);
     }
   };
 
@@ -736,10 +740,10 @@ const SystemSetting = () => {
             />
             <Form.Input
               label='Linux Do Level'
-              name='LinuxDoLevel'
+              name='LinuxDoMinLevel'
               onChange={handleInputChange}
               autoComplete='new-password'
-              value={inputs.LinuxDoLevel}
+              value={inputs.LinuxDoMinLevel}
               placeholder='输入Linux Do OAuth APP 的 最低信任等级'
             />
           </Form.Group>

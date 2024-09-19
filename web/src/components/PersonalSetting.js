@@ -519,6 +519,37 @@ const PersonalSetting = () => {
                   </div>
                 </div>
               </div>
+              {/* linux do */}
+              <div style={{ marginTop: 10 }}>
+                <Typography.Text strong>Linux Do</Typography.Text>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <div>
+                    <Input
+                      value={
+                        userState.user && userState.user.linux_do_id !== ''
+                          ? userState.user.linux_do_id
+                          : '未绑定'
+                      }
+                      readonly={true}
+                    ></Input>
+                  </div>
+                  <div>
+                    <Button
+                      onClick={() => {
+                        onLinuxDoOAuthClicked(status.linux_do_client_id);
+                      }}
+                      disabled={
+                        (userState.user && userState.user.linux_do_id !== '') ||
+                        !status.linux_do_oauth
+                      }
+                    >
+                      {status.linux_do_oauth ? '绑定' : '未启用'}
+                    </Button>
+                  </div>
+                </div>
+              </div>
 
               <div style={{ marginTop: 10 }}>
                 <Typography.Text strong>Telegram</Typography.Text>
