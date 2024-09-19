@@ -10,11 +10,11 @@ import (
 	"log"
 	"net/http"
 	"one-api/common"
+	"one-api/constant"
 	"one-api/dto"
 	"one-api/model"
 	"one-api/service"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -86,7 +86,7 @@ func UpdateMidjourneyTaskBulk() {
 				continue
 			}
 			// 设置超时时间
-			timeout := time.Second * 5
+			timeout := time.Second * 15
 			ctx, cancel := context.WithTimeout(context.Background(), timeout)
 			// 使用带有超时的 context 创建新的请求
 			req = req.WithContext(ctx)
@@ -146,28 +146,26 @@ func UpdateMidjourneyTaskBulk() {
 					buttonStr, _ := json.Marshal(responseItem.Buttons)
 					task.Buttons = string(buttonStr)
 				}
-
+				shouldReturnQuota := false
 				if (task.Progress != "100%" && responseItem.FailReason != "") || (task.Progress == "100%" && task.Status == "FAILURE") {
 					common.LogInfo(ctx, task.MjId+" 构建失败，"+task.FailReason)
 					task.Progress = "100%"
-					err = model.CacheUpdateUserQuota(task.UserId)
-					if err != nil {
-						common.LogError(ctx, "error update user quota cache: "+err.Error())
-					} else {
-						quota := task.Quota
-						if quota != 0 {
-							err = model.IncreaseUserQuota(task.UserId, quota)
-							if err != nil {
-								common.LogError(ctx, "fail to increase user quota: "+err.Error())
-							}
-							logContent := fmt.Sprintf("构图失败 %s，补偿 %s", task.MjId, common.LogQuota(quota))
-							model.RecordLog(task.UserId, model.LogTypeSystem, logContent)
-						}
+					if task.Quota != 0 {
+						shouldReturnQuota = true
 					}
 				}
 				err = task.Update()
 				if err != nil {
 					common.LogError(ctx, "UpdateMidjourneyTask task error: "+err.Error())
+				} else {
+					if shouldReturnQuota {
+						err = model.IncreaseUserQuota(task.UserId, task.Quota)
+						if err != nil {
+							common.LogError(ctx, "fail to increase user quota: "+err.Error())
+						}
+						logContent := fmt.Sprintf("构图失败 %s，补偿 %s", task.MjId, common.LogQuota(task.Quota))
+						model.RecordLog(task.UserId, model.LogTypeSystem, logContent)
+					}
 				}
 			}
 		}
@@ -233,6 +231,12 @@ func GetAllMidjourney(c *gin.Context) {
 	if logs == nil {
 		logs = make([]*model.Midjourney, 0)
 	}
+	if constant.MjForwardUrlEnabled {
+		for i, midjourney := range logs {
+			midjourney.ImageUrl = constant.ServerAddress + "/mj/image/" + midjourney.MjId
+			logs[i] = midjourney
+		}
+	}
 	c.JSON(200, gin.H{
 		"success": true,
 		"message": "",
@@ -259,9 +263,9 @@ func GetUserMidjourney(c *gin.Context) {
 	if logs == nil {
 		logs = make([]*model.Midjourney, 0)
 	}
-	if !strings.Contains(common.ServerAddress, "localhost") {
+	if constant.MjForwardUrlEnabled {
 		for i, midjourney := range logs {
-			midjourney.ImageUrl = common.ServerAddress + "/mj/image/" + midjourney.MjId
+			midjourney.ImageUrl = constant.ServerAddress + "/mj/image/" + midjourney.MjId
 			logs[i] = midjourney
 		}
 	}

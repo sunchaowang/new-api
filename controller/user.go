@@ -12,6 +12,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"one-api/constant"
 )
 
 type LoginRequest struct {
@@ -187,6 +188,39 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
+
+	// 获取插入后的用户ID
+	var insertedUser model.User
+	if err := model.DB.Where("username = ?", cleanUser.Username).First(&insertedUser).Error; err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "用户注册失败或用户ID获取失败",
+		})
+		return
+	}
+	// 生成默认令牌
+	if constant.GenerateDefaultToken {
+		// 生成默认令牌
+		token := model.Token{
+			UserId:             insertedUser.Id, // 使用插入后的用户ID
+			Name:               cleanUser.Username + "的初始令牌",
+			Key:                common.GenerateKey(),
+			CreatedTime:        common.GetTimestamp(),
+			AccessedTime:       common.GetTimestamp(),
+			ExpiredTime:        -1,     // 永不过期
+			RemainQuota:        500000, // 示例额度
+			UnlimitedQuota:     true,
+			ModelLimitsEnabled: false,
+		}
+		if err := token.Insert(); err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "创建默认令牌失败",
+			})
+			return
+		}
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
@@ -217,7 +251,8 @@ func GetAllUsers(c *gin.Context) {
 
 func SearchUsers(c *gin.Context) {
 	keyword := c.Query("keyword")
-	users, err := model.SearchUsers(keyword)
+	group := c.Query("group")
+	users, err := model.SearchUsers(keyword, group)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -478,7 +513,7 @@ func UpdateUser(c *gin.Context) {
 		updatedUser.Password = "" // rollback to what it should be
 	}
 	updatePassword := updatedUser.Password != ""
-	if err := updatedUser.Update(updatePassword); err != nil {
+	if err := updatedUser.Edit(updatePassword); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
@@ -751,7 +786,7 @@ func ManageUser(c *gin.Context) {
 		user.Role = common.RoleCommonUser
 	}
 
-	if err := user.UpdateAll(false); err != nil {
+	if err := user.Update(false); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
@@ -816,11 +851,11 @@ type topUpRequest struct {
 	Key string `json:"key"`
 }
 
-var lock = sync.Mutex{}
+var topUpLock = sync.Mutex{}
 
 func TopUp(c *gin.Context) {
-	lock.Lock()
-	defer lock.Unlock()
+	topUpLock.Lock()
+	defer topUpLock.Unlock()
 	req := topUpRequest{}
 	err := c.ShouldBindJSON(&req)
 	if err != nil {

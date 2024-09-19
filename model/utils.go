@@ -1,6 +1,9 @@
 package model
 
 import (
+	"errors"
+	"github.com/bytedance/gopkg/util/gopool"
+	"gorm.io/gorm"
 	"one-api/common"
 	"sync"
 	"time"
@@ -27,12 +30,12 @@ func init() {
 }
 
 func InitBatchUpdater() {
-	go func() {
+	gopool.Go(func() {
 		for {
 			time.Sleep(time.Duration(common.BatchUpdateInterval) * time.Second)
 			batchUpdate()
 		}
-	}()
+	})
 }
 
 func addNewRecord(type_ int, id int, value int) {
@@ -75,4 +78,14 @@ func batchUpdate() {
 		}
 	}
 	common.SysLog("batch update finished")
+}
+
+func RecordExist(err error) (bool, error) {
+	if err == nil {
+		return true, nil
+	}
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, nil
+	}
+	return false, err
 }

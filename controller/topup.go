@@ -5,10 +5,10 @@ import (
 	"github.com/Calcium-Ion/go-epay/epay"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/lo"
-
 	"log"
 	"net/url"
 	"one-api/common"
+	"one-api/constant"
 	"one-api/model"
 	"one-api/service"
 	"strconv"
@@ -28,34 +28,34 @@ type AmountRequest struct {
 }
 
 func GetEpayClient() *epay.Client {
-	if common.PayAddress == "" || common.EpayId == "" || common.EpayKey == "" {
+	if constant.PayAddress == "" || constant.EpayId == "" || constant.EpayKey == "" {
 		return nil
 	}
 	withUrl, err := epay.NewClient(&epay.Config{
-		PartnerID: common.EpayId,
-		Key:       common.EpayKey,
-	}, common.PayAddress)
+		PartnerID: constant.EpayId,
+		Key:       constant.EpayKey,
+	}, constant.PayAddress)
 	if err != nil {
 		return nil
 	}
 	return withUrl
 }
 
-func getPayMoney(amount float64, user model.User) float64 {
+func getPayMoney(amount float64, group string) float64 {
 	if !common.DisplayInCurrencyEnabled {
 		amount = amount / common.QuotaPerUnit
 	}
 	// 别问为什么用float64，问就是这么点钱没必要
-	topupGroupRatio := common.GetTopupGroupRatio(user.Group)
+	topupGroupRatio := common.GetTopupGroupRatio(group)
 	if topupGroupRatio == 0 {
 		topupGroupRatio = 1
 	}
-	payMoney := amount * common.Price * topupGroupRatio
+	payMoney := amount * constant.Price * topupGroupRatio
 	return payMoney
 }
 
 func getMinTopup() int {
-	minTopup := common.MinTopUp
+	minTopup := constant.MinTopUp
 	if !common.DisplayInCurrencyEnabled {
 		minTopup = minTopup * int(common.QuotaPerUnit)
 	}
@@ -75,8 +75,12 @@ func RequestEpay(c *gin.Context) {
 	}
 
 	id := c.GetInt("id")
-	user, _ := model.GetUserById(id, false)
-	payMoney := getPayMoney(float64(req.Amount), *user)
+	group, err := model.CacheGetUserGroup(id)
+	if err != nil {
+		c.JSON(200, gin.H{"message": "error", "data": "获取用户分组失败"})
+		return
+	}
+	payMoney := getPayMoney(float64(req.Amount), group)
 	if payMoney < 0.01 {
 		c.JSON(200, gin.H{"message": "error", "data": "充值金额过低"})
 		return
@@ -91,9 +95,10 @@ func RequestEpay(c *gin.Context) {
 		payType = epay.WechatPay
 	}
 	callBackAddress := service.GetCallbackAddress()
-	returnUrl, _ := url.Parse(common.ServerAddress + "/log")
+	returnUrl, _ := url.Parse(constant.ServerAddress + "/log")
 	notifyUrl, _ := url.Parse(callBackAddress + "/api/user/epay/notify")
 	tradeNo := fmt.Sprintf("%s%d", common.GetRandomString(6), time.Now().Unix())
+	tradeNo = fmt.Sprintf("USR%dNO%s", id, tradeNo)
 	client := GetEpayClient()
 	if client == nil {
 		c.JSON(200, gin.H{"message": "error", "data": "当前管理员未配置支付信息"})
@@ -101,8 +106,8 @@ func RequestEpay(c *gin.Context) {
 	}
 	uri, params, err := client.Purchase(&epay.PurchaseArgs{
 		Type:           payType,
-		ServiceTradeNo: "A" + tradeNo,
-		Name:           "B" + tradeNo,
+		ServiceTradeNo: tradeNo,
+		Name:           fmt.Sprintf("TUC%d", req.Amount),
 		Money:          strconv.FormatFloat(payMoney, 'f', 2, 64),
 		Device:         epay.PC,
 		NotifyUrl:      notifyUrl,
@@ -120,7 +125,7 @@ func RequestEpay(c *gin.Context) {
 		UserId:     id,
 		Amount:     amount,
 		Money:      payMoney,
-		TradeNo:    "A" + tradeNo,
+		TradeNo:    tradeNo,
 		CreateTime: time.Now().Unix(),
 		Status:     "pending",
 	}
@@ -232,8 +237,12 @@ func RequestAmount(c *gin.Context) {
 		return
 	}
 	id := c.GetInt("id")
-	user, _ := model.GetUserById(id, false)
-	payMoney := getPayMoney(float64(req.Amount), *user)
+	group, err := model.CacheGetUserGroup(id)
+	if err != nil {
+		c.JSON(200, gin.H{"message": "error", "data": "获取用户分组失败"})
+		return
+	}
+	payMoney := getPayMoney(float64(req.Amount), group)
 	if payMoney <= 0.01 {
 		c.JSON(200, gin.H{"message": "error", "data": "充值金额过低"})
 		return

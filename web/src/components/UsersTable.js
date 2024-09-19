@@ -208,23 +208,23 @@ const UsersTable = () => {
               >
                 编辑
               </Button>
+              <Popconfirm
+                title='确定是否要注销此用户？'
+                content='相当于删除用户，此修改将不可逆'
+                okType={'danger'}
+                position={'left'}
+                onConfirm={() => {
+                  manageUser(record.username, 'delete', record).then(() => {
+                    removeRecord(record.id);
+                  });
+                }}
+              >
+                <Button theme='light' type='danger' style={{ marginRight: 1 }}>
+                  注销
+                </Button>
+              </Popconfirm>
             </>
           )}
-          <Popconfirm
-            title='确定是否要删除此用户？'
-            content='硬删除，此修改将不可逆'
-            okType={'danger'}
-            position={'left'}
-            onConfirm={() => {
-              manageUser(record.username, 'delete', record).then(() => {
-                removeRecord(record.id);
-              });
-            }}
-          >
-            <Button theme='light' type='danger' style={{ marginRight: 1 }}>
-              删除
-            </Button>
-          </Popconfirm>
         </div>
       ),
     },
@@ -235,6 +235,8 @@ const UsersTable = () => {
   const [activePage, setActivePage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searching, setSearching] = useState(false);
+  const [searchGroup, setSearchGroup] = useState('');
+  const [groupOptions, setGroupOptions] = useState([]);
   const [userCount, setUserCount] = useState(ITEMS_PER_PAGE);
   const [showAddUser, setShowAddUser] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
@@ -251,13 +253,13 @@ const UsersTable = () => {
   };
 
   const removeRecord = (key) => {
-    console.log(key);
     let newDataSource = [...users];
     if (key != null) {
       let idx = newDataSource.findIndex((data) => data.id === key);
 
       if (idx > -1) {
-        newDataSource.splice(idx, 1);
+        // update deletedAt
+        newDataSource[idx].DeletedAt = new Date();
         setUsers(newDataSource);
       }
     }
@@ -298,6 +300,7 @@ const UsersTable = () => {
       .catch((reason) => {
         showError(reason);
       });
+    fetchGroups().then();
   }, []);
 
   const manageUser = async (username, action, record) => {
@@ -340,15 +343,15 @@ const UsersTable = () => {
     }
   };
 
-  const searchUsers = async () => {
-    if (searchKeyword === '') {
+  const searchUsers = async (searchKeyword, searchGroup) => {
+    if (searchKeyword === '' && searchGroup === '') {
       // if keyword is blank, load files instead.
       await loadUsers(0);
       setActivePage(1);
       return;
     }
     setSearching(true);
-    const res = await API.get(`/api/user/search?keyword=${searchKeyword}`);
+    const res = await API.get(`/api/user/search?keyword=${searchKeyword}&group=${searchGroup}`);
     const { success, message, data } = res.data;
     if (success) {
       setUsers(data);
@@ -409,6 +412,25 @@ const UsersTable = () => {
     }
   };
 
+  const fetchGroups = async () => {
+    try {
+      let res = await API.get(`/api/group/`);
+      // add 'all' option
+      // res.data.data.unshift('all');
+      if (res === undefined) {
+        return;
+      }
+      setGroupOptions(
+        res.data.data.map((group) => ({
+          label: group,
+          value: group,
+        })),
+      );
+    } catch (error) {
+      showError(error.message);
+    }
+  };
+
   return (
     <>
       <AddUser
@@ -422,17 +444,44 @@ const UsersTable = () => {
         handleClose={closeEditUser}
         editingUser={editingUser}
       ></EditUser>
-      <Form onSubmit={searchUsers}>
-        <Form.Input
-          label='搜索关键字'
-          icon='search'
-          field='keyword'
-          iconPosition='left'
-          placeholder='搜索用户的 ID，用户名，显示名称，以及邮箱地址 ...'
-          value={searchKeyword}
-          loading={searching}
-          onChange={(value) => handleKeywordChange(value)}
-        />
+      <Form
+        onSubmit={() => {
+          searchUsers(searchKeyword, searchGroup);
+        }}
+        labelPosition='left'
+      >
+        <div style={{ display: 'flex' }}>
+          <Space>
+          <Form.Input
+            label='搜索关键字'
+            icon='search'
+            field='keyword'
+            iconPosition='left'
+            placeholder='搜索用户的 ID，用户名，显示名称，以及邮箱地址 ...'
+            value={searchKeyword}
+            loading={searching}
+            onChange={(value) => handleKeywordChange(value)}
+          />
+          <Form.Select
+            field='group'
+            label='分组'
+            optionList={groupOptions}
+            onChange={(value) => {
+              setSearchGroup(value);
+              searchUsers(searchKeyword, value);
+            }}
+          />
+          <Button
+            label='查询'
+            type='primary'
+            htmlType='submit'
+            className='btn-margin-right'
+            style={{ marginRight: 8 }}
+          >
+            查询
+          </Button>
+          </Space>
+        </div>
       </Form>
 
       <Table

@@ -16,34 +16,13 @@ import (
 
 const EnableSearchModelSuffix = "-internet"
 
-func requestOpenAI2Ali(request dto.GeneralOpenAIRequest) *AliChatRequest {
-	messages := make([]AliMessage, 0, len(request.Messages))
-	//prompt := ""
-	for i := 0; i < len(request.Messages); i++ {
-		message := request.Messages[i]
-		messages = append(messages, AliMessage{
-			Content: message.StringContent(),
-			Role:    strings.ToLower(message.Role),
-		})
+func requestOpenAI2Ali(request dto.GeneralOpenAIRequest) *dto.GeneralOpenAIRequest {
+	if request.TopP >= 1 {
+		request.TopP = 0.999
+	} else if request.TopP <= 0 {
+		request.TopP = 0.001
 	}
-	enableSearch := false
-	aliModel := request.Model
-	if strings.HasSuffix(aliModel, EnableSearchModelSuffix) {
-		enableSearch = true
-		aliModel = strings.TrimSuffix(aliModel, EnableSearchModelSuffix)
-	}
-	return &AliChatRequest{
-		Model: request.Model,
-		Input: AliInput{
-			//Prompt:  prompt,
-			Messages: messages,
-		},
-		Parameters: AliParameters{
-			IncrementalOutput: request.Stream,
-			Seed:              uint64(request.Seed),
-			EnableSearch:      enableSearch,
-		},
-	}
+	return &request
 }
 
 func embeddingRequestOpenAI2Ali(request dto.GeneralOpenAIRequest) *AliEmbeddingRequest {
@@ -110,7 +89,7 @@ func embeddingResponseAli2OpenAI(response *AliEmbeddingResponse) *dto.OpenAIEmbe
 	return &openAIEmbeddingResponse
 }
 
-func responseAli2OpenAI(response *AliChatResponse) *dto.OpenAITextResponse {
+func responseAli2OpenAI(response *AliResponse) *dto.OpenAITextResponse {
 	content, _ := json.Marshal(response.Output.Text)
 	choice := dto.OpenAITextResponseChoice{
 		Index: 0,
@@ -134,9 +113,9 @@ func responseAli2OpenAI(response *AliChatResponse) *dto.OpenAITextResponse {
 	return &fullTextResponse
 }
 
-func streamResponseAli2OpenAI(aliResponse *AliChatResponse) *dto.ChatCompletionsStreamResponse {
+func streamResponseAli2OpenAI(aliResponse *AliResponse) *dto.ChatCompletionsStreamResponse {
 	var choice dto.ChatCompletionsStreamResponseChoice
-	choice.Delta.Content = aliResponse.Output.Text
+	choice.Delta.SetContentString(aliResponse.Output.Text)
 	if aliResponse.Output.FinishReason != "null" {
 		finishReason := aliResponse.Output.FinishReason
 		choice.FinishReason = &finishReason
@@ -154,18 +133,7 @@ func streamResponseAli2OpenAI(aliResponse *AliChatResponse) *dto.ChatCompletions
 func aliStreamHandler(c *gin.Context, resp *http.Response) (*dto.OpenAIErrorWithStatusCode, *dto.Usage) {
 	var usage dto.Usage
 	scanner := bufio.NewScanner(resp.Body)
-	scanner.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
-		if atEOF && len(data) == 0 {
-			return 0, nil, nil
-		}
-		if i := strings.Index(string(data), "\n"); i >= 0 {
-			return i + 1, data[0:i], nil
-		}
-		if atEOF {
-			return len(data), data, nil
-		}
-		return 0, nil, nil
-	})
+	scanner.Split(bufio.ScanLines)
 	dataChan := make(chan string)
 	stopChan := make(chan bool)
 	go func() {
@@ -187,7 +155,7 @@ func aliStreamHandler(c *gin.Context, resp *http.Response) (*dto.OpenAIErrorWith
 	c.Stream(func(w io.Writer) bool {
 		select {
 		case data := <-dataChan:
-			var aliResponse AliChatResponse
+			var aliResponse AliResponse
 			err := json.Unmarshal([]byte(data), &aliResponse)
 			if err != nil {
 				common.SysError("error unmarshalling stream response: " + err.Error())
@@ -199,7 +167,7 @@ func aliStreamHandler(c *gin.Context, resp *http.Response) (*dto.OpenAIErrorWith
 				usage.TotalTokens = aliResponse.Usage.InputTokens + aliResponse.Usage.OutputTokens
 			}
 			response := streamResponseAli2OpenAI(&aliResponse)
-			response.Choices[0].Delta.Content = strings.TrimPrefix(response.Choices[0].Delta.Content, lastResponseText)
+			response.Choices[0].Delta.SetContentString(strings.TrimPrefix(response.Choices[0].Delta.GetContentString(), lastResponseText))
 			lastResponseText = aliResponse.Output.Text
 			jsonResponse, err := json.Marshal(response)
 			if err != nil {
@@ -221,7 +189,7 @@ func aliStreamHandler(c *gin.Context, resp *http.Response) (*dto.OpenAIErrorWith
 }
 
 func aliHandler(c *gin.Context, resp *http.Response) (*dto.OpenAIErrorWithStatusCode, *dto.Usage) {
-	var aliResponse AliChatResponse
+	var aliResponse AliResponse
 	responseBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return service.OpenAIErrorWrapper(err, "read_response_body_failed", http.StatusInternalServerError), nil

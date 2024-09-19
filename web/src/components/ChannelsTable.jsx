@@ -6,6 +6,7 @@ import {
   showError,
   showInfo,
   showSuccess,
+  showWarning,
   timestamp2string,
 } from '../helpers';
 
@@ -13,6 +14,7 @@ import { CHANNEL_OPTIONS, ITEMS_PER_PAGE } from '../constants';
 import { renderGroup, renderNumberWithPoint, renderQuota } from '../helpers/render';
 import EditChannel from '../pages/Channel/EditChannel';
 import { IconTreeTriangleDown } from '@douyinfe/semi-icons';
+<<<<<<< HEAD:web/src/components/ChannelsTable.jsx
 import {
   Button,
   Table,
@@ -30,6 +32,9 @@ import {
   Card,
   Flex,
 } from 'antd';
+=======
+import { loadChannelModels } from './utils.js';
+>>>>>>> origin/main:web/src/components/ChannelsTable.js
 
 function renderTimestamp(timestamp) {
   return <>{timestamp2string(timestamp)}</>;
@@ -89,7 +94,23 @@ const ChannelsTable = () => {
       title: '状态',
       dataIndex: 'status',
       render: (text, record, index) => {
-        return <div>{renderStatus(text)}</div>;
+        if (text === 3) {
+          if (record.other_info === '') {
+            record.other_info = '{}'
+          }
+          let otherInfo = JSON.parse(record.other_info);
+          let reason = otherInfo['status_reason'];
+          let time = otherInfo['status_time'];
+          return (
+            <div>
+              <Tooltip content={'原因：' + reason + '，时间：' + timestamp2string(time)}>
+                {renderStatus(text)}
+              </Tooltip>
+            </div>
+          );
+        } else {
+          return renderStatus(text);
+        }
       },
     },
     {
@@ -291,6 +312,12 @@ const ChannelsTable = () => {
 
   const setChannelFormat = (channels) => {
     for (let i = 0; i < channels.length; i++) {
+      // if (channels[i].type === 8) {
+      //   showWarning(
+      //     '检测到您使用了“自定义渠道”类型，请更换为“OpenAI”渠道类型！',
+      //   );
+      //   showWarning('下个版本将不再支持“自定义渠道”类型！');
+      // }
       channels[i].key = '' + channels[i].id;
       let test_models = [];
       channels[i].models.split(',').forEach((item, index) => {
@@ -335,7 +362,13 @@ const ChannelsTable = () => {
   };
 
   const copySelectedChannel = async (id) => {
+<<<<<<< HEAD:web/src/components/ChannelsTable.jsx
     const channelToCopy = channels.find((channel) => String(channel.id) === String(id));
+=======
+    const channelToCopy = channels.find(
+      (channel) => String(channel.id) === String(id),
+    );
+>>>>>>> origin/main:web/src/components/ChannelsTable.js
     console.log(channelToCopy);
     channelToCopy.name += '_复制';
     channelToCopy.created_time = null;
@@ -375,6 +408,7 @@ const ChannelsTable = () => {
         showError(reason);
       });
     fetchGroups().then();
+    loadChannelModels().then();
   }, []);
 
   const manageChannel = async (id, action, record, value) => {
@@ -467,7 +501,7 @@ const ChannelsTable = () => {
     );
     const { success, message, data } = res.data;
     if (success) {
-      setChannels(data);
+      setChannelFormat(data);
       setActivePage(1);
     } else {
       showError(message);
@@ -628,6 +662,7 @@ const ChannelsTable = () => {
         handleClose={closeEdit}
         editingChannel={editingChannel}
       />
+<<<<<<< HEAD:web/src/components/ChannelsTable.jsx
       <Space direction={'vertical'} size={20} style={{ width: '100%' }}>
         <Card>
           <Space direction={'vertical'}>
@@ -689,6 +724,74 @@ const ChannelsTable = () => {
                 onClick={() => {
                   setEditingChannel({
                     id: undefined,
+=======
+      <Form
+        onSubmit={() => {
+          searchChannels(searchKeyword, searchGroup, searchModel);
+        }}
+        labelPosition='left'
+      >
+        <div style={{ display: 'flex' }}>
+          <Space>
+            <Form.Input
+              field='search_keyword'
+              label='搜索渠道关键词'
+              placeholder='ID，名称和密钥 ...'
+              value={searchKeyword}
+              loading={searching}
+              onChange={(v) => {
+                setSearchKeyword(v.trim());
+              }}
+            />
+            <Form.Input
+              field='search_model'
+              label='模型'
+              placeholder='模型关键字'
+              value={searchModel}
+              loading={searching}
+              onChange={(v) => {
+                setSearchModel(v.trim());
+              }}
+            />
+            <Form.Select
+              field='group'
+              label='分组'
+              optionList={[{ label: '选择分组', value: null}, ...groupOptions]}
+              initValue={null}
+              onChange={(v) => {
+                setSearchGroup(v);
+                searchChannels(searchKeyword, v, searchModel);
+              }}
+            />
+            <Button
+              label='查询'
+              type='primary'
+              htmlType='submit'
+              className='btn-margin-right'
+              style={{ marginRight: 8 }}
+            >
+              查询
+            </Button>
+          </Space>
+        </div>
+      </Form>
+      <div style={{ marginTop: 10, display: 'flex' }}>
+        <Space>
+          <Space>
+            <Typography.Text strong>使用ID排序</Typography.Text>
+            <Switch
+              checked={idSort}
+              label='使用ID排序'
+              uncheckedText='关'
+              aria-label='是否用ID排序'
+              onChange={(v) => {
+                localStorage.setItem('id-sort', v + '');
+                setIdSort(v);
+                loadChannels(0, pageSize, v)
+                  .then()
+                  .catch((reason) => {
+                    showError(reason);
+>>>>>>> origin/main:web/src/components/ChannelsTable.js
                   });
                   setShowEdit(true);
                 }}

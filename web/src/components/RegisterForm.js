@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from '@douyinfe/semi-ui';
-import { Card, Button, Flex } from 'antd';
-import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import { Link, useNavigate } from 'react-router-dom';
 import { API, getLogo, showError, showInfo, showSuccess } from '../helpers';
 import Turnstile from 'react-turnstile';
+import { Button, Card, Form, Layout } from '@douyinfe/semi-ui';
+import Title from '@douyinfe/semi-ui/lib/es/typography/title';
+import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 
 const RegisterForm = () => {
   const [inputs, setInputs] = useState({
@@ -12,7 +12,7 @@ const RegisterForm = () => {
     password: '',
     password2: '',
     email: '',
-    verification_code: '',
+    verification_code: ''
   });
   const { username, password, password2 } = inputs;
   const [showEmailVerification, setShowEmailVerification] = useState(false);
@@ -42,8 +42,6 @@ const RegisterForm = () => {
   let navigate = useNavigate();
 
   function handleChange(name, value) {
-    // const { name, value } = e.target;
-    // console.log(name, value);
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   }
 
@@ -76,7 +74,10 @@ const RegisterForm = () => {
         affCode = localStorage.getItem('aff');
       }
       inputs.aff_code = affCode;
-      const res = await API.post(`/api/user/register?turnstile=${turnstileToken}`, inputs);
+      const res = await API.post(
+        `/api/user/register?turnstile=${turnstileToken}`,
+        inputs
+      );
       const { success, message } = res.data;
       if (success) {
         navigate('/login');
@@ -99,7 +100,7 @@ const RegisterForm = () => {
     }
     setEmailCodeSendLoading(true);
     const res = await API.get(
-      `/api/verification?email=${inputs.email}&turnstile=${turnstileToken}`,
+      `/api/verification?email=${inputs.email}&turnstile=${turnstileToken}`
     );
     const { success, message } = res.data;
     if (success) {
@@ -111,95 +112,113 @@ const RegisterForm = () => {
   };
 
   return (
-    <Flex justify={'center'}>
-      <Card style={{ width: '500px' }}>
-        <Form size="large">
-          <Form.Input
-            icon="user"
-            iconPosition="left"
-            placeholder="输入用户名，最长 12 位"
-            onChange={(value) => handleChange('username', value)}
-            name="username"
-            field={'username'}
-            label={'用户名'}
-          />
-          <Form.Input
-            icon="lock"
-            iconPosition="left"
-            placeholder="输入密码，最短8位，最长20位"
-            onChange={(value) => handleChange('password', value)}
-            name="password"
-            type="password"
-            field={'password'}
-            label={'密码'}
-          />
-          <Form.Input
-            icon="lock"
-            iconPosition="left"
-            placeholder="输入密码，最短8位，最长20位"
-            onChange={(value) => handleChange('password2', value)}
-            name="password2"
-            field={'password2'}
-            type="password"
-            label={'确认密码'}
-          />
-          {showEmailVerification ? (
-            [
-              <div style={{}}>
-                <Form.Input
-                  icon="mail"
-                  iconPosition="left"
-                  placeholder="输入邮箱地址"
-                  onChange={(value) => handleChange('email', value)}
-                  name="email"
-                  field="email"
-                  type="email"
-                  label={'邮箱'}
-                />
-                <Button
-                  type={'primary'}
-                  onClick={sendVerificationCode}
-                  loading={emailCodeSendLoading}
-                >
-                  获取验证码
-                </Button>
-              </div>,
-              <Form.Input
-                icon="lock"
-                iconPosition="left"
-                placeholder="输入验证码"
-                onChange={(value) => handleChange('verification_code', value)}
-                name="verification_code"
-                field="verification_code"
-                label={'验证码'}
-              />,
-            ]
-          ) : (
-            <></>
-          )}
-          {turnstileEnabled ? (
-            <Turnstile
-              sitekey={turnstileSiteKey}
-              onVerify={(token) => {
-                setTurnstileToken(token);
-              }}
-            />
-          ) : (
-            <></>
-          )}
-          <Button
-            type={'primary'}
-            theme="solid"
-            style={{ width: '100%' }}
-            size="large"
-            onClick={handleSubmit}
-            loading={loading}
+    <div>
+      <Layout>
+        <Layout.Header></Layout.Header>
+        <Layout.Content>
+          <div
+            style={{
+              justifyContent: 'center',
+              display: 'flex',
+              marginTop: 120
+            }}
           >
-            注册
-          </Button>
-        </Form>
-      </Card>
-    </Flex>
+            <div style={{ width: 500 }}>
+              <Card>
+                <Title heading={2} style={{ textAlign: 'center' }}>
+                  新用户注册
+                </Title>
+                <Form size="large">
+                  <Form.Input
+                    field={'username'}
+                    label={'用户名'}
+                    placeholder="用户名"
+                    name="username"
+                    onChange={(value) => handleChange('username', value)}
+                  />
+                  <Form.Input
+                    field={'password'}
+                    label={'密码'}
+                    placeholder="密码，最短 8 位，最长 20 位"
+                    name="password"
+                    type="password"
+                    onChange={(value) => handleChange('password', value)}
+                  />
+                  <Form.Input
+                    field={'password2'}
+                    label={'确认密码'}
+                    placeholder="确认密码"
+                    name="password2"
+                    type="password"
+                    onChange={(value) => handleChange('password2', value)}
+                  />
+                  {showEmailVerification ? (
+                    <>
+                      <Form.Input
+                        field={'email'}
+                        label={'邮箱'}
+                        placeholder="输入邮箱地址"
+                        onChange={(value) => handleChange('email', value)}
+                        name="email"
+                        type="email"
+                        suffix={
+                          <Button onClick={sendVerificationCode} disabled={loading}>
+                            获取验证码
+                          </Button>
+                        }
+                      />
+                      <Form.Input
+                        field={'verification_code'}
+                        label={'验证码'}
+                        placeholder="输入验证码"
+                        onChange={(value) => handleChange('verification_code', value)}
+                        name="verification_code"
+                      />
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  <Button
+                    theme='solid'
+                    style={{ width: '100%' }}
+                    type={'primary'}
+                    size='large'
+                    htmlType={'submit'}
+                    onClick={handleSubmit}
+                  >
+                    注册
+                  </Button>
+                </Form>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: 20
+                  }}
+                >
+                  <Text>
+                    已有账户？
+                    <Link to="/login">
+                      点击登录
+                    </Link>
+                  </Text>
+                </div>
+              </Card>
+              {turnstileEnabled ? (
+                <Turnstile
+                  sitekey={turnstileSiteKey}
+                  onVerify={(token) => {
+                    setTurnstileToken(token);
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
+        </Layout.Content>
+      </Layout>
+    </div>
   );
 };
 

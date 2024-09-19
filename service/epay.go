@@ -1,10 +1,12 @@
 package service
 
-import "one-api/common"
+import (
+	"one-api/constant"
+)
 
 func GetCallbackAddress() string {
-	if common.CustomCallbackAddress == "" {
-		return common.ServerAddress
+	if constant.CustomCallbackAddress == "" {
+		return constant.ServerAddress
 	}
-	return common.CustomCallbackAddress
+	return constant.CustomCallbackAddress
 }

@@ -1,8 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { UserContext } from '../context/User';
+<<<<<<< HEAD
 import { API, getLogo, showError, showInfo, showSuccess } from '../helpers';
 import { onGitHubOAuthClicked, onLinuxDoOAuthClicked } from './utils';
+=======
+import { API, getLogo, showError, showInfo, showSuccess, updateAPI } from '../helpers';
+import { onGitHubOAuthClicked } from './utils';
+>>>>>>> origin/main
 import Turnstile from 'react-turnstile';
 import { Form } from '@douyinfe/semi-ui';
 import { Button, Card, Divider, Flex, Modal } from 'antd';
@@ -13,6 +18,7 @@ import LinuxDoIcon from './LinuxDoIcon';
 
 import { IconGithubLogo } from '@douyinfe/semi-icons';
 import WeChatIcon from './WeChatIcon';
+import { setUserData } from '../helpers/data.js';
 
 const LoginForm = () => {
   const [inputs, setInputs] = useState({
@@ -93,7 +99,8 @@ const LoginForm = () => {
       const { success, message, data } = res.data;
       if (success) {
         userDispatch({ type: 'login', payload: data });
-        localStorage.setItem('user', JSON.stringify(data));
+        setUserData(data);
+        updateAPI()
         showSuccess('登录成功！');
         if (username === 'root' && password === '123456') {
           Modal.error({
@@ -231,11 +238,149 @@ const LoginForm = () => {
                 <></>
               )}
 
+<<<<<<< HEAD
               {status.telegram_oauth ? (
                 <TelegramLoginButton
                   dataOnauth={onTelegramLoginClicked}
                   botName={status.telegram_bot_name}
                 />
+=======
+                  <Button
+                    theme='solid'
+                    style={{ width: '100%' }}
+                    type={'primary'}
+                    size='large'
+                    htmlType={'submit'}
+                    onClick={handleSubmit}
+                  >
+                    登录
+                  </Button>
+                </Form>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: 20,
+                  }}
+                >
+                  <Text>
+                    没有账号请先 <Link to='/register'>注册账号</Link>
+                  </Text>
+                  <Text>
+                    忘记密码 <Link to='/reset'>点击重置</Link>
+                  </Text>
+                </div>
+                {status.github_oauth ||
+                status.wechat_login ||
+                status.telegram_oauth ? (
+                  <>
+                    <Divider margin='12px' align='center'>
+                      第三方登录
+                    </Divider>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: 20,
+                      }}
+                    >
+                      {status.github_oauth ? (
+                        <Button
+                          type='primary'
+                          icon={<IconGithubLogo />}
+                          onClick={() =>
+                            onGitHubOAuthClicked(status.github_client_id)
+                          }
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      {status.wechat_login ? (
+                        <Button
+                          type='primary'
+                          style={{ color: 'rgba(var(--semi-green-5), 1)' }}
+                          icon={<Icon svg={<WeChatIcon />} />}
+                          onClick={onWeChatLoginClicked}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                    {status.telegram_oauth ? (
+                      <>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: 5,
+                          }}
+                        >
+                          <TelegramLoginButton
+                            dataOnauth={onTelegramLoginClicked}
+                            botName={status.telegram_bot_name}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                ) : (
+                  <></>
+                )}
+                <Modal
+                  title='微信扫码登录'
+                  visible={showWeChatLoginModal}
+                  maskClosable={true}
+                  onOk={onSubmitWeChatVerificationCode}
+                  onCancel={() => setShowWeChatLoginModal(false)}
+                  okText={'登录'}
+                  size={'small'}
+                  centered={true}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItem: 'center',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <img src={status.wechat_qrcode} />
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <p>
+                      微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
+                    </p>
+                  </div>
+                  <Form size='large'>
+                    <Form.Input
+                      field={'wechat_verification_code'}
+                      placeholder='验证码'
+                      label={'验证码'}
+                      value={inputs.wechat_verification_code}
+                      onChange={(value) =>
+                        handleChange('wechat_verification_code', value)
+                      }
+                    />
+                  </Form>
+                </Modal>
+              </Card>
+              {turnstileEnabled ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: 20,
+                  }}
+                >
+                  <Turnstile
+                    sitekey={turnstileSiteKey}
+                    onVerify={(token) => {
+                      setTurnstileToken(token);
+                    }}
+                  />
+                </div>
+>>>>>>> origin/main
               ) : (
                 <></>
               )}

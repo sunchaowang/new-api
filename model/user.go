@@ -92,25 +92,42 @@ func (user *User) FillUserByLinuxDoId() error {
 	return nil
 }
 
-func SearchUsers(keyword string) ([]*User, error) {
+func (user *User) FillUserByLinuxDoId() error {
+	if user.LinuxDoId == "" {
+		return errors.New("LINUX DO id 为空！")
+	}
+	DB.Where(User{LinuxDoId: user.LinuxDoId}).First(user)
+	return nil
+}
+
+func SearchUsers(keyword string, group string) ([]*User, error) {
 	var users []*User
 	var err error
 
 	// 尝试将关键字转换为整数ID
 	keywordInt, err := strconv.Atoi(keyword)
 	if err == nil {
-		// 如果转换成功，按照ID搜索用户
-		err = DB.Unscoped().Omit("password").Where("id = ?", keywordInt).Find(&users).Error
+		// 如果转换成功，按照ID和可选的组别搜索用户
+		query := DB.Unscoped().Omit("password").Where("`id` = ?", keywordInt)
+		if group != "" {
+			query = query.Where("`group` = ?", group) // 使用反引号包围group
+		}
+		err = query.Find(&users).Error
 		if err != nil || len(users) > 0 {
-			// 如果依据ID找到用户或者发生错误，返回结果或错误
 			return users, err
 		}
 	}
 
-	// 如果ID转换失败或者没有找到用户，依据其他字段进行模糊搜索
-	err = DB.Unscoped().Omit("password").
-		Where("username LIKE ? OR email LIKE ? OR display_name LIKE ?", keyword+"%", keyword+"%", keyword+"%").
-		Find(&users).Error
+	err = nil
+
+	query := DB.Unscoped().Omit("password")
+	likeCondition := "`username` LIKE ? OR `email` LIKE ? OR `display_name` LIKE ?"
+	if group != "" {
+		query = query.Where("("+likeCondition+") AND `group` = ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%", group)
+	} else {
+		query = query.Where(likeCondition, "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
+	}
+	err = query.Find(&users).Error
 
 	return users, err
 }
@@ -254,7 +271,7 @@ func (user *User) Update(updatePassword bool) error {
 	return err
 }
 
-func (user *User) UpdateAll(updatePassword bool) error {
+func (user *User) Edit(updatePassword bool) error {
 	var err error
 	if updatePassword {
 		user.Password, err = common.Password2Hash(user.Password)
@@ -263,8 +280,17 @@ func (user *User) UpdateAll(updatePassword bool) error {
 		}
 	}
 	newUser := *user
+	updates := map[string]interface{}{
+		"username":     newUser.Username,
+		"display_name": newUser.DisplayName,
+		"group":        newUser.Group,
+		"quota":        newUser.Quota,
+	}
+	if updatePassword {
+		updates["password"] = newUser.Password
+	}
 	DB.First(&user, user.Id)
-	err = DB.Model(user).Select("*").Updates(newUser).Error
+	err = DB.Model(user).Updates(updates).Error
 	if err == nil {
 		if common.RedisEnabled {
 			_ = common.RedisSet(fmt.Sprintf("user_group:%d", user.Id), user.Group, time.Duration(UserId2GroupCacheSeconds)*time.Second)
@@ -299,7 +325,8 @@ func (user *User) ValidateAndFill() (err error) {
 	if user.Username == "" || password == "" {
 		return errors.New("用户名或密码为空")
 	}
-	DB.Where(User{Username: user.Username}).First(user)
+	// find buy username or email
+	DB.Where("username = ? OR email = ?", user.Username, user.Username).First(user)
 	okay := common.ValidatePasswordAndHash(password, user.Password)
 	if !okay || user.Status != common.UserStatusEnabled {
 		return errors.New("用户名或密码错误，或用户已被封禁")
@@ -433,6 +460,11 @@ func ValidateAccessToken(token string) (user *User) {
 
 func GetUserQuota(id int) (quota int, err error) {
 	err = DB.Model(&User{}).Where("id = ?", id).Select("quota").Find(&quota).Error
+	if err != nil {
+		if common.RedisEnabled {
+			go cacheSetUserQuota(id, quota)
+		}
+	}
 	return quota, err
 }
 

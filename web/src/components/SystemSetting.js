@@ -23,6 +23,8 @@ const SystemSetting = () => {
     SMTPFrom: '',
     SMTPToken: '',
     ServerAddress: '',
+    WorkerUrl: '',
+    WorkerValidKey: '',
     EpayId: '',
     EpayKey: '',
     Price: 7.3,
@@ -141,6 +143,8 @@ const SystemSetting = () => {
       name === 'Notice' ||
       (name.startsWith('SMTP') && name !== 'SMTPSSLEnabled') ||
       name === 'ServerAddress' ||
+      name === 'WorkerUrl' ||
+      name === 'WorkerValidKey' ||
       name === 'EpayId' ||
       name === 'EpayKey' ||
       name === 'Price' ||
@@ -171,6 +175,14 @@ const SystemSetting = () => {
     await updateOption('ServerAddress', ServerAddress);
   };
 
+  const submitWorker = async () => {
+    let WorkerUrl = removeTrailingSlash(inputs.WorkerUrl);
+    await updateOption('WorkerUrl', WorkerUrl);
+    if (inputs.WorkerValidKey !== '') {
+      await updateOption('WorkerValidKey', inputs.WorkerValidKey);
+    }
+  }
+
   const submitPayAddress = async () => {
     if (inputs.ServerAddress === '') {
       showError('请先填写服务器地址');
@@ -188,7 +200,7 @@ const SystemSetting = () => {
     if (inputs.EpayId !== '') {
       await updateOption('EpayId', inputs.EpayId);
     }
-    if (inputs.EpayKey !== '') {
+    if (inputs.EpayKey !== undefined && inputs.EpayKey !== '') {
       await updateOption('EpayKey', inputs.EpayKey);
     }
     await updateOption('Price', '' + inputs.Price);
@@ -303,9 +315,11 @@ const SystemSetting = () => {
   return (
     <Grid columns={1}>
       <Grid.Column>
-        <Form loading={loading}>
-          <Header as="h3">通用设置</Header>
-          <Form.Group widths="equal">
+        <Form loading={loading} inverted={isDark}>
+          <Header as='h3' inverted={isDark}>
+            通用设置
+          </Header>
+          <Form.Group widths='equal'>
             <Form.Input
               label="服务器地址"
               placeholder="例如：https://yourdomain.com"
@@ -314,7 +328,31 @@ const SystemSetting = () => {
               onChange={handleInputChange}
             />
           </Form.Group>
-          <Form.Button onClick={submitServerAddress}>更新服务器地址</Form.Button>
+          <Form.Button onClick={submitServerAddress}>
+            更新服务器地址
+          </Form.Button>
+          <Header as='h3' inverted={isDark}>
+            代理设置（支持 <a href='https://github.com/Calcium-Ion/new-api-worker' target='_blank' rel='noreferrer'>new-api-worker</a>）
+          </Header>
+          <Form.Group widths='equal'>
+            <Form.Input
+              label='Worker地址，不填写则不启用代理'
+              placeholder='例如：https://workername.yourdomain.workers.dev'
+              value={inputs.WorkerUrl}
+              name='WorkerUrl'
+              onChange={handleInputChange}
+            />
+            <Form.Input
+              label='Worker密钥，根据你部署的 Worker 填写'
+              placeholder='例如：your_secret_key'
+              value={inputs.WorkerValidKey}
+              name='WorkerValidKey'
+              onChange={handleInputChange}
+            />
+          </Form.Group>
+          <Form.Button onClick={submitWorker}>
+            更新Worker设置
+          </Form.Button>
           <Divider />
           <Header as="h3">
             支付设置（当前仅支持易支付接口，默认使用上方服务器地址作为回调地址！）
@@ -335,8 +373,8 @@ const SystemSetting = () => {
               onChange={handleInputChange}
             />
             <Form.Input
-              label="易支付商户密钥"
-              placeholder="例如：dejhfueqhujasjmndbjkqaw"
+              label='易支付商户密钥'
+              placeholder='敏感信息不会发送到前端显示'
               value={inputs.EpayKey}
               name="EpayKey"
               onChange={handleInputChange}
@@ -380,7 +418,9 @@ const SystemSetting = () => {
           </Form.Group>
           <Form.Button onClick={submitPayAddress}>更新支付设置</Form.Button>
           <Divider />
-          <Header as="h3">配置登录注册</Header>
+          <Header as='h3' inverted={isDark}>
+            配置登录注册
+          </Header>
           <Form.Group inline>
             <Form.Checkbox
               checked={inputs.PasswordLoginEnabled === 'true'}
@@ -710,7 +750,9 @@ const SystemSetting = () => {
           </Form.Group>
           <Form.Button onClick={submitWeChat}>保存 WeChat Server 设置</Form.Button>
           <Divider />
-          <Header as="h3">配置 Telegram 登录</Header>
+          <Header as='h3' inverted={isDark}>
+            配置 Telegram 登录
+          </Header>
           <Form.Group inline>
             <Form.Input
               label="Telegram Bot Token"

@@ -1,20 +1,25 @@
-import { showError } from './utils';
+import { getUserIdFromLocalStorage, showError } from './utils';
 import axios from 'axios';
 
-export const API = axios.create({
+export let API = axios.create({
   baseURL: import.meta.env.VITE_REACT_APP_SERVER_URL
     ? import.meta.env.VITE_REACT_APP_SERVER_URL
     : '',
+  headers: {
+    'New-API-User': getUserIdFromLocalStorage()
+  }
 });
 
-API.interceptors.request.use((config) => {
-  // config.headers
-  //   ? (config.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`)
-  //   : (config.headers = localStorage.getItem('token') && {
-  //       Authorization: `Bearer ${localStorage.getItem('token')}`,
-  //     });
-  return config;
-});
+export function updateAPI() {
+  API = axios.create({
+    baseURL: import.meta.env.VITE_REACT_APP_SERVER_URL
+      ? import.meta.env.VITE_REACT_APP_SERVER_URL
+      : '',
+    headers: {
+      'New-API-User': getUserIdFromLocalStorage()
+    }
+  });
+}
 
 API.interceptors.response.use(
   (response) => response,

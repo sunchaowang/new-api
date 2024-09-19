@@ -7,13 +7,11 @@ import (
 	"log"
 	"math/rand"
 	"net"
-	"os"
 	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
-	"unsafe"
 )
 
 func OpenBrowser(url string) {
@@ -130,6 +128,11 @@ func IntMax(a int, b int) int {
 	}
 }
 
+func IsIP(s string) bool {
+	ip := net.ParseIP(s)
+	return ip != nil
+}
+
 func GetUUID() string {
 	code := uuid.New().String()
 	code = strings.Replace(code, "-", "", -1)
@@ -159,15 +162,6 @@ func GenerateKey() string {
 	return string(key)
 }
 
-func GetRandomString(length int) string {
-	//rand.Seed(time.Now().UnixNano())
-	key := make([]byte, length)
-	for i := 0; i < length; i++ {
-		key[i] = keyChars[rand.Intn(len(keyChars))]
-	}
-	return string(key)
-}
-
 func GetRandomInt(max int) int {
 	//rand.Seed(time.Now().UnixNano())
 	return rand.Intn(max)
@@ -190,51 +184,8 @@ func Max(a int, b int) int {
 	}
 }
 
-func GetOrDefault(env string, defaultValue int) int {
-	if env == "" || os.Getenv(env) == "" {
-		return defaultValue
-	}
-	num, err := strconv.Atoi(os.Getenv(env))
-	if err != nil {
-		SysError(fmt.Sprintf("failed to parse %s: %s, using default value: %d", env, err.Error(), defaultValue))
-		return defaultValue
-	}
-	return num
-}
-
-func GetOrDefaultString(env string, defaultValue string) string {
-	if env == "" || os.Getenv(env) == "" {
-		return defaultValue
-	}
-	return os.Getenv(env)
-}
-
 func MessageWithRequestId(message string, id string) string {
 	return fmt.Sprintf("%s (request id: %s)", message, id)
-}
-
-func String2Int(str string) int {
-	num, err := strconv.Atoi(str)
-	if err != nil {
-		return 0
-	}
-	return num
-}
-
-func StringsContains(strs []string, str string) bool {
-	for _, s := range strs {
-		if s == str {
-			return true
-		}
-	}
-	return false
-}
-
-// StringToByteSlice []byte only read, panic on append
-func StringToByteSlice(s string) []byte {
-	tmp1 := (*[2]uintptr)(unsafe.Pointer(&s))
-	tmp2 := [3]uintptr{tmp1[0], tmp1[1], tmp1[1]}
-	return *(*[]byte)(unsafe.Pointer(&tmp2))
 }
 
 func RandomSleep() {

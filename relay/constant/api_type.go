@@ -15,16 +15,25 @@ const (
 	APITypeAIProxyLibrary
 	APITypeTencent
 	APITypeGemini
-	APITypeZhipu_v4
+	APITypeZhipuV4
 	APITypeOllama
 	APITypePerplexity
+	APITypeAws
+	APITypeCohere
+	APITypeDify
+	APITypeJina
+	APITypeCloudflare
+	APITypeSiliconFlow
+	APITypeVertexAi
 
 	APITypeDummy // this one is only for count, do not add any channel after this
 )
 
-func ChannelType2APIType(channelType int) int {
-	apiType := APITypeOpenAI
+func ChannelType2APIType(channelType int) (int, bool) {
+	apiType := -1
 	switch channelType {
+	case common.ChannelTypeOpenAI:
+		apiType = APITypeOpenAI
 	case common.ChannelTypeAnthropic:
 		apiType = APITypeAnthropic
 	case common.ChannelTypeBaidu:
@@ -44,11 +53,28 @@ func ChannelType2APIType(channelType int) int {
 	case common.ChannelTypeGemini:
 		apiType = APITypeGemini
 	case common.ChannelTypeZhipu_v4:
-		apiType = APITypeZhipu_v4
+		apiType = APITypeZhipuV4
 	case common.ChannelTypeOllama:
 		apiType = APITypeOllama
 	case common.ChannelTypePerplexity:
 		apiType = APITypePerplexity
+	case common.ChannelTypeAws:
+		apiType = APITypeAws
+	case common.ChannelTypeCohere:
+		apiType = APITypeCohere
+	case common.ChannelTypeDify:
+		apiType = APITypeDify
+	case common.ChannelTypeJina:
+		apiType = APITypeJina
+	case common.ChannelCloudflare:
+		apiType = APITypeCloudflare
+	case common.ChannelTypeSiliconFlow:
+		apiType = APITypeSiliconFlow
+	case common.ChannelTypeVertexAi:
+		apiType = APITypeVertexAi
 	}
-	return apiType
+	if apiType == -1 {
+		return APITypeOpenAI, false
+	}
+	return apiType, true
 }

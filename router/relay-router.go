@@ -71,6 +71,7 @@ func SetRelayRouter(router *gin.Engine) {
 		relayV1Router.GET("/fine-tunes/:id/events", controller.RelayNotImplemented)
 		relayV1Router.DELETE("/models/:model", controller.RelayNotImplemented)
 		relayV1Router.POST("/moderations", controller.Relay)
+		relayV1Router.POST("/rerank", controller.Relay)
 	}
 
 	relayMjRouter := router.Group("/mj")
@@ -79,6 +80,15 @@ func SetRelayRouter(router *gin.Engine) {
 	relayMjModeRouter := router.Group("/:mode/mj")
 	registerMjRouterGroup(relayMjModeRouter)
 	//relayMjRouter.Use()
+
+	relaySunoRouter := router.Group("/suno")
+	relaySunoRouter.Use(middleware.TokenAuth(), middleware.Distribute())
+	{
+		relaySunoRouter.POST("/submit/:action", controller.RelayTask)
+		relaySunoRouter.POST("/fetch", controller.RelayTask)
+		relaySunoRouter.GET("/fetch/:id", controller.RelayTask)
+	}
+
 }
 
 func registerMjRouterGroup(relayMjRouter *gin.RouterGroup) {
@@ -98,5 +108,6 @@ func registerMjRouterGroup(relayMjRouter *gin.RouterGroup) {
 		relayMjRouter.GET("/task/:id/image-seed", controller.RelayMidjourney)
 		relayMjRouter.POST("/task/list-by-condition", controller.RelayMidjourney)
 		relayMjRouter.POST("/insight-face/swap", controller.RelayMidjourney)
+		relayMjRouter.POST("/submit/upload-discord-images", controller.RelayMidjourney)
 	}
 }

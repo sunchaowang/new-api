@@ -25,9 +25,6 @@ var token2UserId = make(map[string]int)
 var token2UserIdLock sync.RWMutex
 
 func cacheSetToken(token *Token) error {
-	if !common.RedisEnabled {
-		return token.SelectUpdate()
-	}
 	jsonBytes, err := json.Marshal(token)
 	if err != nil {
 		return err
@@ -90,7 +87,7 @@ func SyncTokenCache(frequency int) {
 				}
 			} else {
 				// 如果数据库中存在，先检查redis
-				_, err := common.RedisGet(fmt.Sprintf("token:%s", key))
+				_, err = common.RedisGet(fmt.Sprintf("token:%s", key))
 				if err != nil {
 					// 如果redis中不存在，则跳过
 					continue
@@ -168,7 +165,11 @@ func CacheUpdateUserQuota(id int) error {
 	if err != nil {
 		return err
 	}
-	err = common.RedisSet(fmt.Sprintf("user_quota:%d", id), fmt.Sprintf("%d", quota), time.Duration(UserId2QuotaCacheSeconds)*time.Second)
+	return cacheSetUserQuota(id, quota)
+}
+
+func cacheSetUserQuota(id int, quota int) error {
+	err := common.RedisSet(fmt.Sprintf("user_quota:%d", id), fmt.Sprintf("%d", quota), time.Duration(UserId2QuotaCacheSeconds)*time.Second)
 	return err
 }
 
@@ -268,6 +269,9 @@ func SyncChannelCache(frequency int) {
 func CacheGetRandomSatisfiedChannel(group string, model string, retry int) (*Channel, error) {
 	if strings.HasPrefix(model, "gpt-4-gizmo") {
 		model = "gpt-4-gizmo-*"
+	}
+	if strings.HasPrefix(model, "gpt-4o-gizmo") {
+		model = "gpt-4o-gizmo-*"
 	}
 
 	// if memory cache is disabled, get channel directly from database
