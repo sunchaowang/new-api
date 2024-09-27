@@ -133,7 +133,9 @@ const Playground = () => {
           completeMessage();
         } else {
           let text = payload.choices[0].delta.content;
-          generateMockResponse(text);
+          if (text) {
+            generateMockResponse(text);
+          }
         }
       } else {
         completeMessage();
@@ -142,7 +144,7 @@ const Playground = () => {
 
     source.addEventListener("error", (e) => {
       generateMockResponse(e.data)
-      completeMessage();
+      completeMessage('error')
     });
 
     source.addEventListener("readystatechange", (e) => {
@@ -186,7 +188,7 @@ const Playground = () => {
           stream: true,
           model: inputs.model,
           group: inputs.group,
-          max_tokens: inputs.max_tokens,
+          max_tokens: parseInt(inputs.max_tokens),
           temperature: inputs.temperature,
         };
       };
@@ -204,12 +206,17 @@ const Playground = () => {
     });
   }, [getSystemMessage]);
 
-  const completeMessage = useCallback(() => {
+  const completeMessage = useCallback((status = 'complete') => {
+    // console.log("Complete Message: ", status)
     setMessage((prevMessage) => {
       const lastMessage = prevMessage[prevMessage.length - 1];
+      // only change the status if the last message is not complete and not error
+      if (lastMessage.status === 'complete' || lastMessage.status === 'error') {
+        return prevMessage;
+      }
       return [
         ...prevMessage.slice(0, -1),
-        { ...lastMessage, status: 'complete' }
+        { ...lastMessage, status: status }
       ];
     });
   }, [])
