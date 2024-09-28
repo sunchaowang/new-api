@@ -144,6 +144,7 @@ func coverMidjourneyTaskDto(c *gin.Context, originTask *model.Midjourney) (midjo
 func RelaySwapFace(c *gin.Context) *dto.MidjourneyResponse {
 	startTime := time.Now().UnixNano() / int64(time.Millisecond)
 	tokenId := c.GetInt("token_id")
+	tokenGroup := c.GetString("token_group")
 	userId := c.GetInt("id")
 	group := c.GetString("group")
 	channelId := c.GetInt("channel_id")
@@ -207,7 +208,7 @@ func RelaySwapFace(c *gin.Context) *dto.MidjourneyResponse {
 				other := make(map[string]interface{})
 				other["model_price"] = modelPrice
 				other["group_ratio"] = groupRatio
-				model.RecordConsumeLog(ctx, userId, channelId, 0, 0, modelName, tokenName, quota, logContent, tokenId, userQuota, 0, false, other)
+				model.RecordConsumeLog(ctx, userId, channelId, 0, 0, modelName, tokenName, quota, logContent, tokenId, userQuota, 0, false, other, c.ClientIP(), c.GetString("request_id"), tokenGroup)
 				model.UpdateUserUsedQuotaAndRequestCount(userId, quota)
 				channelId := c.GetInt("channel_id")
 				model.UpdateChannelUsedQuota(channelId, quota)
@@ -354,6 +355,7 @@ func RelayMidjourneyTask(c *gin.Context, relayMode int) *dto.MidjourneyResponse 
 func RelayMidjourneySubmit(c *gin.Context, relayMode int) *dto.MidjourneyResponse {
 
 	tokenId := c.GetInt("token_id")
+	tokenGroup := c.GetString("token_group")
 	//channelType := c.GetInt("channel")
 	userId := c.GetInt("id")
 	group := c.GetString("group")
@@ -512,7 +514,7 @@ func RelayMidjourneySubmit(c *gin.Context, relayMode int) *dto.MidjourneyRespons
 				other := make(map[string]interface{})
 				other["model_price"] = modelPrice
 				other["group_ratio"] = groupRatio
-				model.RecordConsumeLog(ctx, userId, channelId, 0, 0, modelName, tokenName, quota, logContent, tokenId, userQuota, 0, false, other)
+				model.RecordConsumeLog(ctx, userId, channelId, 0, 0, modelName, tokenName, quota, logContent, tokenId, userQuota, 0, false, other, c.ClientIP(), c.GetString("request_id"), tokenGroup)
 				model.UpdateUserUsedQuotaAndRequestCount(userId, quota)
 				channelId := c.GetInt("channel_id")
 				model.UpdateChannelUsedQuota(channelId, quota)

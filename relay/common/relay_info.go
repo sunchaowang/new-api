@@ -1,11 +1,12 @@
 package common
 
 import (
-	"github.com/gin-gonic/gin"
 	"one-api/common"
 	"one-api/relay/constant"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type RelayInfo struct {
@@ -32,6 +33,7 @@ type RelayInfo struct {
 	BaseUrl              string
 	SupportStreamOptions bool
 	ShouldIncludeUsage   bool
+	TokenGroup           string
 }
 
 func GenRelayInfo(c *gin.Context) *RelayInfo {
@@ -39,6 +41,7 @@ func GenRelayInfo(c *gin.Context) *RelayInfo {
 	channelId := c.GetInt("channel_id")
 
 	tokenId := c.GetInt("token_id")
+	tokenGroup := c.GetString("token_group")
 	userId := c.GetInt("id")
 	group := c.GetString("group")
 	tokenUnlimited := c.GetBool("token_unlimited_quota")
@@ -65,6 +68,7 @@ func GenRelayInfo(c *gin.Context) *RelayInfo {
 		ApiVersion:        c.GetString("api_version"),
 		ApiKey:            strings.TrimPrefix(c.Request.Header.Get("Authorization"), "Bearer "),
 		Organization:      c.GetString("channel_organization"),
+		TokenGroup:        tokenGroup,
 	}
 	if strings.HasPrefix(c.Request.URL.Path, "/pg") {
 		info.IsPlayground = true
@@ -121,6 +125,7 @@ type TaskRelayInfo struct {
 	OriginTaskID string
 
 	ConsumeQuota bool
+	TokenGroup   string
 }
 
 func GenTaskRelayInfo(c *gin.Context) *TaskRelayInfo {
@@ -128,6 +133,7 @@ func GenTaskRelayInfo(c *gin.Context) *TaskRelayInfo {
 	channelId := c.GetInt("channel_id")
 
 	tokenId := c.GetInt("token_id")
+	tokenGroup := c.GetString("token_group")
 	userId := c.GetInt("id")
 	group := c.GetString("group")
 	startTime := time.Now()
@@ -146,6 +152,7 @@ func GenTaskRelayInfo(c *gin.Context) *TaskRelayInfo {
 		StartTime:      startTime,
 		ApiType:        apiType,
 		ApiKey:         strings.TrimPrefix(c.Request.Header.Get("Authorization"), "Bearer "),
+		TokenGroup:     tokenGroup,
 	}
 	if info.BaseUrl == "" {
 		info.BaseUrl = common.ChannelBaseURLs[channelType]

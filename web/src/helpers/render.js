@@ -12,7 +12,8 @@ export function renderText(text, limit) {
  * @param {string} group - The input group string
  * @returns {JSX.Element} - The rendered group tags
  */
-export function renderGroup(group) {
+export function renderGroup(group, groupsOptions ) {
+  console.log(groupsOptions);
   if (group === '') {
     return (
       <Tag size='large' key='default' color='orange'>
@@ -38,7 +39,7 @@ export function renderGroup(group) {
           color={tagColors[group] || stringToColor(group)}
           key={group}
         >
-          {group}
+          {groupsOptions?.has(group) ? groupsOptions.get(group) : group}
         </Tag>
       ))}
     </span>

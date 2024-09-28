@@ -77,9 +77,7 @@ export default function SettingsSensitiveWords(props) {
                 <Form.Switch
                   field={'CheckSensitiveEnabled'}
                   label={'启用屏蔽词过滤功能'}
-                  size='large'
-                  checkedText='｜'
-                  uncheckedText='〇'
+                  size='middle'
                   onChange={(value) => {
                     setInputs({
                       ...inputs,
@@ -92,9 +90,7 @@ export default function SettingsSensitiveWords(props) {
                 <Form.Switch
                   field={'CheckSensitiveOnPromptEnabled'}
                   label={'启用 Prompt 检查'}
-                  size='large'
-                  checkedText='｜'
-                  uncheckedText='〇'
+                  size='middle'
                   onChange={(value) =>
                     setInputs({
                       ...inputs,

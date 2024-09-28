@@ -147,5 +147,11 @@ func SetApiRouter(router *gin.Engine) {
 			taskRoute.GET("/self", middleware.UserAuth(), controller.GetUserTask)
 			taskRoute.GET("/", middleware.AdminAuth(), controller.GetAllTask)
 		}
+
+		userOperationRouter := apiRouter.Group("/operation")
+		userOperationRouter.Use(middleware.CriticalRateLimit(), middleware.TurnstileCheck(), middleware.UserAuth())
+		{
+			userOperationRouter.POST("/checkin", controller.UserOperationCheckIn)
+		}
 	}
 }

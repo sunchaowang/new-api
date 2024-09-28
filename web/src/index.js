@@ -29,10 +29,10 @@ root.render(
                 <HeaderBar />
               </Header>
               <Layout style={{ flex: 1, overflow: 'hidden' }}>
-                <Sider>
+                {/* <Sider>
                   <SiderBar />
                 </Sider>
-                <Layout>
+                <Layout> */}
                   <Content
                     style={{ overflowY: 'auto', padding: '24px' }}
                   >
@@ -41,7 +41,7 @@ root.render(
                   <Layout.Footer>
                     <FooterBar></FooterBar>
                   </Layout.Footer>
-                </Layout>
+                {/* </Layout> */}
               </Layout>
               <ToastContainer />
             </Layout>

@@ -38,6 +38,7 @@ const LoginForm = () => {
   let navigate = useNavigate();
   const [status, setStatus] = useState({});
   const logo = getLogo();
+  const [loginLoading, setLoginLoading] = useState(false);
 
   useEffect(() => {
     if (searchParams.get('expired')) {
@@ -91,6 +92,7 @@ const LoginForm = () => {
       showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
     }
+    setLoginLoading(true);
     setSubmitted(true);
     if (username && password) {
       const res = await API.post(
@@ -120,6 +122,7 @@ const LoginForm = () => {
     } else {
       showError('请输入用户名和密码！');
     }
+    setLoginLoading(false);
   }
 
   // 添加Telegram登录处理函数
@@ -195,6 +198,7 @@ const LoginForm = () => {
                     size='large'
                     htmlType={'submit'}
                     onClick={handleSubmit}
+                    loading={loginLoading}
                   >
                     登录
                   </Button>

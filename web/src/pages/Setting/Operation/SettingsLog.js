@@ -102,9 +102,7 @@ export default function SettingsLog(props) {
                 <Form.Switch
                   field={'LogConsumeEnabled'}
                   label={'启用额度消费日志记录'}
-                  size='large'
-                  checkedText='｜'
-                  uncheckedText='〇'
+                  size='middle'
                   onChange={(value) => {
                     setInputs({
                       ...inputs,

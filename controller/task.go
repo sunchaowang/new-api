@@ -164,7 +164,7 @@ func updateSunoTaskAll(ctx context.Context, channelId int, taskIds []string, tas
 						common.LogError(ctx, "fail to increase user quota: "+err.Error())
 					}
 					logContent := fmt.Sprintf("异步任务执行失败 %s，补偿 %s", task.TaskID, common.LogQuota(quota))
-					model.RecordLog(task.UserId, model.LogTypeSystem, logContent)
+					model.RecordLog(task.UserId, model.LogTypeSystem, logContent, "")
 				}
 			}
 		}

@@ -183,7 +183,7 @@ func Register(c *gin.Context) {
 	if common.EmailVerificationEnabled {
 		cleanUser.Email = user.Email
 	}
-	if err := cleanUser.Insert(inviterId); err != nil {
+	if err := cleanUser.Insert(inviterId, c.ClientIP()); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
@@ -518,7 +518,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 	if originUser.Quota != updatedUser.Quota {
-		model.RecordLog(originUser.Id, model.LogTypeManage, fmt.Sprintf("管理员将用户额度从 %s修改为 %s", common.LogQuota(originUser.Quota), common.LogQuota(updatedUser.Quota)))
+		model.RecordLog(originUser.Id, model.LogTypeManage, fmt.Sprintf("管理员将用户额度从 %s修改为 %s", common.LogQuota(originUser.Quota), common.LogQuota(updatedUser.Quota)), c.ClientIP())
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
@@ -671,7 +671,7 @@ func CreateUser(c *gin.Context) {
 		Password:    user.Password,
 		DisplayName: user.DisplayName,
 	}
-	if err := cleanUser.Insert(0); err != nil {
+	if err := cleanUser.Insert(0, c.ClientIP()); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": err.Error(),
@@ -864,7 +864,7 @@ func TopUp(c *gin.Context) {
 		return
 	}
 	id := c.GetInt("id")
-	quota, err := model.Redeem(req.Key, id)
+	quota, err := model.Redeem(req.Key, id, c.ClientIP())
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

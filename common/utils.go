@@ -4,7 +4,6 @@ import (
 	crand "crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"github.com/google/uuid"
 	"html/template"
 	"log"
 	"math/big"
@@ -15,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func OpenBrowser(url string) {
@@ -205,4 +206,11 @@ func MessageWithRequestId(message string, id string) string {
 func RandomSleep() {
 	// Sleep for 0-3000 ms
 	time.Sleep(time.Duration(rand.Intn(3000)) * time.Millisecond)
+}
+
+// 获取当地0 点时间
+func GetLocalZeroTime() time.Time {
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	return today
 }

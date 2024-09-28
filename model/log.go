@@ -28,6 +28,9 @@ type Log struct {
 	ChannelId        int    `json:"channel" gorm:"index"`
 	TokenId          int    `json:"token_id" gorm:"default:0;index"`
 	Other            string `json:"other"`
+	RequestIP        string `json:"request_ip"`
+	RequestID        string `json:"request_id"`
+	TokenGroup       string `json:"token_group"`
 }
 
 const (
@@ -36,6 +39,8 @@ const (
 	LogTypeConsume
 	LogTypeManage
 	LogTypeSystem
+	LogTypeUserQperationCheckIn
+	LogLogin
 )
 
 func GetLogByKey(key string) (logs []*Log, err error) {
@@ -43,7 +48,7 @@ func GetLogByKey(key string) (logs []*Log, err error) {
 	return logs, err
 }
 
-func RecordLog(userId int, logType int, content string) {
+func RecordLog(userId int, logType int, content string, requestIP string) {
 	if logType == LogTypeConsume && !common.LogConsumeEnabled {
 		return
 	}
@@ -54,6 +59,7 @@ func RecordLog(userId int, logType int, content string) {
 		CreatedAt: common.GetTimestamp(),
 		Type:      logType,
 		Content:   content,
+		RequestIP: requestIP,
 	}
 	err := LOG_DB.Create(log).Error
 	if err != nil {
@@ -61,8 +67,8 @@ func RecordLog(userId int, logType int, content string) {
 	}
 }
 
-func RecordConsumeLog(ctx context.Context, userId int, channelId int, promptTokens int, completionTokens int, modelName string, tokenName string, quota int, content string, tokenId int, userQuota int, useTimeSeconds int, isStream bool, other map[string]interface{}) {
-	common.LogInfo(ctx, fmt.Sprintf("record consume log: userId=%d, 用户调用前余额=%d, channelId=%d, promptTokens=%d, completionTokens=%d, modelName=%s, tokenName=%s, quota=%d, content=%s", userId, userQuota, channelId, promptTokens, completionTokens, modelName, tokenName, quota, content))
+func RecordConsumeLog(ctx context.Context, userId int, channelId int, promptTokens int, completionTokens int, modelName string, tokenName string, quota int, content string, tokenId int, userQuota int, useTimeSeconds int, isStream bool, other map[string]interface{}, requestIP string, requestID string, tokenGroup string) {
+	common.LogInfo(ctx, fmt.Sprintf("record consume log: userId=%d, 用户调用前余额=%d, channelId=%d, promptTokens=%d, completionTokens=%d, modelName=%s, tokenName=%s, quota=%d, content=%s, requestIP=%s, requestID=%s, tokenGroup=%s", userId, userQuota, channelId, promptTokens, completionTokens, modelName, tokenName, quota, content, requestIP, requestID, tokenGroup))
 	if !common.LogConsumeEnabled {
 		return
 	}
@@ -84,6 +90,9 @@ func RecordConsumeLog(ctx context.Context, userId int, channelId int, promptToke
 		UseTime:          useTimeSeconds,
 		IsStream:         isStream,
 		Other:            otherStr,
+		RequestIP:        requestIP,
+		RequestID:        requestID,
+		TokenGroup:       tokenGroup,
 	}
 	err := LOG_DB.Create(log).Error
 	if err != nil {
@@ -96,7 +105,7 @@ func RecordConsumeLog(ctx context.Context, userId int, channelId int, promptToke
 	}
 }
 
-func GetAllLogs(logType int, startTimestamp int64, endTimestamp int64, modelName string, username string, tokenName string, startIdx int, num int, channel int) (logs []*Log, total int64, err error) {
+func GetAllLogs(logType int, startTimestamp int64, endTimestamp int64, modelName string, username string, tokenName string, startIdx int, num int, channel int, requestIP string, requestID string) (logs []*Log, total int64, err error) {
 	var tx *gorm.DB
 	if logType == LogTypeUnknown {
 		tx = LOG_DB
@@ -120,6 +129,12 @@ func GetAllLogs(logType int, startTimestamp int64, endTimestamp int64, modelName
 	}
 	if channel != 0 {
 		tx = tx.Where("channel_id = ?", channel)
+	}
+	if requestIP != "" {
+		tx = tx.Where("request_ip = ?", requestIP)
+	}
+	if requestID != "" {
+		tx = tx.Where("request_id = ?", requestID)
 	}
 	err = tx.Model(&Log{}).Count(&total).Error
 	if err != nil {

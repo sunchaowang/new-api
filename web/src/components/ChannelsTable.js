@@ -410,7 +410,7 @@ const ChannelsTable = () => {
 
   useEffect(() => {
     // console.log('default effect')
-    const localIdSort = localStorage.getItem('id-sort') === 'true';
+    const localIdSort = true; // localStorage.getItem('id-sort') === 'true';
     const localPageSize =
       parseInt(localStorage.getItem('page-size')) || ITEMS_PER_PAGE;
     setIdSort(localIdSort);

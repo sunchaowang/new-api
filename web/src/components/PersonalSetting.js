@@ -528,8 +528,8 @@ const PersonalSetting = () => {
                   <div>
                     <Input
                       value={
-                        userState.user && userState.user.linux_do_id !== ''
-                          ? userState.user.linux_do_id
+                        userState.user && userState.user.linuxdo_id !== ''
+                          ? userState.user.linuxdo_id
                           : '未绑定'
                       }
                       readonly={true}
@@ -541,7 +541,7 @@ const PersonalSetting = () => {
                         onLinuxDoOAuthClicked(status.linux_do_client_id);
                       }}
                       disabled={
-                        (userState.user && userState.user.linux_do_id !== '') ||
+                        (userState.user && userState.user.linuxdo_id !== '') ||
                         !status.linux_do_oauth
                       }
                     >

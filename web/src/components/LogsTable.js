@@ -24,6 +24,7 @@ import {
 } from '@douyinfe/semi-ui';
 import { ITEMS_PER_PAGE } from '../constants';
 import {
+  renderGroup,
   renderModelPrice,
   renderNumber,
   renderQuota,
@@ -89,6 +90,20 @@ function renderType(type) {
         <Tag color='purple' size='large'>
           {' '}
           系统{' '}
+        </Tag>
+      );
+    case 5:
+      return (
+        <Tag color='green' size='large'>
+          {' '}
+          签到{' '}
+        </Tag>
+      );
+    case 6:
+      return (
+        <Tag color='green' size='large'>
+          {' '}
+          登录{' '}
         </Tag>
       );
     default:
@@ -247,10 +262,10 @@ const LogsTable = () => {
       },
     },
     {
-      title: '类型',
-      dataIndex: 'type',
+      title: '令牌分组',
+      dataIndex: 'token_group',
       render: (text, record, index) => {
-        return <div>{renderType(text)}</div>;
+        return record.type === 0 || record.type === 2 ? <div>{renderGroup(text)}</div> : <></>;
       },
     },
     {
@@ -360,7 +375,7 @@ const LogsTable = () => {
             }
           }
         }
-        return isAdminUser ? <div>{content}</div> : <></>;
+        return isAdminUser ? record.type === 0 || record.type === 2 ? <div>{content}</div> : <></> : <></>;
       },
     },
     {
@@ -372,7 +387,7 @@ const LogsTable = () => {
           return (
             <Paragraph
               ellipsis={{
-                rows: 2,
+                rows: 4,
                 showTooltip: {
                   type: 'popover',
                   opts: { style: { width: 240 } },
@@ -380,6 +395,8 @@ const LogsTable = () => {
               }}
               style={{ maxWidth: 240 }}
             >
+              <div>{renderType(record.type)}</div>
+              <div>{record.request_ip}</div>
               {text}
             </Paragraph>
           );
@@ -396,10 +413,12 @@ const LogsTable = () => {
           <Tooltip content={content}>
             <Paragraph
               ellipsis={{
-                rows: 2,
+                rows: 4,
               }}
               style={{ maxWidth: 240 }}
             >
+              <div>{renderType(record.type)}</div>
+              <div>{record.request_ip}</div>
               {text}
             </Paragraph>
           </Tooltip>

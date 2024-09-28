@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, transformWithEsbuild } from 'vite';
+import SemiPlugin from "vite-plugin-semi-theme";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,6 +21,11 @@ export default defineConfig({
       },
     },
     react(),
+    SemiPlugin({
+      theme: "@semi-bot/semi-theme-universedesign",
+      options: {
+      }
+    }),
   ],
   optimizeDeps: {
     force: true,

@@ -1,13 +1,14 @@
 package middleware
 
 import (
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"one-api/common"
 	"one-api/model"
 	"strconv"
 	"strings"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 func validUserInfo(username string, role int) bool {
@@ -194,6 +195,7 @@ func TokenAuth() func(c *gin.Context) {
 		c.Set("id", token.UserId)
 		c.Set("token_id", token.Id)
 		c.Set("token_name", token.Name)
+		c.Set("token_group", token.Group)
 		c.Set("token_unlimited_quota", token.UnlimitedQuota)
 		if !token.UnlimitedQuota {
 			c.Set("token_quota", token.RemainQuota)

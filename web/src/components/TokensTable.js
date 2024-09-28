@@ -122,7 +122,7 @@ const TokensTable = () => {
         return <div>
           <Space>
             {renderStatus(text, record.model_limits_enabled)}
-            {renderGroup(record.group)}
+            {renderGroup(record.group, groups)}
           </Space>
         </div>;
       },
@@ -335,6 +335,29 @@ const TokensTable = () => {
   const [editingToken, setEditingToken] = useState({
     id: undefined,
   });
+  const [groups, setGroups] = useState([]);
+
+  const loadGroups = async () => {
+    let res = await API.get(`/api/user/groups`);
+    const { success, message, data } = res.data;
+    if (success) {
+      // return data is a map, key is group name, value is group description
+      // label is group description, value is group name
+        let localGroupOptions = Object.keys(data).map((group) => ({
+            label: data[group],
+            value: group,
+        })).map((group) => (
+           [group.value, group.label]
+        ));
+        setGroups(new Map(localGroupOptions));
+    } else {
+      showError(message);
+    }
+  };
+
+  useEffect(() => {
+    loadGroups();
+  }, []);
 
   const closeEdit = () => {
     setShowEdit(false);
