@@ -185,7 +185,7 @@ function renderFirstUseTime(type) {
   }
 }
 
-const LogsTable = () => {
+const LogsTable = ({groups}) => {
   const columns = [
     {
       title: '时间',
@@ -265,7 +265,7 @@ const LogsTable = () => {
       title: '令牌分组',
       dataIndex: 'token_group',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? <div>{renderGroup(text)}</div> : <></>;
+        return record.type === 0 || record.type === 2 ? <div>{renderGroup(text, groups)}</div> : <></>;
       },
     },
     {

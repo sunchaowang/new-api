@@ -39,7 +39,7 @@ export function renderGroup(group, groupsOptions ) {
           color={tagColors[group] || stringToColor(group)}
           key={group}
         >
-          {groupsOptions?.has(group) ? groupsOptions.get(group) : group}
+          {groupsOptions?.has?.(group) ? groupsOptions.get(group) : group}
         </Tag>
       ))}
     </span>
