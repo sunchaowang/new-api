@@ -41,8 +41,8 @@ root.render(
                   <Layout.Footer>
                     <FooterBar></FooterBar>
                   </Layout.Footer>
-                {/* </Layout> */}
-              </Layout>
+                </Layout>
+              {/* </Layout> */}
               <ToastContainer />
             </Layout>
           </ThemeProvider>

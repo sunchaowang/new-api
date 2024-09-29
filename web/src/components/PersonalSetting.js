@@ -10,7 +10,7 @@ import {
 } from '../helpers';
 import Turnstile from 'react-turnstile';
 import { UserContext } from '../context/User';
-import { onGitHubOAuthClicked } from './utils';
+import { onGitHubOAuthClicked, onLinuxDoOAuthClicked } from './utils';
 import {
   Avatar,
   Banner,

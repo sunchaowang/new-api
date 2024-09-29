@@ -15,7 +15,7 @@ const LinuxDoOAuth = () => {
 
   const sendCode = async (code, state, count) => {
     let aff = localStorage.getItem('aff');
-    const res = await API.get(`/api/oauth/linuxdo?code=${code}&state=${state}&aff=${aff}`);
+    const res = await API.get(`/api/oauth/linuxdo?code=${code}&state=${state}&aff=${aff ?? ''}`);
     const { success, message, data } = res.data;
     if (success) {
       localStorage.removeItem('aff');
@@ -27,12 +27,12 @@ const LinuxDoOAuth = () => {
         userDispatch({ type: 'login', payload: data });
         localStorage.setItem('user', JSON.stringify(data));
         showSuccess('登录成功！');
-        navigate('/');
+        navigate('/setting');
       }
     } else {
       showError(message);
       if (count === 0) {
-        setPrompt(`操作失败，重定向至登录界面中...`);
+        setPrompt(`操作失败，重定向至设置界面中...`);
         navigate('/setting'); // in case this is failed to bind GitHub
         return;
       }
@@ -54,7 +54,10 @@ const LinuxDoOAuth = () => {
 
     let code = searchParams.get('code');
     let state = searchParams.get('state');
-    sendCode(code, state, 0).then();
+    if (code && state && localStorage.getItem('linuxdo_code_state') !== code + state) {
+      localStorage.setItem('linuxdo_code_state', code + state);
+      sendCode(code, state, 0).then();
+    }
   }, []);
 
   return (

@@ -40,7 +40,7 @@ const (
 	LogTypeManage
 	LogTypeSystem
 	LogTypeUserQperationCheckIn
-	LogLogin
+	LogTypeLogin
 )
 
 func GetLogByKey(key string) (logs []*Log, err error) {

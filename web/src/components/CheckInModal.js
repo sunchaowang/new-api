@@ -75,7 +75,7 @@ export default function CheckInModal(props) {
       onCancel={handleClose}
       footer={[
         <Button onClick={() => handleClose()}>取消</Button>,
-        <Button theme={'solid'} disabled={!turnstileToken} loading={checkinLoading} onClick={() => handleUserOperationCheckIn()} type="primary">
+        <Button theme={'solid'} disabled={!turnstileToken} loading={checkinLoading} onClick={() => handleUserOperationCheckIn()} type={turnstileEnabled ? "primary" : "default"}>
           立即签到
         </Button>
       ]}

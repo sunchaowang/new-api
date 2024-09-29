@@ -764,7 +764,7 @@ const ChannelsTable = () => {
           </Space>
         </div>
       </Form>
-      <div style={{ marginTop: 10, display: 'flex' }}>
+      {/* <div style={{ marginTop: 10, display: 'flex' }}>
         <Space>
           <Space>
             <Typography.Text strong>使用ID排序</Typography.Text>
@@ -785,7 +785,7 @@ const ChannelsTable = () => {
             ></Switch>
           </Space>
         </Space>
-      </div>
+      </div> */}
 
       <Table
         className={'channel-table'}

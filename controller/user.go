@@ -10,9 +10,10 @@ import (
 	"strings"
 	"sync"
 
+	"one-api/constant"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"one-api/constant"
 )
 
 type LoginRequest struct {
@@ -85,6 +86,7 @@ func setupLogin(user *model.User, c *gin.Context) {
 		Status:      user.Status,
 		Group:       user.Group,
 	}
+	model.RecordLog(user.Id, model.LogTypeLogin, fmt.Sprintf("用户 %s 登录", user.Username), c.ClientIP())
 	c.JSON(http.StatusOK, gin.H{
 		"message": "",
 		"success": true,

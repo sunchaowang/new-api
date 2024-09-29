@@ -345,6 +345,14 @@ func (user *User) FillUserByGitHubId() error {
 	return nil
 }
 
+func (user *User) FillUserByLinuxDoId() error {
+	if user.LinuxDoId == "" {
+		return errors.New("LINUX DO id 为空！")
+	}
+	DB.Where(User{LinuxDoId: user.LinuxDoId}).First(user)
+	return nil
+}
+
 func (user *User) FillUserByWeChatId() error {
 	if user.WeChatId == "" {
 		return errors.New("WeChat id 为空！")
@@ -374,6 +382,14 @@ func IsWeChatIdAlreadyTaken(wechatId string) bool {
 
 func IsGitHubIdAlreadyTaken(githubId string) bool {
 	return DB.Unscoped().Where("github_id = ?", githubId).Find(&User{}).RowsAffected == 1
+}
+
+func IsLinuxDoIdAlreadyTaken(linuxdoId string) bool {
+	return DB.Where("linuxdo_id = ?", linuxdoId).Find(&User{}).RowsAffected == 1
+}
+
+func IsUsernameAlreadyTaken(username string) bool {
+	return DB.Where("username = ?", username).Find(&User{}).RowsAffected == 1
 }
 
 func IsTelegramIdAlreadyTaken(telegramId string) bool {
@@ -538,16 +554,4 @@ func updateUserRequestCount(id int, count int) {
 func GetUsernameById(id int) (username string, err error) {
 	err = DB.Model(&User{}).Where("id = ?", id).Select("username").Find(&username).Error
 	return username, err
-}
-
-func (user *User) FillUserByLinuxDoId() error {
-	if user.LinuxDoId == "" {
-		return errors.New("LINUX DO id 为空！")
-	}
-	DB.Where(User{LinuxDoId: user.LinuxDoId}).First(user)
-	return nil
-}
-
-func IsLinuxDoIdAlreadyTaken(linuxdoId string) bool {
-	return DB.Where("linuxdo_id = ?", linuxdoId).Find(&User{}).RowsAffected == 1
 }

@@ -32,7 +32,7 @@
     "build": "vite build",
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "prettier . --write",
-    "preview": "vite preview"
+    "preview": "vite preview --port 5173"
   },
   "babel": {
     "presets": [

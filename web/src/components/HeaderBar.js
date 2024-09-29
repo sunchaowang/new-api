@@ -260,7 +260,7 @@ let buttons = useMemo(
         <div style={{ width: '100%' }}>
           <Nav
             mode={'horizontal'}
-            // bodyStyle={{ height: 100 }}
+            bodyStyle={{ width: '100%' }}
             renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
               const routerMap = {
                 about: '/about',

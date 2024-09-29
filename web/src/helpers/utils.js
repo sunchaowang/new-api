@@ -86,6 +86,11 @@ export function showError(error) {
       switch (error.response.status) {
         case 401:
           // toast.error('错误：未登录或登录已过期，请重新登录！', showErrorOptions);
+          // 清空 cookies session
+          localStorage.removeItem('user');
+          document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+          // 跳转到登录页面
           window.location.href = '/login?expired=true';
           break;
         case 429:
@@ -117,14 +122,14 @@ export function showSuccess(message) {
 }
 
 export function showInfo(message) {
-  Toast.info(message);
+  Toast.warning(message);
 }
 
 export function showNotice(message, isHTML = false) {
   if (isHTML) {
     toast(<HTMLToastContent htmlContent={message} />, showNoticeOptions);
   } else {
-    Toast.info(message);
+    Toast.warning(message);
   }
 }
 
