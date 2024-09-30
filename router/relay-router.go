@@ -22,6 +22,29 @@ func SetRelayRouter(router *gin.Engine) {
 		playgroundRouter.POST("/chat/completions", controller.Playground)
 	}
 	relayV1Router := router.Group("/v1")
+	registryV1RouterGroup(relayV1Router)
+
+	relayAPIV1Router := router.Group("/api/v1")
+	registryV1RouterGroup(relayAPIV1Router)
+
+	relayMjRouter := router.Group("/mj")
+	registerMjRouterGroup(relayMjRouter)
+
+	relayMjModeRouter := router.Group("/:mode/mj")
+	registerMjRouterGroup(relayMjModeRouter)
+	//relayMjRouter.Use()
+
+	relaySunoRouter := router.Group("/suno")
+	relaySunoRouter.Use(middleware.TokenAuth(), middleware.Distribute())
+	{
+		relaySunoRouter.POST("/submit/:action", controller.RelayTask)
+		relaySunoRouter.POST("/fetch", controller.RelayTask)
+		relaySunoRouter.GET("/fetch/:id", controller.RelayTask)
+	}
+
+}
+
+func registryV1RouterGroup(relayV1Router *gin.RouterGroup) {
 	relayV1Router.Use(middleware.TokenAuth(), middleware.Distribute())
 	{
 		relayV1Router.POST("/completions", controller.Relay)
@@ -49,22 +72,6 @@ func SetRelayRouter(router *gin.Engine) {
 		relayV1Router.POST("/moderations", controller.Relay)
 		relayV1Router.POST("/rerank", controller.Relay)
 	}
-
-	relayMjRouter := router.Group("/mj")
-	registerMjRouterGroup(relayMjRouter)
-
-	relayMjModeRouter := router.Group("/:mode/mj")
-	registerMjRouterGroup(relayMjModeRouter)
-	//relayMjRouter.Use()
-
-	relaySunoRouter := router.Group("/suno")
-	relaySunoRouter.Use(middleware.TokenAuth(), middleware.Distribute())
-	{
-		relaySunoRouter.POST("/submit/:action", controller.RelayTask)
-		relaySunoRouter.POST("/fetch", controller.RelayTask)
-		relaySunoRouter.GET("/fetch/:id", controller.RelayTask)
-	}
-
 }
 
 func registerMjRouterGroup(relayMjRouter *gin.RouterGroup) {

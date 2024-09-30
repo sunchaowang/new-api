@@ -5,13 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"one-api/common"
 	"one-api/model"
 	"strconv"
 	"time"
+
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 type GitHubOAuthResponse struct {
@@ -21,9 +22,13 @@ type GitHubOAuthResponse struct {
 }
 
 type GitHubUser struct {
-	Login string `json:"login"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Login     string `json:"login"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Location  string `json:"location"`
+	Type      string `json:"type"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
 }
 
 func getGitHubUserInfoByCode(code string) (*GitHubUser, error) {
@@ -110,7 +115,10 @@ func GitHubOAuth(c *gin.Context) {
 		return
 	}
 	user := model.User{
-		GitHubId: githubUser.Login,
+		GitHubId:        githubUser.Login,
+		GitHubUserName:  githubUser.Name,
+		GitHubEmail:     githubUser.Email,
+		GitHubCreatedAt: githubUser.CreatedAt,
 	}
 	// IsGitHubIdAlreadyTaken is unscoped
 	if model.IsGitHubIdAlreadyTaken(user.GitHubId) {
@@ -188,6 +196,9 @@ func GitHubBind(c *gin.Context) {
 	}
 	user := model.User{
 		GitHubId: githubUser.Login,
+		GitHubUserName: githubUser.Name,
+		GitHubEmail: githubUser.Email,
+		GitHubCreatedAt: githubUser.CreatedAt,
 	}
 	if model.IsGitHubIdAlreadyTaken(user.GitHubId) {
 		c.JSON(http.StatusOK, gin.H{

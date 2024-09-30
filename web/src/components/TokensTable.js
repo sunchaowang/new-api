@@ -111,41 +111,43 @@ const TokensTable = () => {
 
   const columns = [
     {
-      title: '名称',
-      dataIndex: 'name',
+      title: "名称",
+      dataIndex: "name",
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
+      title: "状态",
+      dataIndex: "status",
+      key: "status",
       render: (text, record, index) => {
-        return <div>
-          <Space>
-            {renderStatus(text, record.model_limits_enabled)}
-            {renderGroup(record.group, groups)}
-          </Space>
-        </div>;
+        return (
+          <div>
+            <Space>
+              {renderStatus(text, record.model_limits_enabled)}
+              {renderGroup(record.group, groups)}
+            </Space>
+          </div>
+        );
       },
     },
     {
-      title: '已用额度',
-      dataIndex: 'used_quota',
+      title: "已用额度",
+      dataIndex: "used_quota",
       render: (text, record, index) => {
         return <div>{renderQuota(parseInt(text))}</div>;
       },
     },
     {
-      title: '剩余额度',
-      dataIndex: 'remain_quota',
+      title: "剩余额度",
+      dataIndex: "remain_quota",
       render: (text, record, index) => {
         return (
           <div>
             {record.unlimited_quota ? (
-              <Tag size={'large'} color={'white'}>
+              <Tag size={"large"} color={"white"}>
                 无限制
               </Tag>
             ) : (
-              <Tag size={'large'} color={'light-blue'}>
+              <Tag size={"large"} color={"light-blue"}>
                 {renderQuota(parseInt(text))}
               </Tag>
             )}
@@ -154,80 +156,80 @@ const TokensTable = () => {
       },
     },
     {
-      title: '创建时间',
-      dataIndex: 'created_time',
+      title: "创建时间",
+      dataIndex: "created_time",
       render: (text, record, index) => {
         return <div>{renderTimestamp(text)}</div>;
       },
     },
     {
-      title: '过期时间',
-      dataIndex: 'expired_time',
+      title: "过期时间",
+      dataIndex: "expired_time",
       render: (text, record, index) => {
         return (
           <div>
-            {record.expired_time === -1 ? '永不过期' : renderTimestamp(text)}
+            {record.expired_time === -1 ? "永不过期" : renderTimestamp(text)}
           </div>
         );
       },
     },
     {
-      title: '',
-      dataIndex: 'operate',
+      title: "",
+      dataIndex: "operate",
       render: (text, record, index) => (
         <div>
           <Popover
-            content={'sk-' + record.key}
+            content={"sk-" + record.key}
             style={{ padding: 20 }}
-            position='top'
+            position="top"
           >
-            <Button theme='light' type='tertiary' style={{ marginRight: 1 }}>
+            <Button theme="light" type="tertiary" style={{ marginRight: 1 }}>
               查看
             </Button>
           </Popover>
           <Button
-            theme='light'
-            type='secondary'
+            theme="light"
+            type="primary"
             style={{ marginRight: 1 }}
             onClick={async (text) => {
-              await copyText('sk-' + record.key);
+              await copyText("sk-" + record.key);
             }}
           >
             复制
           </Button>
           <SplitButtonGroup
             style={{ marginRight: 1 }}
-            aria-label='项目操作按钮组'
+            aria-label="项目操作按钮组"
           >
             <Button
-              theme='light'
-              style={{ color: 'rgba(var(--semi-teal-7), 1)' }}
+              theme="light"
+              style={{ color: "rgba(var(--semi-teal-7), 1)" }}
               onClick={() => {
-                onOpenLink('next', record.key);
+                onOpenLink("next", record.key);
               }}
             >
               聊天
             </Button>
             <Dropdown
-              trigger='click'
-              position='bottomRight'
+              trigger="click"
+              position="bottomRight"
               menu={[
                 {
-                  node: 'item',
-                  key: 'next',
-                  disabled: !localStorage.getItem('chat_link'),
-                  name: 'ChatGPT Next Web',
+                  node: "item",
+                  key: "next",
+                  disabled: !localStorage.getItem("chat_link"),
+                  name: "ChatGPT Next Web",
                   onClick: () => {
-                    onOpenLink('next', record.key);
+                    onOpenLink("next", record.key);
                   },
                 },
                 {
-                  node: 'item',
-                  key: 'next-mj',
-                  disabled: !localStorage.getItem('chat_link2'),
-                  name: 'ChatGPT Web & Midjourney',
+                  node: "item",
+                  key: "next-mj",
+                  disabled: !localStorage.getItem("chat_link2"),
+                  name: "ChatGPT Web & Midjourney",
                   onClick: () => {
-                    onOpenLink('next-mj', record.key);
+                    onOpenLink("next-mj", record.key);
                   },
                 },
                 // {
@@ -239,74 +241,74 @@ const TokensTable = () => {
                 //   },
                 // },
                 {
-                  node: 'item',
-                  key: 'ama',
-                  name: 'AMA 问天（BotGem）',
+                  node: "item",
+                  key: "ama",
+                  name: "AMA 问天（BotGem）",
                   onClick: () => {
-                    onOpenLink('ama', record.key);
+                    onOpenLink("ama", record.key);
                   },
                 },
                 {
-                  node: 'item',
-                  key: 'opencat',
-                  name: 'OpenCat',
+                  node: "item",
+                  key: "opencat",
+                  name: "OpenCat",
                   onClick: () => {
-                    onOpenLink('opencat', record.key);
+                    onOpenLink("opencat", record.key);
                   },
                 },
               ]}
             >
               <Button
                 style={{
-                  padding: '8px 4px',
-                  color: 'rgba(var(--semi-teal-7), 1)',
+                  padding: "8px 4px",
+                  color: "rgba(var(--semi-teal-7), 1)",
                 }}
-                type='primary'
+                type="primary"
                 icon={<IconTreeTriangleDown />}
               ></Button>
             </Dropdown>
           </SplitButtonGroup>
           <Popconfirm
-            title='确定是否要删除此令牌？'
-            content='此修改将不可逆'
-            okType={'danger'}
-            position={'left'}
+            title="确定是否要删除此令牌？"
+            content="此修改将不可逆"
+            okType={"danger"}
+            position={"left"}
             onConfirm={() => {
-              manageToken(record.id, 'delete', record).then(() => {
+              manageToken(record.id, "delete", record).then(() => {
                 removeRecord(record.key);
               });
             }}
           >
-            <Button theme='light' type='danger' style={{ marginRight: 1 }}>
+            <Button theme="light" type="danger" style={{ marginRight: 1 }}>
               删除
             </Button>
           </Popconfirm>
           {record.status === 1 ? (
             <Button
-              theme='light'
-              type='warning'
+              theme="light"
+              type="warning"
               style={{ marginRight: 1 }}
               onClick={async () => {
-                manageToken(record.id, 'disable', record);
+                manageToken(record.id, "disable", record);
               }}
             >
               禁用
             </Button>
           ) : (
             <Button
-              theme='light'
-              type='secondary'
+              theme="light"
+              type="secondary"
               style={{ marginRight: 1 }}
               onClick={async () => {
-                manageToken(record.id, 'enable', record);
+                manageToken(record.id, "enable", record);
               }}
             >
               启用
             </Button>
           )}
           <Button
-            theme='light'
-            type='tertiary'
+            theme="light"
+            type="tertiary"
             style={{ marginRight: 1 }}
             onClick={() => {
               setEditingToken(record);

@@ -42,27 +42,27 @@ const (
 
 func Path2RelayMode(path string) int {
 	relayMode := RelayModeUnknown
-	if strings.HasPrefix(path, "/v1/chat/completions") || strings.HasPrefix(path, "/pg/chat/completions") {
+	if strings.Contains(path, "/v1/chat/completions") || strings.HasPrefix(path, "/pg/chat/completions") {
 		relayMode = RelayModeChatCompletions
-	} else if strings.HasPrefix(path, "/v1/completions") {
+	} else if strings.Contains(path, "/v1/completions") {
 		relayMode = RelayModeCompletions
-	} else if strings.HasPrefix(path, "/v1/embeddings") {
+	} else if strings.Contains(path, "/v1/embeddings") {
 		relayMode = RelayModeEmbeddings
-	} else if strings.HasSuffix(path, "embeddings") {
+	} else if strings.Contains(path, "embeddings") {
 		relayMode = RelayModeEmbeddings
-	} else if strings.HasPrefix(path, "/v1/moderations") {
+	} else if strings.Contains(path, "/v1/moderations") {
 		relayMode = RelayModeModerations
-	} else if strings.HasPrefix(path, "/v1/images/generations") {
+	} else if strings.Contains(path, "/v1/images/generations") {
 		relayMode = RelayModeImagesGenerations
-	} else if strings.HasPrefix(path, "/v1/edits") {
+	} else if strings.Contains(path, "/v1/edits") {
 		relayMode = RelayModeEdits
-	} else if strings.HasPrefix(path, "/v1/audio/speech") {
+	} else if strings.Contains(path, "/v1/audio/speech") {
 		relayMode = RelayModeAudioSpeech
-	} else if strings.HasPrefix(path, "/v1/audio/transcriptions") {
+	} else if strings.Contains(path, "/v1/audio/transcriptions") {
 		relayMode = RelayModeAudioTranscription
-	} else if strings.HasPrefix(path, "/v1/audio/translations") {
+	} else if strings.Contains(path, "/v1/audio/translations") {
 		relayMode = RelayModeAudioTranslation
-	} else if strings.HasPrefix(path, "/v1/rerank") {
+	} else if strings.Contains(path, "/v1/rerank") {
 		relayMode = RelayModeRerank
 	}
 	return relayMode

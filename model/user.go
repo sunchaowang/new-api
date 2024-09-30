@@ -22,8 +22,13 @@ type User struct {
 	Status           int            `json:"status" gorm:"type:int;default:1"` // enabled, disabled
 	Email            string         `json:"email" gorm:"index" validate:"max=50"`
 	GitHubId         string         `json:"github_id" gorm:"column:github_id;index"`
+	GitHubUserName   string         `json:"github_username" gorm:"column:github_username;type:string"`
+	GitHubEmail      string         `json:"github_email" gorm:"column:github_email;type:string"`
+	GitHubCreatedAt  string         `json:"github_created_at" gorm:"column:github_created_at;type:string"`
 	LinuxDoId        string         `json:"linuxdo_id" gorm:"column:linuxdo_id;index"`
 	LinuxDoLevel     int            `json:"linuxdo_level" gorm:"column:linuxdo_level;type:int;default:0"`
+	LinuxDoUserName  string         `json:"linuxdo_username" gorm:"column:linuxdo_username;type:string"`
+	LinuxDoName      string         `json:"linuxdo_name" gorm:"column:linuxdo_name;type:string"`
 	WeChatId         string         `json:"wechat_id" gorm:"column:wechat_id;index"`
 	TelegramId       string         `json:"telegram_id" gorm:"column:telegram_id;index"`
 	VerificationCode string         `json:"verification_code" gorm:"-:all"`                                    // this field is only for Email verification, don't save it to database!
@@ -146,6 +151,7 @@ func DeleteUserById(id int) (err error) {
 		return errors.New("id 为空！")
 	}
 	user := User{Id: id}
+	user.Username = fmt.Sprintf("deleted_%d", user.Username)
 	return user.Delete()
 }
 

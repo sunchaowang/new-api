@@ -6,7 +6,7 @@ import SemiPlugin from "vite-plugin-semi-theme";
 export default defineConfig({
   plugins: [
     {
-      name: 'treat-js-files-as-jsx',
+      name: "treat-js-files-as-jsx",
       async transform(code, id) {
         if (!/src\/.*\.js$/.test(id)) {
           return null;
@@ -15,23 +15,22 @@ export default defineConfig({
         // Use the exposed transform from vite, instead of directly
         // transforming with esbuild
         return transformWithEsbuild(code, id, {
-          loader: 'jsx',
-          jsx: 'automatic',
+          loader: "jsx",
+          jsx: "automatic",
         });
       },
     },
     react(),
     SemiPlugin({
-      theme: "@semi-bot/semi-theme-universedesign",
-      options: {
-      }
+      theme: "@semi-bot/semi-theme-chirou",
+      options: {},
     }),
   ],
   optimizeDeps: {
     force: true,
     esbuildOptions: {
       loader: {
-        '.js': 'jsx',
+        ".js": "jsx",
       },
     },
   },
@@ -39,17 +38,17 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-core': ['react', 'react-dom', 'react-router-dom'],
-          'semi-ui': ['@douyinfe/semi-icons', '@douyinfe/semi-ui'],
-          semantic: ['semantic-ui-offline', 'semantic-ui-react'],
-          visactor: ['@visactor/react-vchart', '@visactor/vchart'],
-          tools: ['axios', 'history', 'marked'],
-          'react-components': [
-            'react-dropzone',
-            'react-fireworks',
-            'react-telegram-login',
-            'react-toastify',
-            'react-turnstile',
+          "react-core": ["react", "react-dom", "react-router-dom"],
+          "semi-ui": ["@douyinfe/semi-icons", "@douyinfe/semi-ui"],
+          semantic: ["semantic-ui-offline", "semantic-ui-react"],
+          visactor: ["@visactor/react-vchart", "@visactor/vchart"],
+          tools: ["axios", "history", "marked"],
+          "react-components": [
+            "react-dropzone",
+            "react-fireworks",
+            "react-telegram-login",
+            "react-toastify",
+            "react-turnstile",
           ],
         },
       },
@@ -58,15 +57,14 @@ export default defineConfig({
   server: {
     // https: true,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
+      "/api": {
+        target: "http://localhost:3000",
         changeOrigin: true,
       },
-      '/pg': {
-        target: 'http://localhost:3000',
+      "/pg": {
+        target: "http://localhost:3000",
         changeOrigin: true,
       },
     },
   },
-  
 });

@@ -6,6 +6,7 @@
   "dependencies": {
     "@douyinfe/semi-icons": "^2.63.1",
     "@douyinfe/semi-ui": "^2.63.1",
+    "@semi-bot/semi-theme-chirou": "^1.0.0",
     "@semi-bot/semi-theme-universedesign": "^1.0.0",
     "@visactor/react-vchart": "~1.8.8",
     "@visactor/vchart": "~1.8.8",
