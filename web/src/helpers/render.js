@@ -58,7 +58,7 @@ export function renderNumber(num) {
   }
 }
 
-export function renderQuotaNumberWithDigit(num, digits = 2) {
+export function renderQuotaNumberWithDigit(num, digits = 6) {
   let displayInCurrency = localStorage.getItem('display_in_currency');
   num = num.toFixed(digits);
   if (displayInCurrency) {
@@ -124,7 +124,7 @@ export function renderQuotaWithAmount(amount) {
   }
 }
 
-export function renderQuota(quota, digits = 2) {
+export function renderQuota(quota, digits = 6) {
   let quotaPerUnit = localStorage.getItem('quota_per_unit');
   let displayInCurrency = localStorage.getItem('display_in_currency');
   quotaPerUnit = parseFloat(quotaPerUnit);

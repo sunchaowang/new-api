@@ -11,6 +11,9 @@ dependencies:
   '@douyinfe/semi-ui':
     specifier: ^2.63.1
     version: 2.66.1(react-dom@18.2.0)(react@18.2.0)
+  '@semi-bot/semi-theme-chirou':
+    specifier: ^1.0.0
+    version: 1.0.0
   '@semi-bot/semi-theme-universedesign':
     specifier: ^1.0.0
     version: 1.0.13
@@ -2633,6 +2636,10 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@semi-bot/semi-theme-chirou@1.0.0:
+    resolution: {integrity: sha512-9mE83f2lTQayhGXiz/+zMql8z7C7jxO7ur6oVtFibBt8MnLYsPjzTfCfKxa1EQ3duWZsNtEXKAkYr6yO+S5MIw==}
     dev: false
 
   /@semi-bot/semi-theme-universedesign@1.0.13:

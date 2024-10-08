@@ -252,7 +252,7 @@ const ChannelsTable = () => {
           ) : (
             <Button
               theme='light'
-              type='secondary'
+              type='primary'
               style={{ marginRight: 1 }}
               onClick={async () => {
                 manageChannel(record.id, 'enable', record);

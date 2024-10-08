@@ -90,6 +90,7 @@ func InitOptionMap() {
 	common.OptionMap["ModelRatio"] = common.ModelRatio2JSONString()
 	common.OptionMap["ModelPrice"] = common.ModelPrice2JSONString()
 	common.OptionMap["GroupRatio"] = common.GroupRatio2JSONString()
+	common.OptionMap["TokenGroupRatio"] = common.TokenGroupRatio2JSONString()
 	common.OptionMap["UserUsableGroups"] = common.UserUsableGroups2JSONString()
 	common.OptionMap["CompletionRatio"] = common.CompletionRatio2JSONString()
 	common.OptionMap["TopUpLink"] = common.TopUpLink
@@ -316,6 +317,8 @@ func updateOptionMap(key string, value string) (err error) {
 		err = common.UpdateModelRatioByJSONString(value)
 	case "GroupRatio":
 		err = common.UpdateGroupRatioByJSONString(value)
+	case "TokenGroupRatio":
+		err = common.UpdateTokenGroupRatioByJSONString(value)
 	case "UserUsableGroups":
 		err = common.UpdateUserUsableGroupsByJSONString(value)
 	case "CompletionRatio":

@@ -217,7 +217,7 @@ export default function SettingsMagnification(props) {
           <Row gutter={16}>
             <Col span={16}>
               <Form.TextArea
-                  label={'用户可选分组'}
+                  label={'用户可选令牌分组'}
                   extraText={''}
                   placeholder={'为一个 JSON 文本，键为分组名称，值为倍率'}
                   field={'UserUsableGroups'}

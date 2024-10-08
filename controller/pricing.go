@@ -9,9 +9,10 @@ import (
 func GetPricing(c *gin.Context) {
 	pricing := model.GetPricing()
 	c.JSON(200, gin.H{
-		"success":     true,
-		"data":        pricing,
-		"group_ratio": common.GroupRatio,
+		"success":           true,
+		"data":              pricing,
+		"group_ratio":       common.GroupRatio,
+		"token_group_ratio": common.TokenGroupRatio,
 	})
 }
 

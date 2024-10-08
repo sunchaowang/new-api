@@ -279,6 +279,7 @@ const ModelPricing = () => {
   const [loading, setLoading] = useState(true);
   const [userState, userDispatch] = useContext(UserContext);
   const [groupRatio, setGroupRatio] = useState({});
+  const [tokenGroup, setTokenGroup] = useState(['default']);
 
   const setModelsFormat = (models, groupRatio) => {
     for (let i = 0; i < models.length; i++) {
