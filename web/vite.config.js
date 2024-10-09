@@ -58,11 +58,11 @@ export default defineConfig({
     // https: true,
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: env.VITE_APP_SERVER || "http://localhost:3000",
         changeOrigin: true,
       },
       "/pg": {
-        target: "http://localhost:3000",
+        target: env.VITE_APP_SERVER || "http://localhost:3000",
         changeOrigin: true,
       },
     },
