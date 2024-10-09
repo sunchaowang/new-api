@@ -8,4 +8,4 @@ build
 logs
 web/dist
 
-*.env.*
+*.env*.local
