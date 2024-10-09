@@ -598,6 +598,13 @@ const TokensTable = () => {
     }
   };
 
+  const copyBaseUrl = () => {
+    let status = localStorage.getItem("status");
+    status = JSON.parse(status);
+    copy(status.server_address);
+    showSuccess("复制成功");
+  };
+
   return (
     <>
       <EditToken
@@ -607,35 +614,48 @@ const TokensTable = () => {
         handleClose={closeEdit}
       ></EditToken>
       <Form
-        layout='horizontal'
+        layout="horizontal"
         style={{ marginTop: 10 }}
-        labelPosition={'left'}
+        labelPosition={"left"}
       >
         <Form.Input
-          field='keyword'
-          label='搜索关键字'
-          placeholder='令牌名称'
+          field="keyword"
+          label="搜索关键字"
+          placeholder="令牌名称"
           value={searchKeyword}
           loading={searching}
           onChange={handleKeywordChange}
         />
         <Form.Input
-          field='token'
-          label='Key'
-          placeholder='密钥'
+          field="token"
+          label="Key"
+          placeholder="密钥"
           value={searchToken}
           loading={searching}
           onChange={handleSearchTokenChange}
         />
         <Button
-          label='查询'
-          type='primary'
-          htmlType='submit'
-          className='btn-margin-right'
+          label="查询"
+          type="primary"
+          htmlType="submit"
+          className="btn-margin-right"
           onClick={searchTokens}
           style={{ marginRight: 8 }}
         >
           查询
+        </Button>
+        <Button
+          theme="solid"
+          type="primary"
+          style={{ marginRight: 8 }}
+          onClick={() => {
+            setEditingToken({
+              id: undefined,
+            });
+            setShowEdit(true);
+          }}
+        >
+          添加令牌
         </Button>
       </Form>
 
@@ -661,37 +681,29 @@ const TokensTable = () => {
         rowSelection={rowSelection}
         onRow={handleRow}
       ></Table>
-      <Button
-        theme='light'
-        type='primary'
-        style={{ marginRight: 8 }}
-        onClick={() => {
-          setEditingToken({
-            id: undefined,
-          });
-          setShowEdit(true);
-        }}
-      >
-        添加令牌
+      <Button type="primary" style={{ marginRight: 8 }} onClick={copyBaseUrl}>
+        复制 BaseURL
       </Button>
-      <Button
-        label='复制所选令牌'
-        type='warning'
+
+      {/* <Button
+        theme="solid"
+        label="复制所选令牌"
+        type="warning"
         onClick={async () => {
           if (selectedKeys.length === 0) {
-            showError('请至少选择一个令牌！');
+            showError("请至少选择一个令牌！");
             return;
           }
-          let keys = '';
+          let keys = "";
           for (let i = 0; i < selectedKeys.length; i++) {
             keys +=
-              selectedKeys[i].name + '    sk-' + selectedKeys[i].key + '\n';
+              selectedKeys[i].name + "    sk-" + selectedKeys[i].key + "\n";
           }
           await copyText(keys);
         }}
       >
         复制所选令牌到剪贴板
-      </Button>
+      </Button> */}
     </>
   );
 };
