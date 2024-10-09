@@ -175,7 +175,7 @@ const ModelPricing = () => {
         // enable_groups is a string array
         return (
           <Space>
-            {text.map((group) => {
+            {Object.entries(userUsableGroups).map(([group,groupName]) => {
               if (group === selectedGroup) {
                 return (
                   <Tag
@@ -183,7 +183,7 @@ const ModelPricing = () => {
                     size='large'
                     prefixIcon={<IconVerify />}
                   >
-                    {group}
+                    {groupName}
                   </Tag>
                 );
               } else {
@@ -193,10 +193,10 @@ const ModelPricing = () => {
                     size='large'
                     onClick={() => {
                       setSelectedGroup(group);
-                      showInfo('当前查看的分组为：' + group + '，倍率为：' + groupRatio[group]);
+                      showInfo('当前查看的分组为：' + groupName + '，倍率为：' + groupRatio[group]);
                     }}
                   >
-                    {group}
+                    {groupName}
                   </Tag>
                 );
               }
@@ -279,7 +279,7 @@ const ModelPricing = () => {
   const [loading, setLoading] = useState(true);
   const [userState, userDispatch] = useContext(UserContext);
   const [groupRatio, setGroupRatio] = useState({});
-  const [tokenGroup, setTokenGroup] = useState(['default']);
+  const [userUsableGroups, setUserUsableGroups] = useState([]);
 
   const setModelsFormat = (models, groupRatio) => {
     for (let i = 0; i < models.length; i++) {
@@ -314,9 +314,10 @@ const ModelPricing = () => {
     let url = '';
     url = `/api/pricing`;
     const res = await API.get(url);
-    const { success, message, data, group_ratio } = res.data;
+    const { success, message, data, group_ratio, user_usable_group } = res.data;
     if (success) {
       setGroupRatio(group_ratio);
+      setUserUsableGroups(user_usable_group);
       setSelectedGroup(userState.user ? userState.user.group : 'default')
       setModelsFormat(data, group_ratio);
     } else {
@@ -350,14 +351,14 @@ const ModelPricing = () => {
             type="success"
             fullMode={false}
             closeIcon="null"
-            description={`您的默认分组为：${userState.user.group}，分组倍率为：${groupRatio[userState.user.group]}`}
+            description={`您的默认令牌分组为：default，分组倍率为：${groupRatio['default']}`}
           />
         ) : (
           <Banner
             type='warning'
             fullMode={false}
             closeIcon="null"
-            description={`您还未登陆，显示的价格为默认分组倍率: ${groupRatio['default']}`}
+            description={`您还未登陆，显示的价格为默认分组倍率: ${groupRatio['default'] ?? 1}`}
           />
         )}
         <br/>

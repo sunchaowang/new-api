@@ -12,7 +12,7 @@ func GetPricing(c *gin.Context) {
 		"success":           true,
 		"data":              pricing,
 		"group_ratio":       common.GroupRatio,
-		"token_group_ratio": common.TokenGroupRatio,
+		"user_usable_group": common.UserUsableGroups,
 	})
 }
 
