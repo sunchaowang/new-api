@@ -95,7 +95,7 @@ func RequestEpay(c *gin.Context) {
 		payType = epay.WechatPay
 	}
 	callBackAddress := service.GetCallbackAddress()
-	returnUrl, _ := url.Parse(constant.ServerAddress + "/log")
+	returnUrl, _ := url.Parse(callBackAddress + "/log")
 	notifyUrl, _ := url.Parse(callBackAddress + "/api/user/epay/notify")
 	tradeNo := fmt.Sprintf("%s%d", common.GetRandomString(6), time.Now().Unix())
 	tradeNo = fmt.Sprintf("USR%dNO%s", id, tradeNo)
