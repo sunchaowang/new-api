@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {createElement, useEffect, useState} from 'react';
 import { API, isMobile, showError, showInfo, showSuccess } from '../../helpers';
 import {
   renderNumber,
@@ -17,10 +17,12 @@ import {
   Space,
   Modal,
   Toast,
+    Icon
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import { Link } from 'react-router-dom';
+import Alipay from '../../assets/svg/brand-alipay.svg?react';
 
 const TopUp = () => {
   const [redemptionCode, setRedemptionCode] = useState('');
@@ -294,25 +296,33 @@ const TopUp = () => {
                   />
                   <Space>
                     <Button
-                      type={'primary'}
-                      theme={'solid'}
-                      onClick={async () => {
-                        preTopUp('zfb');
-                      }}
+                        type={'primary'}
+                        theme={'solid'}
+                        onClick={async () => {
+                          preTopUp('zfb');
+                        }}
+
                     >
-                      支付宝
+                      <Space spacing={8}>
+                        <i className="bi bi-alipay"></i>
+                        支付宝
+                      </Space>
                     </Button>
                     <Button
-                      style={{
-                        backgroundColor: 'rgba(var(--semi-green-5), 1)',
-                      }}
-                      type={'primary'}
+                        style={{
+                          backgroundColor: 'rgba(var(--semi-green-5), 1)',
+                        }}
+                        type={'primary'}
                       theme={'solid'}
                       onClick={async () => {
                         preTopUp('wx');
                       }}
+                        disabled={true}
                     >
-                      微信
+                      <Space spacing={8}>
+                        <i className="bi bi-wechat"></i>
+                        微信
+                      </Space>
                     </Button>
                   </Space>
                 </Form>
