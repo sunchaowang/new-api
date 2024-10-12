@@ -318,7 +318,7 @@ const ModelPricing = () => {
     if (success) {
       setGroupRatio(group_ratio);
       setUserUsableGroups(user_usable_group);
-      setSelectedGroup(userState.user ? userState.user.group : 'default')
+      setSelectedGroup('default')
       setModelsFormat(data, group_ratio);
     } else {
       showError(message);
