@@ -24,17 +24,6 @@ import {
 import { IconTreeTriangleDown } from '@douyinfe/semi-icons';
 import EditToken from '../pages/Token/EditToken';
 
-const COPY_OPTIONS = [
-  { key: 'next', text: 'ChatGPT Next Web', value: 'next' },
-  { key: 'ama', text: 'ChatGPT Web & Midjourney', value: 'ama' },
-  { key: 'opencat', text: 'OpenCat', value: 'opencat' },
-];
-
-const OPEN_LINK_OPTIONS = [
-  { key: 'ama', text: 'ChatGPT Web & Midjourney', value: 'ama' },
-  { key: 'opencat', text: 'OpenCat', value: 'opencat' },
-];
-
 function renderTimestamp(timestamp) {
   return <>{timestamp2string(timestamp)}</>;
 }
@@ -87,27 +76,6 @@ function renderStatus(status, model_limits_enabled = false) {
 }
 
 const TokensTable = () => {
-  const link_menu = [
-    {
-      node: 'item',
-      key: 'next',
-      name: 'ChatGPT Next Web',
-      onClick: () => {
-        onOpenLink('next');
-      },
-    },
-    { node: 'item', key: 'ama', name: 'AMA 问天', value: 'ama' },
-    {
-      node: 'item',
-      key: 'next-mj',
-      name: 'ChatGPT Web & Midjourney',
-      value: 'next-mj',
-      onClick: () => {
-        onOpenLink('next-mj');
-      },
-    },
-    { node: 'item', key: 'opencat', name: 'OpenCat', value: 'opencat' },
-  ];
 
   const columns = [
     {
@@ -163,8 +131,8 @@ const TokensTable = () => {
       },
     },
     {
-      title: "过期时间",
-      dataIndex: "expired_time",
+      title: '过期时间',
+      dataIndex: 'expired_time',
       render: (text, record, index) => {
         return (
           <div>
@@ -174,151 +142,173 @@ const TokensTable = () => {
       },
     },
     {
-      title: "",
-      dataIndex: "operate",
-      render: (text, record, index) => (
-        <div>
-          <Popover
-            content={"sk-" + record.key}
-            style={{ padding: 20 }}
-            position="top"
-          >
-            <Button theme="light" type="tertiary" style={{ marginRight: 1 }}>
-              查看
-            </Button>
-          </Popover>
-          <Button
-            theme="light"
-            type="primary"
-            style={{ marginRight: 1 }}
-            onClick={async (text) => {
-              await copyText("sk-" + record.key);
-            }}
-          >
-            复制
-          </Button>
-          <SplitButtonGroup
-            style={{ marginRight: 1 }}
-            aria-label="项目操作按钮组"
-          >
+      title: '',
+      dataIndex: 'operate',
+      render: (text, record, index) => {
+        let chats = localStorage.getItem('chats');
+        let chatsArray = []
+        let chatLink = localStorage.getItem('chat_link');
+        let mjLink = localStorage.getItem('chat_link2');
+        let shouldUseCustom = true;
+        if (chatLink) {
+          shouldUseCustom = false;
+          chatLink += `/#/?settings={"key":"{key}","url":"{address}"}`;
+          chatsArray.push({
+            node: 'item',
+            key: 'default',
+            name: 'ChatGPT Next Web',
+            onClick: () => {
+              onOpenLink('default', chatLink, record);
+            },
+          });
+        }
+        if (mjLink) {
+          shouldUseCustom = false;
+          mjLink += `/#/?settings={"key":"{key}","url":"{address}"}`;
+          chatsArray.push({
+            node: 'item',
+            key: 'mj',
+            name: 'ChatGPT Next Midjourney',
+            onClick: () => {
+              onOpenLink('mj', mjLink, record);
+            },
+          });
+        }
+        if (shouldUseCustom) {
+          try {
+            // console.log(chats);
+            chats = JSON.parse(chats);
+            // check chats is array
+            if (Array.isArray(chats)) {
+              for (let i = 0; i < chats.length; i++) {
+                let chat = {}
+                chat.node = 'item';
+                // c is a map
+                // chat.key = chats[i].name;
+                // console.log(chats[i])
+                for (let key in chats[i]) {
+                  if (chats[i].hasOwnProperty(key)) {
+                    chat.key = i;
+                    chat.name = key;
+                    chat.onClick = () => {
+                      onOpenLink(key, chats[i][key], record);
+                    }
+                  }
+                }
+                chatsArray.push(chat);
+              }
+            }
+
+          } catch (e) {
+            console.log(e);
+            showError('聊天链接配置错误，请联系管理员');
+          }
+        }
+        return (
+          <div>
+            <Popover
+              content={'sk-' + record.key}
+              style={{ padding: 20 }}
+              position='top'
+            >
+              <Button theme='light' type='tertiary' style={{ marginRight: 1 }}>
+                查看
+              </Button>
+            </Popover>
             <Button
-              theme="light"
-              style={{ color: "rgba(var(--semi-teal-7), 1)" }}
-              onClick={() => {
-                onOpenLink("next", record.key);
+              theme='light'
+              type='secondary'
+              style={{ marginRight: 1 }}
+              onClick={async (text) => {
+                await copyText('sk-' + record.key);
               }}
             >
-              聊天
+              复制
             </Button>
-            <Dropdown
-              trigger="click"
-              position="bottomRight"
-              menu={[
-                {
-                  node: "item",
-                  key: "next",
-                  disabled: !localStorage.getItem("chat_link"),
-                  name: "ChatGPT Next Web",
-                  onClick: () => {
-                    onOpenLink("next", record.key);
-                  },
-                },
-                {
-                  node: "item",
-                  key: "next-mj",
-                  disabled: !localStorage.getItem("chat_link2"),
-                  name: "ChatGPT Web & Midjourney",
-                  onClick: () => {
-                    onOpenLink("next-mj", record.key);
-                  },
-                },
-                // {
-                //   node: 'item',
-                //   key: 'lobe',
-                //   name: 'Lobe Chat',
-                //   onClick: () => {
-                //     onOpenLink('lobe', record.key);
-                //   },
-                // },
-                {
-                  node: "item",
-                  key: "ama",
-                  name: "AMA 问天（BotGem）",
-                  onClick: () => {
-                    onOpenLink("ama", record.key);
-                  },
-                },
-                {
-                  node: "item",
-                  key: "opencat",
-                  name: "OpenCat",
-                  onClick: () => {
-                    onOpenLink("opencat", record.key);
-                  },
-                },
-              ]}
+            <SplitButtonGroup
+              style={{ marginRight: 1 }}
+              aria-label='项目操作按钮组'
             >
               <Button
-                style={{
-                  padding: "8px 4px",
-                  color: "rgba(var(--semi-teal-7), 1)",
+                theme='light'
+                style={{ color: 'rgba(var(--semi-teal-7), 1)' }}
+                onClick={() => {
+                  if (chatsArray.length === 0) {
+                    showError('请联系管理员配置聊天链接');
+                  } else {
+                    onOpenLink('default', chats[0][Object.keys(chats[0])[0]], record);
+                  }
                 }}
-                type="primary"
-                icon={<IconTreeTriangleDown />}
-              ></Button>
-            </Dropdown>
-          </SplitButtonGroup>
-          <Popconfirm
-            title="确定是否要删除此令牌？"
-            content="此修改将不可逆"
-            okType={"danger"}
-            position={"left"}
-            onConfirm={() => {
-              manageToken(record.id, "delete", record).then(() => {
-                removeRecord(record.key);
-              });
-            }}
-          >
-            <Button theme="light" type="danger" style={{ marginRight: 1 }}>
-              删除
-            </Button>
-          </Popconfirm>
-          {record.status === 1 ? (
-            <Button
-              theme="light"
-              type="warning"
-              style={{ marginRight: 1 }}
-              onClick={async () => {
-                manageToken(record.id, "disable", record);
+              >
+                聊天
+              </Button>
+              <Dropdown
+                trigger='click'
+                position='bottomRight'
+                menu={chatsArray}
+              >
+                <Button
+                  style={{
+                    padding: '8px 4px',
+                    color: 'rgba(var(--semi-teal-7), 1)',
+                  }}
+                  type='primary'
+                  icon={<IconTreeTriangleDown />}
+                ></Button>
+              </Dropdown>
+            </SplitButtonGroup>
+            <Popconfirm
+              title='确定是否要删除此令牌？'
+              content='此修改将不可逆'
+              okType={'danger'}
+              position={'left'}
+              onConfirm={() => {
+                manageToken(record.id, 'delete', record).then(() => {
+                  removeRecord(record.key);
+                });
               }}
             >
-              禁用
-            </Button>
-          ) : (
+              <Button theme='light' type='danger' style={{ marginRight: 1 }}>
+                删除
+              </Button>
+            </Popconfirm>
+            {record.status === 1 ? (
+              <Button
+                theme='light'
+                type='warning'
+                style={{ marginRight: 1 }}
+                onClick={async () => {
+                  manageToken(record.id, 'disable', record);
+                }}
+              >
+                禁用
+              </Button>
+            ) : (
+              <Button
+                theme='light'
+                type='secondary'
+                style={{ marginRight: 1 }}
+                onClick={async () => {
+                  manageToken(record.id, 'enable', record);
+                }}
+              >
+                启用
+              </Button>
+            )}
             <Button
-              theme="light"
-              type="secondary"
+              theme='light'
+              type='tertiary'
               style={{ marginRight: 1 }}
-              onClick={async () => {
-                manageToken(record.id, "enable", record);
+              onClick={() => {
+                setEditingToken(record);
+                setShowEdit(true);
               }}
             >
-              启用
+              编辑
             </Button>
-          )}
-          <Button
-            theme="light"
-            type="tertiary"
-            style={{ marginRight: 1 }}
-            onClick={() => {
-              setEditingToken(record);
-              setShowEdit(true);
-            }}
-          >
-            编辑
-          </Button>
-        </div>
-      ),
+          </div>
+        );
+      },
     },
   ];
 
@@ -332,8 +322,7 @@ const TokensTable = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchToken, setSearchToken] = useState('');
   const [searching, setSearching] = useState(false);
-  const [showTopUpModal, setShowTopUpModal] = useState(false);
-  const [targetTokenIdx, setTargetTokenIdx] = useState(0);
+  const [chats, setChats] = useState([]);
   const [editingToken, setEditingToken] = useState({
     id: undefined,
   });
@@ -401,16 +390,6 @@ const TokensTable = () => {
     setLoading(false);
   };
 
-  const onPaginationChange = (e, { activePage }) => {
-    (async () => {
-      if (activePage === Math.ceil(tokens.length / pageSize) + 1) {
-        // In this case we have to load more data and then append them.
-        await loadTokens(activePage - 1);
-      }
-      setActivePage(activePage);
-    })();
-  };
-
   const refresh = async () => {
     await loadTokens(activePage - 1);
   };
@@ -427,7 +406,8 @@ const TokensTable = () => {
     }
   };
 
-  const onOpenLink = async (type, key) => {
+  const onOpenLink = async (type, url, record) => {
+    // console.log(type, url, key);
     let status = localStorage.getItem('status');
     let serverAddress = '';
     if (status) {
@@ -438,36 +418,39 @@ const TokensTable = () => {
       serverAddress = window.location.origin;
     }
     let encodedServerAddress = encodeURIComponent(serverAddress);
-    const chatLink = localStorage.getItem('chat_link');
-    const mjLink = localStorage.getItem('chat_link2');
-    let defaultUrl;
-
-    if (chatLink) {
-      defaultUrl =
-        chatLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
-    }
-    let url;
-    switch (type) {
-      case 'ama':
-        url = `ama://set-api-key?server=${encodedServerAddress}&key=sk-${key}`;
-        break;
-      case 'opencat':
-        url = `opencat://team/join?domain=${encodedServerAddress}&token=sk-${key}`;
-        break;
-      case 'lobe':
-        url = `https://chat-preview.lobehub.com/?settings={"keyVaults":{"openai":{"apiKey":"sk-${key}","baseURL":"${encodedServerAddress}/v1"}}}`;
-        break;
-      case 'next-mj':
-        url =
-          mjLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
-        break;
-      default:
-        if (!chatLink) {
-          showError('管理员未设置聊天链接');
-          return;
-        }
-        url = defaultUrl;
-    }
+    url = url.replace('{address}', encodedServerAddress);
+    url = url.replace('{key}', 'sk-' + record.key);
+    // console.log(url);
+    // const chatLink = localStorage.getItem('chat_link');
+    // const mjLink = localStorage.getItem('chat_link2');
+    // let defaultUrl;
+    //
+    // if (chatLink) {
+    //   defaultUrl =
+    //     chatLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
+    // }
+    // let url;
+    // switch (type) {
+    //   case 'ama':
+    //     url = `ama://set-api-key?server=${encodedServerAddress}&key=sk-${key}`;
+    //     break;
+    //   case 'opencat':
+    //     url = `opencat://team/join?domain=${encodedServerAddress}&token=sk-${key}`;
+    //     break;
+    //   case 'lobe':
+    //     url = `https://chat-preview.lobehub.com/?settings={"keyVaults":{"openai":{"apiKey":"sk-${key}","baseURL":"${encodedServerAddress}/v1"}}}`;
+    //     break;
+    //   case 'next-mj':
+    //     url =
+    //       mjLink + `/#/?settings={"key":"sk-${key}","url":"${serverAddress}"}`;
+    //     break;
+    //   default:
+    //     if (!chatLink) {
+    //       showError('管理员未设置聊天链接');
+    //       return;
+    //     }
+    //     url = defaultUrl;
+    // }
 
     window.open(url, '_blank');
   };
