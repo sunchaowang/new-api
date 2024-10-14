@@ -110,15 +110,15 @@ const HeaderBar = () => {
         icon: <IconLayers />,
         className: isAdmin() ? "semi-navigation-item-normal" : "tableHiddle",
       },
-      {
-        text: "聊天",
-        itemKey: "chat",
-        to: "/chat",
-        icon: <IconComment />,
-        className: localStorage.getItem("chat_link")
-          ? "semi-navigation-item-normal"
-          : "tableHiddle",
-      },
+      // {
+      //   text: "聊天",
+      //   itemKey: "chat",
+      //   to: "/chat",
+      //   icon: <IconComment />,
+      //   className: localStorage.getItem("chat_link")
+      //     ? "semi-navigation-item-normal"
+      //     : "tableHiddle",
+      // },
       {
         text: "API令牌",
         itemKey: "token",

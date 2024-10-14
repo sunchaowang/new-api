@@ -224,6 +224,7 @@ func Register(c *gin.Context) {
 			RemainQuota:        500000, // 示例额度
 			UnlimitedQuota:     true,
 			ModelLimitsEnabled: false,
+			Group:              "default",
 		}
 		if err := token.Insert(); err != nil {
 			c.JSON(http.StatusOK, gin.H{
