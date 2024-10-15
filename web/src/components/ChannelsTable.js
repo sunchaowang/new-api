@@ -63,21 +63,21 @@ const ChannelsTable = () => {
     //     className: 'checkbox',
     // },
     {
-      title: 'ID',
-      dataIndex: 'id',
+      title: "ID",
+      dataIndex: "id",
     },
     {
-      title: '名称',
-      dataIndex: 'name',
+      title: "名称",
+      dataIndex: "name",
     },
     {
-      title: '分组',
-      dataIndex: 'group',
+      title: "分组",
+      dataIndex: "group",
       render: (text, record, index) => {
         return (
           <div>
             <Space spacing={2}>
-              {text.split(',').map((item, index) => {
+              {text.split(",").map((item, index) => {
                 return renderGroup(item);
               })}
             </Space>
@@ -86,26 +86,30 @@ const ChannelsTable = () => {
       },
     },
     {
-      title: '类型',
-      dataIndex: 'type',
+      title: "类型",
+      dataIndex: "type",
       render: (text, record, index) => {
         return <div>{renderType(text)}</div>;
       },
     },
     {
-      title: '状态',
-      dataIndex: 'status',
+      title: "状态",
+      dataIndex: "status",
       render: (text, record, index) => {
         if (text === 3) {
-          if (record.other_info === '') {
-            record.other_info = '{}'
+          if (record.other_info === "") {
+            record.other_info = "{}";
           }
           let otherInfo = JSON.parse(record.other_info);
-          let reason = otherInfo['status_reason'];
-          let time = otherInfo['status_time'];
+          let reason = otherInfo["status_reason"];
+          let time = otherInfo["status_time"];
           return (
             <div>
-              <Tooltip content={'原因：' + reason + '，时间：' + timestamp2string(time)}>
+              <Tooltip
+                content={
+                  "原因：" + reason + "，时间：" + timestamp2string(time)
+                }
+              >
                 {renderStatus(text)}
               </Tooltip>
             </div>
@@ -116,29 +120,29 @@ const ChannelsTable = () => {
       },
     },
     {
-      title: '响应时间',
-      dataIndex: 'response_time',
+      title: "响应时间",
+      dataIndex: "response_time",
       render: (text, record, index) => {
         return <div>{renderResponseTime(text)}</div>;
       },
     },
     {
-      title: '已用/剩余',
-      dataIndex: 'expired_time',
+      title: "已用/剩余",
+      dataIndex: "expired_time",
       render: (text, record, index) => {
         return (
           <div>
             <Space spacing={1}>
-              <Tooltip content={'已用额度'}>
-                <Tag color='white' type='ghost' size='large'>
+              <Tooltip content={"已用额度"}>
+                <Tag color="white" type="ghost" size="large">
                   {renderQuota(record.used_quota)}
                 </Tag>
               </Tooltip>
-              <Tooltip content={'剩余额度' + record.balance + '，点击更新'}>
+              <Tooltip content={"剩余额度" + record.balance + "，点击更新"}>
                 <Tag
-                  color='white'
-                  type='ghost'
-                  size='large'
+                  color="white"
+                  type="ghost"
+                  size="large"
                   onClick={() => {
                     updateChannelBalance(record);
                   }}
@@ -152,16 +156,16 @@ const ChannelsTable = () => {
       },
     },
     {
-      title: '优先级',
-      dataIndex: 'priority',
+      title: "优先级",
+      dataIndex: "priority",
       render: (text, record, index) => {
         return (
           <div>
             <InputNumber
               style={{ width: 70 }}
-              name='priority'
+              name="priority"
               onBlur={(e) => {
-                manageChannel(record.id, 'priority', record, e.target.value);
+                manageChannel(record.id, "priority", record, e.target.value);
               }}
               keepFocus={true}
               innerButtons
@@ -173,16 +177,16 @@ const ChannelsTable = () => {
       },
     },
     {
-      title: '权重',
-      dataIndex: 'weight',
+      title: "权重",
+      dataIndex: "weight",
       render: (text, record, index) => {
         return (
           <div>
             <InputNumber
               style={{ width: 70 }}
-              name='weight'
+              name="weight"
               onBlur={(e) => {
-                manageChannel(record.id, 'weight', record, e.target.value);
+                manageChannel(record.id, "weight", record, e.target.value);
               }}
               keepFocus={true}
               innerButtons
@@ -194,76 +198,79 @@ const ChannelsTable = () => {
       },
     },
     {
-      title: '',
-      dataIndex: 'operate',
+      title: "",
+      dataIndex: "operate",
       render: (text, record, index) => (
         <div>
           <SplitButtonGroup
             style={{ marginRight: 1 }}
-            aria-label='测试操作项目组'
+            aria-label="测试操作项目组"
           >
             <Button
-              theme='light'
+              theme="light"
               onClick={() => {
-                testChannel(record, '');
+                testChannel(
+                  record,
+                  record.test_model || record.models.split(",")[0]
+                );
               }}
             >
               测试
             </Button>
             <Dropdown
-              trigger='click'
-              position='bottomRight'
+              trigger="click"
+              position="bottomRight"
               menu={record.test_models}
             >
               <Button
-                style={{ padding: '8px 4px' }}
-                type='primary'
+                style={{ padding: "8px 4px" }}
+                type="primary"
                 icon={<IconTreeTriangleDown />}
               ></Button>
             </Dropdown>
           </SplitButtonGroup>
           {/*<Button theme='light' type='primary' style={{marginRight: 1}} onClick={()=>testChannel(record)}>测试</Button>*/}
           <Popconfirm
-            title='确定是否要删除此渠道？'
-            content='此修改将不可逆'
-            okType={'danger'}
-            position={'left'}
+            title="确定是否要删除此渠道？"
+            content="此修改将不可逆"
+            okType={"danger"}
+            position={"left"}
             onConfirm={() => {
-              manageChannel(record.id, 'delete', record).then(() => {
+              manageChannel(record.id, "delete", record).then(() => {
                 removeRecord(record.id);
               });
             }}
           >
-            <Button theme='light' type='danger' style={{ marginRight: 1 }}>
+            <Button theme="light" type="danger" style={{ marginRight: 1 }}>
               删除
             </Button>
           </Popconfirm>
           {record.status === 1 ? (
             <Button
-              theme='light'
-              type='warning'
+              theme="light"
+              type="warning"
               style={{ marginRight: 1 }}
               onClick={async () => {
-                manageChannel(record.id, 'disable', record);
+                manageChannel(record.id, "disable", record);
               }}
             >
               禁用
             </Button>
           ) : (
             <Button
-              theme='light'
-              type='primary'
+              theme="light"
+              type="primary"
               style={{ marginRight: 1 }}
               onClick={async () => {
-                manageChannel(record.id, 'enable', record);
+                manageChannel(record.id, "enable", record);
               }}
             >
               启用
             </Button>
           )}
           <Button
-            theme='light'
-            type='tertiary'
+            theme="light"
+            type="tertiary"
             style={{ marginRight: 1 }}
             onClick={() => {
               setEditingChannel(record);
@@ -273,15 +280,15 @@ const ChannelsTable = () => {
             编辑
           </Button>
           <Popconfirm
-            title='确定是否要复制此渠道？'
-            content='复制渠道的所有信息'
-            okType={'danger'}
-            position={'left'}
+            title="确定是否要复制此渠道？"
+            content="复制渠道的所有信息"
+            okType={"danger"}
+            position={"left"}
             onConfirm={async () => {
               copySelectedChannel(record.id);
             }}
           >
-            <Button theme='light' type='primary' style={{ marginRight: 1 }}>
+            <Button theme="light" type="primary" style={{ marginRight: 1 }}>
               复制
             </Button>
           </Popconfirm>
@@ -294,14 +301,14 @@ const ChannelsTable = () => {
   const [loading, setLoading] = useState(true);
   const [activePage, setActivePage] = useState(1);
   const [idSort, setIdSort] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [searchGroup, setSearchGroup] = useState('');
-  const [searchModel, setSearchModel] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchGroup, setSearchGroup] = useState("");
+  const [searchModel, setSearchModel] = useState("");
   const [searching, setSearching] = useState(false);
   const [updatingBalance, setUpdatingBalance] = useState(false);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [showPrompt, setShowPrompt] = useState(
-    shouldShowPrompt('channel-test'),
+    shouldShowPrompt("channel-test")
   );
   const [channelCount, setChannelCount] = useState(pageSize);
   const [groupOptions, setGroupOptions] = useState([]);
@@ -332,11 +339,11 @@ const ChannelsTable = () => {
       //   );
       //   showWarning('下个版本将不再支持“自定义渠道”类型！');
       // }
-      channels[i].key = '' + channels[i].id;
+      channels[i].key = "" + channels[i].id;
       let test_models = [];
-      channels[i].models.split(',').forEach((item, index) => {
+      channels[i].models.split(",").forEach((item, index) => {
         test_models.push({
-          node: 'item',
+          node: "item",
           name: item,
           onClick: () => {
             testChannel(channels[i], item);
@@ -357,7 +364,7 @@ const ChannelsTable = () => {
   const loadChannels = async (startIdx, pageSize, idSort) => {
     setLoading(true);
     const res = await API.get(
-      `/api/channel/?p=${startIdx}&page_size=${pageSize}&id_sort=${idSort}`,
+      `/api/channel/?p=${startIdx}&page_size=${pageSize}&id_sort=${idSort}`
     );
     if (res === undefined) {
       return;
@@ -379,28 +386,28 @@ const ChannelsTable = () => {
 
   const copySelectedChannel = async (id) => {
     const channelToCopy = channels.find(
-      (channel) => String(channel.id) === String(id),
+      (channel) => String(channel.id) === String(id)
     );
     console.log(channelToCopy);
-    channelToCopy.name += '_复制';
+    channelToCopy.name += "_复制";
     channelToCopy.created_time = null;
     channelToCopy.balance = 0;
     channelToCopy.used_quota = 0;
     if (!channelToCopy) {
-      showError('渠道未找到，请刷新页面后重试。');
+      showError("渠道未找到，请刷新页面后重试。");
       return;
     }
     try {
       const newChannel = { ...channelToCopy, id: undefined };
-      const response = await API.post('/api/channel/', newChannel);
+      const response = await API.post("/api/channel/", newChannel);
       if (response.data.success) {
-        showSuccess('渠道复制成功');
+        showSuccess("渠道复制成功");
         await refresh();
       } else {
         showError(response.data.message);
       }
     } catch (error) {
-      showError('渠道复制失败: ' + error.message);
+      showError("渠道复制失败: " + error.message);
     }
   };
 
@@ -412,7 +419,7 @@ const ChannelsTable = () => {
     // console.log('default effect')
     const localIdSort = true; // localStorage.getItem('id-sort') === 'true';
     const localPageSize =
-      parseInt(localStorage.getItem('page-size')) || ITEMS_PER_PAGE;
+      parseInt(localStorage.getItem("page-size")) || ITEMS_PER_PAGE;
     setIdSort(localIdSort);
     setPageSize(localPageSize);
     loadChannels(0, localPageSize, localIdSort)
@@ -428,41 +435,41 @@ const ChannelsTable = () => {
     let data = { id };
     let res;
     switch (action) {
-      case 'delete':
+      case "delete":
         res = await API.delete(`/api/channel/${id}/`);
         break;
-      case 'enable':
+      case "enable":
         data.status = 1;
-        res = await API.put('/api/channel/', data);
+        res = await API.put("/api/channel/", data);
         break;
-      case 'disable':
+      case "disable":
         data.status = 2;
-        res = await API.put('/api/channel/', data);
+        res = await API.put("/api/channel/", data);
         break;
-      case 'priority':
-        if (value === '') {
+      case "priority":
+        if (value === "") {
           return;
         }
         data.priority = parseInt(value);
-        res = await API.put('/api/channel/', data);
+        res = await API.put("/api/channel/", data);
         break;
-      case 'weight':
-        if (value === '') {
+      case "weight":
+        if (value === "") {
           return;
         }
         data.weight = parseInt(value);
         if (data.weight < 0) {
           data.weight = 0;
         }
-        res = await API.put('/api/channel/', data);
+        res = await API.put("/api/channel/", data);
         break;
     }
     const { success, message } = res.data;
     if (success) {
-      showSuccess('操作成功完成！');
+      showSuccess("操作成功完成！");
       let channel = res.data.data;
       let newChannels = [...channels];
-      if (action === 'delete') {
+      if (action === "delete") {
       } else {
         record.status = channel.status;
       }
@@ -476,25 +483,25 @@ const ChannelsTable = () => {
     switch (status) {
       case 1:
         return (
-          <Tag size='large' color='green'>
+          <Tag size="large" color="green">
             已启用
           </Tag>
         );
       case 2:
         return (
-          <Tag size='large' color='yellow'>
+          <Tag size="large" color="yellow">
             已禁用
           </Tag>
         );
       case 3:
         return (
-          <Tag size='large' color='yellow'>
+          <Tag size="large" color="yellow">
             自动禁用
           </Tag>
         );
       default:
         return (
-          <Tag size='large' color='grey'>
+          <Tag size="large" color="grey">
             未知状态
           </Tag>
         );
@@ -503,34 +510,34 @@ const ChannelsTable = () => {
 
   const renderResponseTime = (responseTime) => {
     let time = responseTime / 1000;
-    time = time.toFixed(2) + ' 秒';
+    time = time.toFixed(2) + " 秒";
     if (responseTime === 0) {
       return (
-        <Tag size='large' color='grey'>
+        <Tag size="large" color="grey">
           未测试
         </Tag>
       );
     } else if (responseTime <= 1000) {
       return (
-        <Tag size='large' color='green'>
+        <Tag size="large" color="green">
           {time}
         </Tag>
       );
     } else if (responseTime <= 3000) {
       return (
-        <Tag size='large' color='lime'>
+        <Tag size="large" color="lime">
           {time}
         </Tag>
       );
     } else if (responseTime <= 5000) {
       return (
-        <Tag size='large' color='yellow'>
+        <Tag size="large" color="yellow">
           {time}
         </Tag>
       );
     } else {
       return (
-        <Tag size='large' color='red'>
+        <Tag size="large" color="red">
           {time}
         </Tag>
       );
@@ -538,7 +545,7 @@ const ChannelsTable = () => {
   };
 
   const searchChannels = async (searchKeyword, searchGroup, searchModel) => {
-    if (searchKeyword === '' && searchGroup === '' && searchModel === '') {
+    if (searchKeyword === "" && searchGroup === "" && searchModel === "") {
       // if keyword is blank, load files instead.
       await loadChannels(0, pageSize, idSort);
       setActivePage(1);
@@ -546,7 +553,7 @@ const ChannelsTable = () => {
     }
     setSearching(true);
     const res = await API.get(
-      `/api/channel/search?keyword=${searchKeyword}&group=${searchGroup}&model=${searchModel}`,
+      `/api/channel/search?keyword=${searchKeyword}&group=${searchGroup}&model=${searchModel}`
     );
     const { success, message, data } = res.data;
     if (success) {
@@ -564,7 +571,9 @@ const ChannelsTable = () => {
     if (success) {
       record.response_time = time * 1000;
       record.test_time = Date.now() / 1000;
-      showInfo(`通道 ${record.name} 测试成功，耗时 ${time.toFixed(2)} 秒。`);
+      showInfo(
+        `通道 ${record.id} 测试 ${model} 成功，耗时 ${time.toFixed(2)} 秒。`
+      );
     } else {
       showError(message);
     }
