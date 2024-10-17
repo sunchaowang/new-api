@@ -4,10 +4,11 @@ import {
   copy,
   getTodayStartTimestamp,
   isAdmin,
+  isMobile,
   showError,
   showSuccess,
   timestamp2string,
-} from '../helpers';
+} from "../helpers";
 
 import {
   Avatar,
@@ -25,6 +26,7 @@ import {
   Row,
   Col,
   Typography,
+  Descriptions,
 } from "@douyinfe/semi-ui";
 import { IconLightningStroked } from "@douyinfe/semi-icons";
 import { ITEMS_PER_PAGE } from "../constants";
@@ -629,8 +631,72 @@ const LogsTable = ({ groups }) => {
       <Layout>
         <Header>
           <Spin spinning={loadingStat}>
-            <Row style={{ width: "100%" }} gutter={16}>
-              <Col span={8}>
+            <Card style={{ width: "100%" }}>
+              <Row>
+                <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                  <Descriptions
+                    layout={isMobile() ? "vertical" : "horizontal"}
+                    row={1}
+                    data={[
+                      {
+                        key: "总消耗额度",
+                        value: (
+                          <Tag
+                            color="green"
+                            size="large"
+                            style={{ marginTop: 15 }}
+                          >
+                            {renderQuota(stat.quota)}
+                          </Tag>
+                        ),
+                      },
+                    ]}
+                  />
+                </Col>
+                <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                  <Descriptions
+                    layout={isMobile() ? "vertical" : "horizontal"}
+                    row={1}
+                    data={[
+                      {
+                        key: "近一分钟内请求次数",
+                        value: (
+                          <Tag
+                            color="blue"
+                            size="large"
+                            style={{ marginTop: 15 }}
+                          >
+                            {stat.rpm}
+                          </Tag>
+                        ),
+                      },
+                    ]}
+                  />
+                </Col>
+                <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                  <Descriptions
+                    layout={isMobile() ? "vertical" : "horizontal"}
+                    row={1}
+                    data={[
+                      {
+                        key: "近一分钟内消耗Token数",
+                        value: (
+                          <Tag
+                            color="purple"
+                            size="large"
+                            style={{ marginTop: 15 }}
+                          >
+                            {stat.tpm}
+                          </Tag>
+                        ),
+                      },
+                    ]}
+                  />
+                </Col>
+              </Row>
+            </Card>
+            {/* <Row style={{ width: "100%" }} gutter={[16, 16]}>
+              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Card
                   title={
                     <Typography>
@@ -644,7 +710,7 @@ const LogsTable = ({ groups }) => {
                   {renderQuota(stat.quota)}
                 </Card>
               </Col>
-              <Col span={8}>
+              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Card
                   title={
                     <Typography>
@@ -658,7 +724,7 @@ const LogsTable = ({ groups }) => {
                   {stat.rpm}
                 </Card>
               </Col>
-              <Col span={8}>
+              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Card
                   title={
                     <Typography>
@@ -672,7 +738,7 @@ const LogsTable = ({ groups }) => {
                   {stat.tpm}
                 </Card>
               </Col>
-            </Row>
+            </Row> */}
           </Spin>
         </Header>
         <Form layout="horizontal" style={{ marginTop: 10 }}>
