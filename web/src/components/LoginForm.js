@@ -4,6 +4,7 @@ import { UserContext } from "../context/User";
 import {
   API,
   getLogo,
+  isMobile,
   showError,
   showInfo,
   showSuccess,
@@ -19,6 +20,8 @@ import {
   Icon,
   Layout,
   Modal,
+  Row,
+  Col,
 } from "@douyinfe/semi-ui";
 import Title from "@douyinfe/semi-ui/lib/es/typography/title";
 import Text from "@douyinfe/semi-ui/lib/es/typography/text";
@@ -171,199 +174,193 @@ const LoginForm = () => {
       <Layout>
         <Layout.Header></Layout.Header>
         <Layout.Content>
-          <div
-            style={{
-              justifyContent: "center",
-              display: "flex",
-              marginTop: 120,
-            }}
-          >
-            <div style={{ width: 500 }} className={styles.main}>
-              <div className={styles.login}>
-                <div className={styles.component66}>
-                  <img src={getLogo()} className={styles.logo} />
-                  <div className={styles.header}>
-                    <p className={styles.title}>欢迎回来</p>
-                    <p className={styles.text}>
-                      <span className={styles.text}>登录</span>
-                      <span className={styles.text1}> Chirou API </span>
-                      <span className={styles.text2}>账户</span>
-                    </p>
-                  </div>
-                </div>
-                <div className={styles.form}>
-                  <Form style={{ width: "100%" }}>
-                    <Form.Input
-                      field={"username"}
-                      label={"用户名"}
-                      placeholder="用户名"
-                      name="username"
-                      onChange={(value) => handleChange("username", value)}
-                    />
-                    <Form.Input
-                      field={"password"}
-                      label={"密码"}
-                      placeholder="密码"
-                      name="password"
-                      type="password"
-                      onChange={(value) => handleChange("password", value)}
-                    />
+          <Row type="flex" align="center" justify="center">
+            <Col span={24} sm={20} md={16} lg={12} xl={8} xxl={6}>
+              <Card title={"欢迎回来"}>
+                <div style={{ width: "100%" }} className={styles.main}>
+                  <div className={styles.login}>
+                    <img src={getLogo()} className={styles.logo} />
+                    <div className={styles.header}>
+                      <p className={styles.title}></p>
+                      <p className={styles.text}>
+                        <span className={styles.text}>登录</span>
+                        <span className={styles.text1}> Chirou API </span>
+                        <span className={styles.text2}>账户</span>
+                      </p>
+                    </div>
+                    <Form style={{ width: "100%" }}>
+                      <Form.Input
+                        field={"username"}
+                        label={"用户名"}
+                        placeholder="用户名"
+                        name="username"
+                        onChange={(value) => handleChange("username", value)}
+                      />
+                      <Form.Input
+                        field={"password"}
+                        label={"密码"}
+                        placeholder="密码"
+                        name="password"
+                        type="password"
+                        onChange={(value) => handleChange("password", value)}
+                      />
 
-                    <Button
-                      theme="solid"
-                      style={{ width: "100%" }}
-                      type={"primary"}
-                      size="large"
-                      htmlType={"submit"}
-                      onClick={handleSubmit}
-                      loading={loginLoading}
+                      <Button
+                        theme="solid"
+                        style={{ width: "100%" }}
+                        type={"primary"}
+                        size="large"
+                        htmlType={"submit"}
+                        onClick={handleSubmit}
+                        loading={loginLoading}
+                      >
+                        登录
+                      </Button>
+                    </Form>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        marginTop: 20,
+                      }}
                     >
-                      登录
-                    </Button>
-                  </Form>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginTop: 20,
-                  }}
-                >
-                  <Text>
-                    没有账号请先 <Link to="/register">注册账号</Link>
-                  </Text>
-                  <Text>
-                    忘记密码 <Link to="/reset">点击重置</Link>
-                  </Text>
-                </div>
-                {status.github_oauth ||
-                status.wechat_login ||
-                status.linux_do_oauth ||
-                status.telegram_oauth ? (
-                  <>
-                    <Divider margin="12px" align="center">
-                      第三方登录
-                    </Divider>
+                      <Text>
+                        没有账号请先 <Link to="/register">注册账号</Link>
+                      </Text>
+                      <Text>
+                        忘记密码 <Link to="/reset">点击重置</Link>
+                      </Text>
+                    </div>
+                    {status.github_oauth ||
+                    status.wechat_login ||
+                    status.linux_do_oauth ||
+                    status.telegram_oauth ? (
+                      <>
+                        <Divider margin="12px" align="center">
+                          第三方登录
+                        </Divider>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            marginTop: 20,
+                            gap: 10,
+                          }}
+                        >
+                          {status.github_oauth ? (
+                            <Button
+                              type="primary"
+                              icon={<IconGithubLogo />}
+                              onClick={() =>
+                                onGitHubOAuthClicked(status.github_client_id)
+                              }
+                            />
+                          ) : (
+                            <></>
+                          )}
+                          {status.linux_do_oauth ? (
+                            <Button
+                              type="primary"
+                              icon={<LinuxDoIcon />}
+                              onClick={() =>
+                                onLinuxDoOAuthClicked(status.linux_do_client_id)
+                              }
+                            />
+                          ) : (
+                            <></>
+                          )}
+                          {status.wechat_login ? (
+                            <Button
+                              type="primary"
+                              style={{ color: "rgba(var(--semi-green-5), 1)" }}
+                              icon={<Icon svg={<WeChatIcon />} />}
+                              onClick={onWeChatLoginClicked}
+                            />
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                        {status.telegram_oauth ? (
+                          <>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                marginTop: 5,
+                              }}
+                            >
+                              <TelegramLoginButton
+                                dataOnauth={onTelegramLoginClicked}
+                                botName={status.telegram_bot_name}
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    <Modal
+                      title="微信扫码登录"
+                      visible={showWeChatLoginModal}
+                      maskClosable={true}
+                      onOk={onSubmitWeChatVerificationCode}
+                      onCancel={() => setShowWeChatLoginModal(false)}
+                      okText={"登录"}
+                      size={"small"}
+                      centered={true}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItem: "center",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <img src={status.wechat_qrcode} />
+                      </div>
+                      <div style={{ textAlign: "center" }}>
+                        <p>
+                          微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
+                        </p>
+                      </div>
+                      <Form size="large">
+                        <Form.Input
+                          field={"wechat_verification_code"}
+                          placeholder="验证码"
+                          label={"验证码"}
+                          value={inputs.wechat_verification_code}
+                          onChange={(value) =>
+                            handleChange("wechat_verification_code", value)
+                          }
+                        />
+                      </Form>
+                    </Modal>
+                  </div>
+                  {turnstileEnabled ? (
                     <div
                       style={{
                         display: "flex",
                         justifyContent: "center",
                         marginTop: 20,
-                        gap: 10,
                       }}
                     >
-                      {status.github_oauth ? (
-                        <Button
-                          type="primary"
-                          icon={<IconGithubLogo />}
-                          onClick={() =>
-                            onGitHubOAuthClicked(status.github_client_id)
-                          }
-                        />
-                      ) : (
-                        <></>
-                      )}
-                      {status.linux_do_oauth ? (
-                        <Button
-                          type="primary"
-                          icon={<LinuxDoIcon />}
-                          onClick={() =>
-                            onLinuxDoOAuthClicked(status.linux_do_client_id)
-                          }
-                        />
-                      ) : (
-                        <></>
-                      )}
-                      {status.wechat_login ? (
-                        <Button
-                          type="primary"
-                          style={{ color: "rgba(var(--semi-green-5), 1)" }}
-                          icon={<Icon svg={<WeChatIcon />} />}
-                          onClick={onWeChatLoginClicked}
-                        />
-                      ) : (
-                        <></>
-                      )}
+                      <Turnstile
+                        sitekey={turnstileSiteKey}
+                        onVerify={(token) => {
+                          setTurnstileToken(token);
+                        }}
+                      />
                     </div>
-                    {status.telegram_oauth ? (
-                      <>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            marginTop: 5,
-                          }}
-                        >
-                          <TelegramLoginButton
-                            dataOnauth={onTelegramLoginClicked}
-                            botName={status.telegram_bot_name}
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                ) : (
-                  <></>
-                )}
-                <Modal
-                  title="微信扫码登录"
-                  visible={showWeChatLoginModal}
-                  maskClosable={true}
-                  onOk={onSubmitWeChatVerificationCode}
-                  onCancel={() => setShowWeChatLoginModal(false)}
-                  okText={"登录"}
-                  size={"small"}
-                  centered={true}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItem: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <img src={status.wechat_qrcode} />
-                  </div>
-                  <div style={{ textAlign: "center" }}>
-                    <p>
-                      微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
-                    </p>
-                  </div>
-                  <Form size="large">
-                    <Form.Input
-                      field={"wechat_verification_code"}
-                      placeholder="验证码"
-                      label={"验证码"}
-                      value={inputs.wechat_verification_code}
-                      onChange={(value) =>
-                        handleChange("wechat_verification_code", value)
-                      }
-                    />
-                  </Form>
-                </Modal>
-              </div>
-              {turnstileEnabled ? (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginTop: 20,
-                  }}
-                >
-                  <Turnstile
-                    sitekey={turnstileSiteKey}
-                    onVerify={(token) => {
-                      setTurnstileToken(token);
-                    }}
-                  />
+                  ) : (
+                    <></>
+                  )}
                 </div>
-              ) : (
-                <></>
-              )}
-            </div>
-          </div>
+              </Card>
+            </Col>
+          </Row>
         </Layout.Content>
       </Layout>
     </div>
