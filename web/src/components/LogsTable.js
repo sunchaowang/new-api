@@ -195,8 +195,20 @@ function renderFirstUseTime(type) {
 const LogsTable = ({ groups }) => {
   const columns = [
     {
-      title: "时间",
+      title: "时间/IP",
+      fixed: true,
+      width: 200,
       dataIndex: "timestamp2string",
+      render: (text, record, index) => {
+        return <Space vertical wrap align='left' spacing={8}>
+        <div>{text}</div>
+        <div>
+          <Tag onClick={() => {
+                copyText(record.request_ip);
+              }} color="grey">{record.request_ip}</Tag>
+        </div>
+      </Space>
+      },
     },
     {
       title: "渠道",
@@ -400,6 +412,8 @@ const LogsTable = ({ groups }) => {
     {
       title: "详情",
       dataIndex: "content",
+      fixed: 'right',
+      width: 240,
       render: (text, record, index) => {
         let other = getLogOther(record.other);
         if (other == null || record.type !== 2) {
@@ -437,7 +451,6 @@ const LogsTable = ({ groups }) => {
               style={{ maxWidth: 240 }}
             >
               <div>{renderType(record.type)}</div>
-              <div>{record.request_ip}</div>
               {text}
             </Paragraph>
           </Tooltip>
@@ -695,50 +708,6 @@ const LogsTable = ({ groups }) => {
                 </Col>
               </Row>
             </Card>
-            {/* <Row style={{ width: "100%" }} gutter={[16, 16]}>
-              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                <Card
-                  title={
-                    <Typography>
-                      <Typography.Text>
-                        <IconLightningStroked />
-                        总消耗额度
-                      </Typography.Text>
-                    </Typography>
-                  }
-                >
-                  {renderQuota(stat.quota)}
-                </Card>
-              </Col>
-              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                <Card
-                  title={
-                    <Typography>
-                      <Typography.Text>
-                        <IconLightningStroked />
-                        近一分钟内请求次数
-                      </Typography.Text>
-                    </Typography>
-                  }
-                >
-                  {stat.rpm}
-                </Card>
-              </Col>
-              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                <Card
-                  title={
-                    <Typography>
-                      <Typography.Text>
-                        <IconLightningStroked />
-                        近一分钟内消耗Token数
-                      </Typography.Text>
-                    </Typography>
-                  }
-                >
-                  {stat.tpm}
-                </Card>
-              </Col>
-            </Row> */}
           </Spin>
         </Header>
         <Form layout="horizontal" style={{ marginTop: 10 }}>
@@ -837,9 +806,10 @@ const LogsTable = ({ groups }) => {
           </>
         </Form>
         <Table
-          style={{ marginTop: 5 }}
+          style={{ marginTop: 5, width: '100%' }}
           columns={columns}
           dataSource={logs}
+          scroll={{ x: 'max-content' }}
           pagination={{
             currentPage: activePage,
             pageSize: pageSize,
@@ -850,6 +820,9 @@ const LogsTable = ({ groups }) => {
               handlePageSizeChange(size);
             },
             onPageChange: handlePageChange,
+            formatPageText: false,
+            size: isMobile() ? 'small' : 'default',
+            showTotal: true
           }}
         />
       </Layout>

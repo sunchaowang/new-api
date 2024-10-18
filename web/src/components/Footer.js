@@ -18,11 +18,8 @@ const FooterBar = () => {
   const defaultFooter = (
     <div className='custom-footer'>
       <a
-        href='https://github.com/Calcium-Ion/new-api'
-        target='_blank'
-        rel='noreferrer'
       >
-        New API {import.meta.env.VITE_REACT_APP_VERSION}{' '}
+        Chirou API {import.meta.env.VITE_REACT_APP_VERSION}{' '}
       </a>
       由{' '}
       <a
