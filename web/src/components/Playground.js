@@ -85,14 +85,16 @@ const Playground = () => {
 
       if (localGroupOptions.length > 0) {
       } else {
-        localGroupOptions = [{
-          label: '用户分组',
-          value: '',
-        }];
+        localGroupOptions = [
+          {
+            label: "默认分组",
+            value: "default",
+          },
+        ];
         setGroups(localGroupOptions);
       }
       setGroups(localGroupOptions);
-      handleInputChange('group', localGroupOptions[0].value);
+      handleInputChange("group", "default");
     } else {
       showError(message);
     }

@@ -204,7 +204,7 @@ func RelaySwapFace(c *gin.Context) *dto.MidjourneyResponse {
 			}
 			if quota != 0 {
 				tokenName := c.GetString("token_name")
-				logContent := fmt.Sprintf("模型固定价格 %.6f，分组倍率 %.6f，操作 %s", modelPrice, groupRatio, constant.MjActionSwapFace)
+				logContent := fmt.Sprintf("模型固定价格 %v，分组倍率 %v，操作 %s", modelPrice, groupRatio, constant.MjActionSwapFace)
 				other := make(map[string]interface{})
 				other["model_price"] = modelPrice
 				other["group_ratio"] = groupRatio
@@ -510,7 +510,7 @@ func RelayMidjourneySubmit(c *gin.Context, relayMode int) *dto.MidjourneyRespons
 			}
 			if quota != 0 {
 				tokenName := c.GetString("token_name")
-				logContent := fmt.Sprintf("模型固定价格 %.6f，分组倍率 %.6f，操作 %s，ID %s", modelPrice, groupRatio, midjRequest.Action, midjResponse.Result)
+				logContent := fmt.Sprintf("模型固定价格 %v，分组倍率 %v，操作 %s，ID %s", modelPrice, groupRatio, midjRequest.Action, midjResponse.Result)
 				other := make(map[string]interface{})
 				other["model_price"] = modelPrice
 				other["group_ratio"] = groupRatio
