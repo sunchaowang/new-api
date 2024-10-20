@@ -37,7 +37,7 @@ import DashboardPlayground from '../components/Playground';
 import DashboardToken from '../pages/Token';
 import DashboardMidJourney from '../pages/Midjourney';
 import DashboardTask from '../pages/Task';
-import DashboardTopup from '../pages/Topup';
+import DashboardTopup from '../pages/TopUp';
 import DashboardRedemption from '../pages/Redemption';
 import DashboardUser from '../pages/User';
 import DashboardPersonal from '../pages/Personal';
