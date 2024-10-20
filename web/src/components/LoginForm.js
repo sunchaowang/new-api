@@ -74,21 +74,19 @@ const LoginForm = () => {
   };
 
   const onSubmitWeChatVerificationCode = async () => {
-    if (turnstileEnabled && turnstileToken === "") {
-      showInfo("请稍后几秒重试，Turnstile 正在检查用户环境！");
+    if (turnstileEnabled && turnstileToken === '') {
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
     }
-    const res = await API.get(
-      `/api/oauth/wechat?code=${inputs.wechat_verification_code}`
-    );
+    const res = await API.get(`/api/oauth/wechat?code=${inputs.wechat_verification_code}`);
     const { success, message, data } = res.data;
     if (success) {
-      userDispatch({ type: "login", payload: data });
-      localStorage.setItem("user", JSON.stringify(data));
+      userDispatch({ type: 'login', payload: data });
+      localStorage.setItem('user', JSON.stringify(data));
       setUserData(data);
       updateAPI();
-      navigate("/");
-      showSuccess("登录成功！");
+      navigate('/dashboard/home');
+      showSuccess('登录成功！');
       setShowWeChatLoginModal(false);
     } else {
       showError(message);
@@ -100,39 +98,36 @@ const LoginForm = () => {
   }
 
   async function handleSubmit(e) {
-    if (turnstileEnabled && turnstileToken === "") {
-      showInfo("请稍后几秒重试，Turnstile 正在检查用户环境！");
+    if (turnstileEnabled && turnstileToken === '') {
+      showInfo('请稍后几秒重试，Turnstile 正在检查用户环境！');
       return;
     }
     setLoginLoading(true);
     setSubmitted(true);
     if (username && password) {
-      const res = await API.post(
-        `/api/user/login?turnstile=${turnstileToken}`,
-        {
-          username,
-          password,
-        }
-      );
+      const res = await API.post(`/api/user/login?turnstile=${turnstileToken}`, {
+        username,
+        password,
+      });
       const { success, message, data } = res.data;
       if (success) {
-        userDispatch({ type: "login", payload: data });
+        userDispatch({ type: 'login', payload: data });
         setUserData(data);
         updateAPI();
-        showSuccess("登录成功！");
-        if (username === "root" && password === "123456") {
+        showSuccess('登录成功！');
+        if (username === 'root' && password === '123456') {
           Modal.error({
-            title: "您正在使用默认密码！",
-            content: "请立刻修改默认密码！",
+            title: '您正在使用默认密码！',
+            content: '请立刻修改默认密码！',
             centered: true,
           });
         }
-        navigate("/token");
+        navigate('/dashboard/home');
       } else {
         showError(message);
       }
     } else {
-      showError("请输入用户名和密码！");
+      showError('请输入用户名和密码！');
     }
     setLoginLoading(false);
   }
@@ -163,7 +158,7 @@ const LoginForm = () => {
       showSuccess("登录成功！");
       setUserData(data);
       updateAPI();
-      navigate("/");
+      navigate('/dashboard/home');
     } else {
       showError(message);
     }

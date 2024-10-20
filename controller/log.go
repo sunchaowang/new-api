@@ -208,3 +208,29 @@ func DeleteHistoryLogs(c *gin.Context) {
 	})
 	return
 }
+
+// 通过 type 获取日志
+func GetLogsByType(c *gin.Context) {
+	logType, exists := c.GetQuery("type")
+	if !exists {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"success": false,
+			"message": "type is required",
+		})
+		return
+	}
+	userId := c.GetInt("id")
+	logs, err := model.SearchUserLogs(userId, logType)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    logs,
+	})
+}

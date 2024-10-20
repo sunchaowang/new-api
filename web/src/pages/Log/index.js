@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import LogsTable from '../../components/LogsTable';
-import {API} from '../../helpers';
+import { API, showError } from "../../helpers";
 
 const Token = () => {
   const [groups, setGroups] = useState([]);

@@ -304,7 +304,7 @@ const PersonalSetting = () => {
             onOk={transfer}
             onCancel={handleCancel}
             maskClosable={false}
-            size={"small"}
+            size={'small'}
             centered={true}
           >
             <div style={{ marginTop: 20 }}>
@@ -331,7 +331,7 @@ const PersonalSetting = () => {
               </div>
             </div>
           </Modal>
-          <div style={{ marginTop: 20 }}>
+          <div>
             <Card
               title={
                 <Card.Meta
@@ -341,24 +341,19 @@ const PersonalSetting = () => {
                       color={stringToColor(getUsername())}
                       style={{ marginRight: 4 }}
                     >
-                      {typeof getUsername() === "string" &&
-                        getUsername().slice(0, 1)}
+                      {typeof getUsername() === 'string' && getUsername().slice(0, 1)}
                     </Avatar>
                   }
                   title={<Typography.Text>{getUsername()}</Typography.Text>}
                   description={
-                    isRoot() ? (
-                      <Tag color="red">管理员</Tag>
-                    ) : (
-                      <Tag color="blue">普通用户</Tag>
-                    )
+                    isRoot() ? <Tag color="red">管理员</Tag> : <Tag color="blue">普通用户</Tag>
                   }
                 ></Card.Meta>
               }
               headerExtraContent={
                 <>
                   <Space vertical align="start">
-                    <Tag color="green">{"ID: " + userState?.user?.id}</Tag>
+                    <Tag color="green">{'ID: ' + userState?.user?.id}</Tag>
                     <Tag color="blue">{userState?.user?.group}</Tag>
                   </Space>
                 </>
@@ -411,13 +406,13 @@ const PersonalSetting = () => {
               <div style={{ marginTop: 10 }}>
                 <Descriptions row>
                   <Descriptions.Item itemKey="待使用收益">
-                    <span style={{ color: "rgba(var(--semi-red-5), 1)" }}>
+                    <span style={{ color: 'rgba(var(--semi-red-5), 1)' }}>
                       {renderQuota(userState?.user?.aff_quota)}
                     </span>
                     <Button
-                      type={"primary"}
+                      type={'primary'}
                       onClick={() => setOpenTransfer(true)}
-                      size={"small"}
+                      size={'small'}
                       style={{ marginLeft: 10 }}
                     >
                       划转
@@ -436,15 +431,13 @@ const PersonalSetting = () => {
               <Typography.Title heading={6}>个人信息</Typography.Title>
               <div style={{ marginTop: 20 }}>
                 <Typography.Text strong>邮箱</Typography.Text>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div style={{ width: "50%" }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ width: '50%' }}>
                     <Input
                       value={
-                        userState.user && userState.user.email !== ""
+                        userState.user && userState.user.email !== ''
                           ? userState.user.email
-                          : "未绑定"
+                          : '未绑定'
                       }
                       readonly={true}
                     ></Input>
@@ -455,24 +448,18 @@ const PersonalSetting = () => {
                         setShowEmailBindModal(true);
                       }}
                     >
-                      {userState.user && userState.user.email !== ""
-                        ? "修改绑定"
-                        : "绑定邮箱"}
+                      {userState.user && userState.user.email !== '' ? '修改绑定' : '绑定邮箱'}
                     </Button>
                   </div>
                 </div>
               </div>
               <div style={{ marginTop: 10 }}>
                 <Typography.Text strong>微信</Typography.Text>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div style={{ width: "50%" }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ width: '50%' }}>
                     <Input
                       value={
-                        userState.user && userState.user.wechat_id !== ""
-                          ? "已绑定"
-                          : "未绑定"
+                        userState.user && userState.user.wechat_id !== '' ? '已绑定' : '未绑定'
                       }
                       readonly={true}
                     ></Input>
@@ -480,26 +467,23 @@ const PersonalSetting = () => {
                   <div>
                     <Button
                       disabled={
-                        (userState.user && userState.user.wechat_id !== "") ||
-                        !status.wechat_login
+                        (userState.user && userState.user.wechat_id !== '') || !status.wechat_login
                       }
                     >
-                      {status.wechat_login ? "绑定" : "未启用"}
+                      {status.wechat_login ? '绑定' : '未启用'}
                     </Button>
                   </div>
                 </div>
               </div>
               <div style={{ marginTop: 10 }}>
                 <Typography.Text strong>GitHub</Typography.Text>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div style={{ width: "50%" }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ width: '50%' }}>
                     <Input
                       value={
-                        userState.user && userState.user.github_id !== ""
+                        userState.user && userState.user.github_id !== ''
                           ? userState.user.github_id
-                          : "未绑定"
+                          : '未绑定'
                       }
                       readonly={true}
                     ></Input>
@@ -510,11 +494,10 @@ const PersonalSetting = () => {
                         onGitHubOAuthClicked(status.github_client_id);
                       }}
                       disabled={
-                        (userState.user && userState.user.github_id !== "") ||
-                        !status.github_oauth
+                        (userState.user && userState.user.github_id !== '') || !status.github_oauth
                       }
                     >
-                      {status.github_oauth ? "绑定" : "未启用"}
+                      {status.github_oauth ? '绑定' : '未启用'}
                     </Button>
                   </div>
                 </div>
@@ -522,15 +505,13 @@ const PersonalSetting = () => {
               {/* linux do */}
               <div style={{ marginTop: 10 }}>
                 <Typography.Text strong>Linux Do</Typography.Text>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div style={{ width: "50%" }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ width: '50%' }}>
                     <Input
                       value={
-                        userState.user && userState.user.linuxdo_id !== ""
+                        userState.user && userState.user.linuxdo_id !== ''
                           ? userState.user.linuxdo_id
-                          : "未绑定"
+                          : '未绑定'
                       }
                       readonly={true}
                     ></Input>
@@ -541,11 +522,11 @@ const PersonalSetting = () => {
                         onLinuxDoOAuthClicked(status.linux_do_client_id);
                       }}
                       disabled={
-                        (userState.user && userState.user.linuxdo_id !== "") ||
+                        (userState.user && userState.user.linuxdo_id !== '') ||
                         !status.linux_do_oauth
                       }
                     >
-                      {status.linux_do_oauth ? "绑定" : "未启用"}
+                      {status.linux_do_oauth ? '绑定' : '未启用'}
                     </Button>
                   </div>
                 </div>
@@ -553,22 +534,20 @@ const PersonalSetting = () => {
 
               <div style={{ marginTop: 10 }}>
                 <Typography.Text strong>Telegram</Typography.Text>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div style={{ width: "50%" }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ width: '50%' }}>
                     <Input
                       value={
-                        userState.user && userState.user.telegram_id !== ""
+                        userState.user && userState.user.telegram_id !== ''
                           ? userState.user.telegram_id
-                          : "未绑定"
+                          : '未绑定'
                       }
                       readonly={true}
                     ></Input>
                   </div>
                   <div>
                     {status.telegram_oauth ? (
-                      userState.user.telegram_id !== "" ? (
+                      userState.user.telegram_id !== '' ? (
                         <Button disabled={true}>已绑定</Button>
                       ) : (
                         <TelegramLoginButton
@@ -585,9 +564,7 @@ const PersonalSetting = () => {
 
               <div style={{ marginTop: 10 }}>
                 <Space>
-                  <Button onClick={generateAccessToken}>
-                    生成系统访问令牌
-                  </Button>
+                  <Button onClick={generateAccessToken}>生成系统访问令牌</Button>
                   <Button
                     onClick={() => {
                       setShowChangePasswordModal(true);
@@ -596,7 +573,7 @@ const PersonalSetting = () => {
                     修改密码
                   </Button>
                   <Button
-                    type={"danger"}
+                    type={'danger'}
                     onClick={() => {
                       setShowAccountDeleteModal(true);
                     }}
@@ -610,7 +587,7 @@ const PersonalSetting = () => {
                     readOnly
                     value={systemToken}
                     onClick={handleSystemTokenClick}
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: '10px' }}
                   />
                 )}
                 {status.wechat_login && (
@@ -626,21 +603,17 @@ const PersonalSetting = () => {
                   onCancel={() => setShowWeChatBindModal(false)}
                   // onOpen={() => setShowWeChatBindModal(true)}
                   visible={showWeChatBindModal}
-                  size={"small"}
+                  size={'small'}
                 >
                   <Image src={status.wechat_qrcode} />
-                  <div style={{ textAlign: "center" }}>
-                    <p>
-                      微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）
-                    </p>
+                  <div style={{ textAlign: 'center' }}>
+                    <p>微信扫码关注公众号，输入「验证码」获取验证码（三分钟内有效）</p>
                   </div>
                   <Input
                     placeholder="验证码"
                     name="wechat_verification_code"
                     value={inputs.wechat_verification_code}
-                    onChange={(v) =>
-                      handleInputChange("wechat_verification_code", v)
-                    }
+                    onChange={(v) => handleInputChange('wechat_verification_code', v)}
                   />
                   <Button color="" fluid size="large" onClick={bindWeChat}>
                     绑定
@@ -653,7 +626,7 @@ const PersonalSetting = () => {
               // onOpen={() => setShowEmailBindModal(true)}
               onOk={bindEmail}
               visible={showEmailBindModal}
-              size={"small"}
+              size={'small'}
               centered={true}
               maskClosable={false}
             >
@@ -661,22 +634,19 @@ const PersonalSetting = () => {
               <div
                 style={{
                   marginTop: 20,
-                  display: "flex",
-                  justifyContent: "space-between",
+                  display: 'flex',
+                  justifyContent: 'space-between',
                 }}
               >
                 <Input
                   fluid
                   placeholder="输入邮箱地址"
-                  onChange={(value) => handleInputChange("email", value)}
+                  onChange={(value) => handleInputChange('email', value)}
                   name="email"
                   type="email"
                 />
-                <Button
-                  onClick={sendVerificationCode}
-                  disabled={disableButton || loading}
-                >
-                  {disableButton ? `重新发送 (${countdown})` : "获取验证码"}
+                <Button onClick={sendVerificationCode} disabled={disableButton || loading}>
+                  {disableButton ? `重新发送 (${countdown})` : '获取验证码'}
                 </Button>
               </div>
               <div style={{ marginTop: 10 }}>
@@ -685,9 +655,7 @@ const PersonalSetting = () => {
                   placeholder="验证码"
                   name="email_verification_code"
                   value={inputs.email_verification_code}
-                  onChange={(value) =>
-                    handleInputChange("email_verification_code", value)
-                  }
+                  onChange={(value) => handleInputChange('email_verification_code', value)}
                 />
               </div>
               {turnstileEnabled ? (
@@ -704,7 +672,7 @@ const PersonalSetting = () => {
             <Modal
               onCancel={() => setShowAccountDeleteModal(false)}
               visible={showAccountDeleteModal}
-              size={"small"}
+              size={'small'}
               centered={true}
               onOk={deleteAccount}
             >
@@ -721,10 +689,7 @@ const PersonalSetting = () => {
                   name="self_account_deletion_confirmation"
                   value={inputs.self_account_deletion_confirmation}
                   onChange={(value) =>
-                    handleInputChange(
-                      "self_account_deletion_confirmation",
-                      value
-                    )
+                    handleInputChange('self_account_deletion_confirmation', value)
                   }
                 />
                 {turnstileEnabled ? (
@@ -742,7 +707,7 @@ const PersonalSetting = () => {
             <Modal
               onCancel={() => setShowChangePasswordModal(false)}
               visible={showChangePasswordModal}
-              size={"small"}
+              size={'small'}
               centered={true}
               onOk={changePassword}
             >
@@ -751,18 +716,14 @@ const PersonalSetting = () => {
                   name="set_new_password"
                   placeholder="新密码"
                   value={inputs.set_new_password}
-                  onChange={(value) =>
-                    handleInputChange("set_new_password", value)
-                  }
+                  onChange={(value) => handleInputChange('set_new_password', value)}
                 />
                 <Input
                   style={{ marginTop: 20 }}
                   name="set_new_password_confirmation"
                   placeholder="确认新密码"
                   value={inputs.set_new_password_confirmation}
-                  onChange={(value) =>
-                    handleInputChange("set_new_password_confirmation", value)
-                  }
+                  onChange={(value) => handleInputChange('set_new_password_confirmation', value)}
                 />
                 {turnstileEnabled ? (
                   <Turnstile

@@ -38,6 +38,7 @@ const (
 	RelayModeSunoSubmit
 
 	RelayModeRerank
+	RelayModeLumaGenerations
 )
 
 func Path2RelayMode(path string) int {
@@ -115,6 +116,14 @@ func Path2RelaySuno(method, path string) int {
 		relayMode = RelayModeSunoFetchByID
 	} else if strings.Contains(path, "/submit/") {
 		relayMode = RelayModeSunoSubmit
+	}
+	return relayMode
+}
+
+func Path2RelayLuma(path string) int {
+	relayMode := RelayModeUnknown
+	if strings.HasSuffix(path, "/generations") {
+		relayMode = RelayModeLumaGenerations
 	}
 	return relayMode
 }

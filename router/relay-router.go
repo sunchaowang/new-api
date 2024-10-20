@@ -1,10 +1,11 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
 	"one-api/controller"
 	"one-api/middleware"
 	"one-api/relay"
+
+	"github.com/gin-gonic/gin"
 )
 
 func SetRelayRouter(router *gin.Engine) {
@@ -42,6 +43,8 @@ func SetRelayRouter(router *gin.Engine) {
 		relaySunoRouter.GET("/fetch/:id", controller.RelayTask)
 	}
 
+	relayLumaRouter := router.Group("/luma")
+	registerLumaRouterGroup(relayLumaRouter)
 }
 
 func registryV1RouterGroup(relayV1Router *gin.RouterGroup) {
@@ -92,5 +95,13 @@ func registerMjRouterGroup(relayMjRouter *gin.RouterGroup) {
 		relayMjRouter.POST("/task/list-by-condition", controller.RelayMidjourney)
 		relayMjRouter.POST("/insight-face/swap", controller.RelayMidjourney)
 		relayMjRouter.POST("/submit/upload-discord-images", controller.RelayMidjourney)
+	}
+}
+
+// luma
+func registerLumaRouterGroup(relayLumaRouter *gin.RouterGroup) {
+	relayLumaRouter.Use(middleware.TokenAuth(), middleware.Distribute())
+	{
+		relayLumaRouter.POST("/generations", controller.RelayLuma)
 	}
 }

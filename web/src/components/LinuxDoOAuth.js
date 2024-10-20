@@ -22,18 +22,18 @@ const LinuxDoOAuth = () => {
 
       if (message === 'bind') {
         showSuccess('绑定成功！');
-        navigate('/setting');
+        navigate('/dashboard/setting');
       } else {
         userDispatch({ type: 'login', payload: data });
         localStorage.setItem('user', JSON.stringify(data));
         showSuccess('登录成功！');
-        navigate('/setting');
+        navigate('/dashboard/home');
       }
     } else {
       showError(message);
       if (count === 0) {
         setPrompt(`操作失败，重定向至设置界面中...`);
-        navigate('/setting'); // in case this is failed to bind GitHub
+        navigate('/dashboard/setting'); // in case this is failed to bind GitHub
         return;
       }
       count++;
@@ -48,7 +48,7 @@ const LinuxDoOAuth = () => {
     if (error) {
       let errorDescription = searchParams.get('error_description');
       showError(`授权错误：${error}: ${errorDescription}`);
-      navigate('/setting');
+      navigate('/dashboard/setting');
       return;
     }
 

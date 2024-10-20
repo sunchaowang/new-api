@@ -48,7 +48,7 @@ func GetLogByKey(key string) (logs []*Log, err error) {
 	return logs, err
 }
 
-func RecordLog(userId int, logType int, content string, requestIP string) {
+func RecordLog(userId int, logType int, content string, requestIP string, extraFields ...map[string]interface{}) {
 	if logType == LogTypeConsume && !common.LogConsumeEnabled {
 		return
 	}
@@ -61,6 +61,38 @@ func RecordLog(userId int, logType int, content string, requestIP string) {
 		Content:   content,
 		RequestIP: requestIP,
 	}
+	
+	if len(extraFields) > 0 && extraFields[0] != nil {
+		for key, value := range extraFields[0] {
+			switch key {
+			case "TokenName":
+				log.TokenName = value.(string)
+			case "ModelName":
+				log.ModelName = value.(string)
+			case "Quota":
+				log.Quota = value.(int)
+			case "PromptTokens":
+				log.PromptTokens = value.(int)
+			case "CompletionTokens":
+				log.CompletionTokens = value.(int)
+			case "UseTime":
+				log.UseTime = value.(int)
+			case "IsStream":
+				log.IsStream = value.(bool)
+			case "ChannelId":
+				log.ChannelId = value.(int)
+			case "TokenId":
+				log.TokenId = value.(int)
+			case "Other":
+				log.Other = value.(string)
+			case "RequestID":
+				log.RequestID = value.(string)
+			case "TokenGroup":
+				log.TokenGroup = value.(string)
+			}
+		}
+	}
+
 	err := LOG_DB.Create(log).Error
 	if err != nil {
 		common.SysError("failed to record log: " + err.Error())

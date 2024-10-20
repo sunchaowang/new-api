@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "@douyinfe/semi-icons": "^2.63.1",
+    "@douyinfe/semi-icons-lab": "^2.68.0",
     "@douyinfe/semi-ui": "^2.63.1",
     "@semi-bot/semi-theme-strapi": "^0.1.4",
     "@semi-bot/semi-theme-universedesign": "^1.0.13",

@@ -3,34 +3,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/User';
 import { StatusContext } from '../context/Status';
 
-import {
-  API,
-  getLogo,
-  getSystemName,
-  isAdmin,
-  isMobile,
-  showError,
-} from '../helpers';
+import { API, isAdmin, isMobile, showError } from '../helpers';
 import '../index.css';
 
-import {
-  IconCalendarClock, IconChecklistStroked,
-  IconComment, IconCommentStroked,
-  IconCreditCard,
-  IconGift, IconHelpCircle,
-  IconHistogram,
-  IconHome,
-  IconImage,
-  IconKey,
-  IconLayers,
-  IconPriceTag,
-  IconSetting,
-  IconUser
-} from '@douyinfe/semi-icons';
-import { Avatar, Dropdown, Layout, Nav, Switch } from '@douyinfe/semi-ui';
+import { IconGift } from '@douyinfe/semi-icons';
+import { Avatar, Dropdown, Layout, Nav, Switch, SideSheet } from '@douyinfe/semi-ui';
 import { setStatusData } from '../helpers/data.js';
 import { stringToColor } from '../helpers/render.js';
 import { useSetTheme, useTheme } from '../context/Theme/index.js';
+import {
+  IconChangelog,
+  IconColorPlatteNew,
+  IconConfig,
+  IconToken,
+  IconTransfer,
+  IconTree,
+  IconImage,
+  IconSpin,
+  IconTable,
+  IconAccessibility,
+  IconList,
+  IconForm,
+} from '@douyinfe/semi-icons-lab';
+import { useIsMobile } from '../helpers/hooks.js';
 
 // HeaderBar Buttons
 
@@ -45,123 +40,141 @@ const SiderBar = () => {
   const [chatItems, setChatItems] = useState([]);
   const theme = useTheme();
   const setTheme = useSetTheme();
+  const isUseMobile = useIsMobile();
 
   const routerMap = {
-    home: '/',
-    channel: '/channel',
-    token: '/token',
-    redemption: '/redemption',
-    topup: '/topup',
-    user: '/user',
-    log: '/log',
-    midjourney: '/midjourney',
-    setting: '/setting',
-    about: '/about',
+    dashboardHome: '/dashboard/',
+    channel: '/dashboard/channel',
+    token: '/dashboard/token',
+    redemption: '/dashboard/redemption',
+    topup: '/dashboard/topup',
+    user: '/dashboard/user',
+    log: '/dashboard/log',
+    midjourney: '/dashboard/midjourney',
+    luma: '/dashboard/luma',
+    setting: '/dashboard/setting',
     chat: '/chat',
-    detail: '/detail',
+    detail: '/dashboard/detail',
     pricing: '/pricing',
-    task: '/task',
-    playground: '/playground',
+    task: '/dashboard/task',
+    playground: '/dashboard/playground',
+    'dashboard/home': '/dashboard/home',
+    personal: '/dashboard/personal',
   };
 
-  const headerButtons = useMemo(
+  const menuButtons = useMemo(
     () => [
+      {
+        text: '欢迎页',
+        itemKey: 'dashboard/home',
+        to: '/dashboard/home',
+        icon: <IconForm />,
+      },
       {
         text: 'Playground',
         itemKey: 'playground',
-        to: '/playground',
-        icon: <IconCommentStroked />,
+        to: '/dashboard/playground',
+        icon: <IconColorPlatteNew />,
       },
+      // {
+      //   text: "模型价格",
+      //   itemKey: "pricing",
+      //   to: "/dashboard/pricing",
+      //   icon: <IconTag />,
+      // },
+      // {
+      //   text: '聊天',
+      //   itemKey: 'chat',
+      //   // to: '/chat',
+      //   items: chatItems,
+      //   icon: <IconComment />,
+      //   // className: localStorage.getItem('chat_link')
+      //   //   ? 'semi-navigation-item-normal'
+      //   //   : 'tableHiddle',
+      // },
       {
-        text: '模型价格',
-        itemKey: 'pricing',
-        to: '/pricing',
-        icon: <IconPriceTag />,
-      },
-      {
-        text: '渠道',
-        itemKey: 'channel',
-        to: '/channel',
-        icon: <IconLayers />,
-        className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
-      },
-      {
-        text: '聊天',
-        itemKey: 'chat',
-        // to: '/chat',
-        items: chatItems,
-        icon: <IconComment />,
-        // className: localStorage.getItem('chat_link')
-        //   ? 'semi-navigation-item-normal'
-        //   : 'tableHiddle',
-      },
-      {
-        text: '令牌',
+        text: 'API令牌',
         itemKey: 'token',
-        to: '/token',
-        icon: <IconKey />,
+        to: '/dashboard/token',
+        icon: <IconToken />,
       },
       {
-        text: '兑换码',
-        itemKey: 'redemption',
-        to: '/redemption',
-        icon: <IconGift />,
-        className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
-      },
-      {
-        text: '钱包',
-        itemKey: 'topup',
-        to: '/topup',
-        icon: <IconCreditCard />,
-      },
-      {
-        text: '用户管理',
-        itemKey: 'user',
-        to: '/user',
-        icon: <IconUser />,
-        className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
-      },
-      {
-        text: '日志',
+        text: '请求日志',
         itemKey: 'log',
-        to: '/log',
-        icon: <IconHistogram />,
+        to: '/dashboard/log',
+        icon: <IconChangelog />,
       },
       {
-        text: '数据看板',
-        itemKey: 'detail',
-        to: '/detail',
-        icon: <IconCalendarClock />,
-        className:
-          localStorage.getItem('enable_data_export') === 'true'
-            ? 'semi-navigation-item-normal'
-            : 'tableHiddle',
-      },
-      {
-        text: '绘图',
+        text: '绘图日志',
         itemKey: 'midjourney',
-        to: '/midjourney',
+        to: '/dashboard/midjourney',
         icon: <IconImage />,
         className:
           localStorage.getItem('enable_drawing') === 'true'
             ? 'semi-navigation-item-normal'
             : 'tableHiddle',
       },
+
+      {
+        text: '数据分析',
+        itemKey: 'detail',
+        to: '/dashboard/detail',
+        icon: <IconTable />,
+        className:
+          localStorage.getItem('enable_data_export') === 'true'
+            ? 'semi-navigation-item-normal'
+            : 'tableHiddle',
+      },
       {
         text: '异步任务',
         itemKey: 'task',
-        to: '/task',
-        icon: <IconChecklistStroked />,
+        to: '/dashboard/task',
+        icon: <IconSpin />,
         className:
-            localStorage.getItem('enable_task') === 'true'
-                ? 'semi-navigation-item-normal'
-                : 'tableHiddle',
+          localStorage.getItem('enable_task') === 'true'
+            ? 'semi-navigation-item-normal'
+            : 'tableHiddle',
       },
       {
-        text: '设置',
+        text: '余额充值',
+        itemKey: 'topup',
+        to: '/dashboard/topup',
+        icon: <IconTransfer />,
+      },
+      {
+        text: '渠道管理',
+        itemKey: 'channel',
+        to: '/dashboard/channel',
+        icon: <IconTree />,
+        className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
+      },
+      {
+        text: '兑换码管理',
+        itemKey: 'redemption',
+        to: '/dashboard/redemption',
+        icon: <IconGift />,
+        className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
+      },
+
+      {
+        text: '用户管理',
+        itemKey: 'user',
+        to: '/dashboard/user',
+        icon: <IconList />,
+        className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
+      },
+      {
+        text: '个人中心',
+        itemKey: 'personal',
+        to: '/dashboard/personal',
+        icon: <IconAccessibility />,
+      },
+      {
+        text: '系统设置',
         itemKey: 'setting',
-        to: '/setting',
-        icon: <IconSetting />,
+        to: '/dashboard/setting',
+        icon: <IconConfig />,
+        className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
       },
       // {
       //     text: '关于',
@@ -174,7 +187,8 @@ const SiderBar = () => {
       localStorage.getItem('enable_data_export'),
       localStorage.getItem('enable_drawing'),
       localStorage.getItem('enable_task'),
-      localStorage.getItem('chat_link'), chatItems,
+      localStorage.getItem('chat_link'),
+      chatItems,
       isAdmin(),
     ],
   );
@@ -195,52 +209,52 @@ const SiderBar = () => {
 
   useEffect(() => {
     loadStatus().then(() => {
-      setIsCollapsed(
-        isMobile() ||
-          localStorage.getItem('default_collapse_sidebar') === 'true',
-      );
+      setIsCollapsed(isUseMobile || localStorage.getItem('default_collapse_sidebar') === 'true');
     });
-    let localKey = window.location.pathname.split('/')[1];
+    let localKey = window.location.pathname.split('/').at(-1);
     if (localKey === '') {
       localKey = 'home';
     }
     setSelectedKeys([localKey]);
     let chatLink = localStorage.getItem('chat_link');
     if (!chatLink) {
-        let chats = localStorage.getItem('chats');
-        if (chats) {
-            // console.log(chats);
-            try {
-                chats = JSON.parse(chats);
-                if (Array.isArray(chats)) {
-                    let chatItems = [];
-                    for (let i = 0; i < chats.length; i++) {
-                        let chat = {};
-                        for (let key in chats[i]) {
-                            chat.text = key;
-                            chat.itemKey = 'chat' + i;
-                            chat.to = '/chat/' + i;
-                        }
-                        // setRouterMap({ ...routerMap, chat: '/chat/' + i })
-                        chatItems.push(chat);
-                    }
-                    setChatItems(chatItems);
-                }
-            } catch (e) {
-                console.error(e);
-                showError('聊天数据解析失败')
+      let chats = localStorage.getItem('chats');
+      if (chats) {
+        // console.log(chats);
+        try {
+          chats = JSON.parse(chats);
+          if (Array.isArray(chats)) {
+            let chatItems = [];
+            for (let i = 0; i < chats.length; i++) {
+              let chat = {};
+              for (let key in chats[i]) {
+                chat.text = key;
+                chat.itemKey = 'chat' + i;
+                chat.to = '/chat/' + i;
+              }
+              // setRouterMap({ ...routerMap, chat: '/chat/' + i })
+              chatItems.push(chat);
             }
+            setChatItems(chatItems);
+          }
+        } catch (e) {
+          console.error(e);
+          showError('聊天数据解析失败');
         }
+      }
     }
   }, []);
+
+  useEffect(() => {
+    setIsCollapsed(isUseMobile);
+  }, [isUseMobile]);
 
   return (
     <>
       <Nav
         style={{ maxWidth: 220, height: '100%' }}
         defaultIsCollapsed={
-          isMobile() ||
-          localStorage.getItem('default_collapse_sidebar') === 'true'
+          isUseMobile || localStorage.getItem('default_collapse_sidebar') === 'true'
         }
         isCollapsed={isCollapsed}
         onCollapseChange={(collapsed) => {
@@ -248,48 +262,45 @@ const SiderBar = () => {
         }}
         selectedKeys={selectedKeys}
         renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
-            let chatLink = localStorage.getItem('chat_link');
-            if (!chatLink) {
-                let chats = localStorage.getItem('chats');
-                if (chats) {
-                    chats = JSON.parse(chats);
-                    if (Array.isArray(chats) && chats.length > 0) {
-                        for (let i = 0; i < chats.length; i++) {
-                            routerMap['chat' + i] = '/chat/' + i;
-                        }
-                        if (chats.length > 1) {
-                            // delete /chat
-                            if (routerMap['chat']) {
-                                delete routerMap['chat'];
-                            }
-                        } else {
-                            // rename /chat to /chat/0
-                            routerMap['chat'] = '/chat/0';
-                        }
-                    }
+          let chatLink = localStorage.getItem('chat_link');
+          if (!chatLink) {
+            let chats = localStorage.getItem('chats');
+            if (chats) {
+              chats = JSON.parse(chats);
+              if (Array.isArray(chats) && chats.length > 0) {
+                for (let i = 0; i < chats.length; i++) {
+                  routerMap['chat' + i] = '/chat/' + i;
                 }
+                if (chats.length > 1) {
+                  // delete /chat
+                  if (routerMap['chat']) {
+                    delete routerMap['chat'];
+                  }
+                } else {
+                  // rename /chat to /chat/0
+                  routerMap['chat'] = '/chat/0';
+                }
+              }
             }
+          }
           return (
-            <Link
-              style={{ textDecoration: 'none' }}
-              to={routerMap[props.itemKey]}
-            >
+            <Link style={{ textDecoration: 'none' }} to={routerMap[props.itemKey]}>
               {itemElement}
             </Link>
           );
         }}
-        items={headerButtons}
+        items={menuButtons}
         onSelect={(key) => {
           setSelectedKeys([key.itemKey]);
         }}
         footer={
           <>
-            {isMobile() && (
+            {isUseMobile && (
               <Switch
-                checkedText='🌞'
+                checkedText="🌞"
                 size={'small'}
                 checked={theme === 'dark'}
-                uncheckedText='🌙'
+                uncheckedText="🌙"
                 onChange={(checked) => {
                   setTheme(checked);
                 }}

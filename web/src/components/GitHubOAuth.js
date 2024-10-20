@@ -20,20 +20,20 @@ const GitHubOAuth = () => {
     if (success) {
       if (message === 'bind') {
         showSuccess('绑定成功！');
-        navigate('/setting');
+        navigate('/dashboard/setting');
       } else {
         userDispatch({ type: 'login', payload: data });
         localStorage.setItem('user', JSON.stringify(data));
         setUserData(data);
         updateAPI()
         showSuccess('登录成功！');
-        navigate('/token');
+        navigate('/dashboard/home');
       }
     } else {
       showError(message);
       if (count === 0) {
         setPrompt(`操作失败，重定向至登录界面中...`);
-        navigate('/setting'); // in case this is failed to bind GitHub
+        navigate('/dashboard/setting'); // in case this is failed to bind GitHub
         return;
       }
       count++;

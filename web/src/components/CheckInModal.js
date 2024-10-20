@@ -49,6 +49,9 @@ export default function CheckInModal(props) {
         if (props.loadUser) {
           props.loadUser();
         }
+        if (props.callback) {
+          props.callback();
+        }
       } else {
         showError(message);
       }
@@ -74,17 +77,28 @@ export default function CheckInModal(props) {
       maskClosable={false}
       onCancel={handleClose}
       footer={[
-        <Button onClick={() => handleClose()}>取消</Button>,
-        <Button theme={'solid'} disabled={!turnstileToken} loading={checkinLoading} onClick={() => handleUserOperationCheckIn()} type={turnstileEnabled ? "primary" : "default"}>
+        <Button type={'default'} onClick={() => handleClose()}>
+          取消
+        </Button>,
+        <Button
+          type={'primary'}
+          theme={'solid'}
+          disabled={!turnstileToken}
+          loading={checkinLoading}
+          onClick={() => handleUserOperationCheckIn()}
+          type={turnstileEnabled ? 'primary' : 'default'}
+        >
           立即签到
-        </Button>
+        </Button>,
       ]}
       afterClose={afterClose}
       destroyOnClose
       title="正在检查用户环境"
     >
       <Space vertical size={16}>
-        <Typography>温馨提示：每日签到获得的额度以前一日的总消耗额度为基础获得随机返赠🤓</Typography>
+        <Typography>
+          温馨提示：每日签到获得的额度以前一日的总消耗额度为基础获得随机返赠🤓
+        </Typography>
         {turnstileEnabled ? (
           <Spin spinning={!turnstileLoaded}>
             <div style={{ width: 300, height: 65 }}>

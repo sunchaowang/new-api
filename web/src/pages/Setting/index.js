@@ -10,14 +10,8 @@ import OperationSetting from '../../components/OperationSetting';
 const Setting = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [tabActiveKey, setTabActiveKey] = useState('1');
-  let panes = [
-    {
-      tab: '个人设置',
-      content: <PersonalSetting />,
-      itemKey: 'personal',
-    },
-  ];
+  const [tabActiveKey, setTabActiveKey] = useState('operation');
+  let panes = [];
 
   if (isRoot()) {
     panes.push({
@@ -46,7 +40,7 @@ const Setting = () => {
     if (tab) {
       setTabActiveKey(tab);
     } else {
-      onChangeTab('personal');
+      onChangeTab('operation');
     }
   }, [location.search]);
   return (
