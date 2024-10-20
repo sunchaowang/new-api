@@ -200,7 +200,30 @@ const SignCalendar = () => {
     // 判断年月日是否相同
     return (
       <div style={{ ...baseStyle }} onClick={() => handleCheckIn(dateString)}>
-        <Tag color={checkInDate ? 'green' : isBefore ? 'red' : 'yellow'} prefixIcon={<IconGift />}>
+        <Tag
+          color={checkInDate ? 'green' : isBefore ? 'red' : 'yellow'}
+          prefixIcon={
+            checkInDate ? (
+              <IconGift
+                style={{
+                  lineHeight: '12px',
+                }}
+              />
+            ) : isBefore ? (
+              <IconClear
+                style={{
+                  lineHeight: '12px',
+                }}
+              />
+            ) : (
+              <IconDuration
+                style={{
+                  lineHeight: '12px',
+                }}
+              />
+            )
+          }
+        >
           {isMobile ? '' : !checkInDate ? (isBefore ? '未签到' : '待签到') : '已签到'}
         </Tag>
         {!!checkInDate?.quota && (

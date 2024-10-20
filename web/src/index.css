@@ -14,6 +14,17 @@ body {
   height: 100vh;
 }
 
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  vertical-align: middle;
+}
+
 #root {
   height: 100vh;
   flex-direction: column;
