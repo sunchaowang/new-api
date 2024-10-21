@@ -83,7 +83,7 @@ export default function Home() {
               <Descriptions.Item key="累计请求次数" label="累计请求次数">
                 {userState.user?.request_count}
               </Descriptions.Item>
-              <Descriptions.Item key="上次登录" label="上次登录" style={{ width: '100%' }}>
+              <Descriptions.Item key="上次登录时间" label="上次登录时间" style={{ width: '100%' }}>
                 {dayjs.unix(userState.user?.last_login_at).format('YYYY-MM-DD HH:mm:ss')}
               </Descriptions.Item>
             </Descriptions>
@@ -91,7 +91,7 @@ export default function Home() {
         </Row>
         {/* 签到日历 */}
         <Row style={{ width: '100%' }}>
-          <Card style={{ width: '100%' }} title={'签到日历'}>
+          <Card style={{ width: '100%' }} title={'签到日历'} bodyStyle={{ padding: 0 }}>
             <SignCalendar />
           </Card>
         </Row>
@@ -99,6 +99,7 @@ export default function Home() {
         <Row style={{ width: '100%' }}>
           <Card
             style={{ width: '100%' }}
+            bodyStyle={{ padding: 0 }}
             title="数据看板(近1天)"
             headerExtraContent={
               <Typography.Text link onClick={() => navigate('/dashboard/detail')}>
@@ -239,10 +240,15 @@ const SignCalendar = () => {
               left: '50%',
               transform: 'translateX(-50%)',
               color: 'var(--semi-color-primary)',
-              ...(isMobile ? { transform: 'scale(0.85)' } : {}),
             }}
           >
-            {renderQuota(checkInDate.quota, 2)}
+            <span
+              style={{
+                ...(isMobile ? { transform: 'scale(0.85)' } : {}),
+              }}
+            >
+              {renderQuota(checkInDate.quota, 2)}
+            </span>
           </Typography.Text>
         )}
       </div>

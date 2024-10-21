@@ -9,6 +9,7 @@ import { UserProvider } from './context/User';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { StatusProvider } from './context/Status';
+import { ConfigProvider } from './context/Config';
 import { Layout } from '@douyinfe/semi-ui';
 import { ThemeProvider } from './context/Theme';
 import FooterBar from './components/Footer';
@@ -19,12 +20,14 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    <StatusProvider>
-      <UserProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </UserProvider>
-    </StatusProvider>
+    <ConfigProvider>
+      <StatusProvider>
+        <UserProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </UserProvider>
+      </StatusProvider>
+    </ConfigProvider>
   </React.StrictMode>,
 );

@@ -252,14 +252,7 @@ const SiderBar = () => {
   return (
     <>
       <Nav
-        style={{ maxWidth: 220, height: '100%' }}
-        defaultIsCollapsed={
-          isUseMobile || localStorage.getItem('default_collapse_sidebar') === 'true'
-        }
-        isCollapsed={isCollapsed}
-        onCollapseChange={(collapsed) => {
-          setIsCollapsed(collapsed);
-        }}
+        style={{ height: '100%' }}
         selectedKeys={selectedKeys}
         renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
           let chatLink = localStorage.getItem('chat_link');
@@ -309,7 +302,7 @@ const SiderBar = () => {
           </>
         }
       >
-        <Nav.Footer collapseButton={true}></Nav.Footer>
+        {/* <Nav.Footer collapseButton={true}></Nav.Footer> */}
       </Nav>
     </>
   );

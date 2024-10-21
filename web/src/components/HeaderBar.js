@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/User";
 import { StatusContext } from "../context/Status";
+import { ConfigContext } from '../context/Config';
 import { useSetTheme, useTheme } from "../context/Theme";
 
 import { API, getLogo, getSystemName, showSuccess, isAdmin, showError } from '../helpers';
@@ -9,10 +10,10 @@ import '../index.css';
 
 import fireworks from 'react-fireworks';
 
-import { IconHelpCircle, IconKey, IconUser } from '@douyinfe/semi-icons';
+import { IconHelpCircle, IconKey, IconMenu, IconUser } from '@douyinfe/semi-icons';
 import { IconIntro, IconLayout, IconTag } from '@douyinfe/semi-icons-lab';
 
-import { Avatar, Dropdown, Layout, Nav, Switch, Modal } from '@douyinfe/semi-ui';
+import { Avatar, Dropdown, Layout, Nav, Switch, Modal, Button } from '@douyinfe/semi-ui';
 import { stringToColor } from '../helpers/render';
 import { setStatusData } from '../helpers/data.js';
 import CheckInModal from './CheckInModal.js';
@@ -38,6 +39,7 @@ if (localStorage.getItem('chat_link')) {
 
 const HeaderBar = () => {
   const [statusState, statusDispatch] = useContext(StatusContext);
+  const [configState, configDispatch] = useContext(ConfigContext);
   const [checkinModalVisible, setCheckinModalVisible] = useState(false);
   const isMobile = useIsMobile();
 
@@ -121,6 +123,10 @@ const HeaderBar = () => {
     }, 3000);
   };
 
+  const toggleSidebar = () => {
+    configDispatch({ type: 'set', payload: { isCollapse: !configState.config.isCollapse } });
+  };
+
   const theme = useTheme();
   const setTheme = useSetTheme();
 
@@ -168,7 +174,7 @@ const HeaderBar = () => {
             header={
               isMobile
                 ? {
-                    logo: <img src={logo} alt="logo" style={{ marginRight: '0.75em' }} />,
+                    text: <Button onClick={() => toggleSidebar()} icon={<IconMenu />}></Button>,
                   }
                 : {
                     logo: <img src={logo} alt="logo" />,
