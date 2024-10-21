@@ -124,7 +124,14 @@ const SignCalendar = () => {
 
   const getLogsByType = async () => {
     setLoading(true);
-    let res = await API.get(`/api/log/self/search?keyword=5`);
+    // 本月的 CreatedAt
+    let res = await API.get(`/api/log/self/search`, {
+      params: {
+        keyword: 5,
+        created_at_begin: dayjs().startOf('month').unix(),
+        created_at_end: dayjs().endOf('month').unix(),
+      },
+    });
     const { success, message, data } = res.data;
     if (success) {
       setCheckInDates(

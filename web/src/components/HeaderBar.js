@@ -42,6 +42,7 @@ const HeaderBar = () => {
   const [configState, configDispatch] = useContext(ConfigContext);
   const [checkinModalVisible, setCheckinModalVisible] = useState(false);
   const isMobile = useIsMobile();
+  const [isLoginExpired, setIsLoginExpired] = useState(false);
 
   const loadStatus = async () => {
     const res = await API.get('/api/status');
@@ -84,6 +85,7 @@ const HeaderBar = () => {
       localStorage.getItem('enable_task'),
       localStorage.getItem('chat_link'),
       isAdmin(),
+      isMobile,
     ],
   );
 
@@ -131,15 +133,18 @@ const HeaderBar = () => {
   const setTheme = useSetTheme();
 
   useEffect(() => {
-    loadStatus().then(() => {
-      // setIsCollapsed(
-      //   isMobile() ||
-      //     localStorage.getItem('default_collapse_sidebar') === 'true',
-      // );
-    });
+    loadStatus().then(() => {});
 
     if (theme === 'dark') {
       document.body.setAttribute('theme-mode', 'dark');
+    }
+
+    if (localStorage.getItem('user')) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user.is_login_expired) {
+        setIsLoginExpired(true);
+      }
+      console.log('isLoginExpired', isLoginExpired);
     }
 
     if (isNewYear) {
@@ -173,9 +178,11 @@ const HeaderBar = () => {
             onSelect={(key) => {}}
             header={
               isMobile
-                ? {
-                    text: <Button onClick={() => toggleSidebar()} icon={<IconMenu />}></Button>,
-                  }
+                ? !isLoginExpired
+                  ? {
+                      text: <Button onClick={() => toggleSidebar()} icon={<IconMenu />}></Button>,
+                    }
+                  : null
                 : {
                     logo: <img src={logo} alt="logo" />,
                     text: systemName,
@@ -215,7 +222,7 @@ const HeaderBar = () => {
                     />
                   )}
                 </>
-                {userState.user ? (
+                {userState.user && !isLoginExpired ? (
                   <>
                     {/* 签到 */}
                     <CheckInModal

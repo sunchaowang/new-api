@@ -61,7 +61,7 @@ func RecordLog(userId int, logType int, content string, requestIP string, extraF
 		Content:   content,
 		RequestIP: requestIP,
 	}
-	
+
 	if len(extraFields) > 0 && extraFields[0] != nil {
 		for key, value := range extraFields[0] {
 			switch key {
@@ -220,8 +220,18 @@ func SearchAllLogs(keyword string) (logs []*Log, err error) {
 	return logs, err
 }
 
-func SearchUserLogs(userId int, keyword string) (logs []*Log, err error) {
-	err = LOG_DB.Where("user_id = ? and type = ?", userId, keyword).Order("id desc").Limit(common.MaxRecentItems).Omit("id").Find(&logs).Error
+func SearchUserLogs(userId int, keyword string, extraFields ...map[string]interface{}) (logs []*Log, err error) {
+	tx := LOG_DB.Where("user_id = ? and type = ?", userId, keyword)
+	
+	if len(extraFields) > 0 && extraFields[0] != nil {
+		if extraFields[0]["created_at_begin"] != nil {
+			tx = tx.Where("created_at >= ?", extraFields[0]["created_at_begin"])
+		}
+		if extraFields[0]["created_at_end"] != nil {
+			tx = tx.Where("created_at <= ?", extraFields[0]["created_at_end"])
+		}
+	}
+	err = tx.Order("id desc").Limit(common.MaxRecentItems).Omit("id").Find(&logs).Error
 	return logs, err
 }
 

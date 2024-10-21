@@ -106,7 +106,18 @@ func SearchAllLogs(c *gin.Context) {
 func SearchUserLogs(c *gin.Context) {
 	keyword := c.Query("keyword")
 	userId := c.GetInt("id")
-	logs, err := model.SearchUserLogs(userId, keyword)
+	// 本月的 CreatedAt
+	createdAtBegin, _ := strconv.ParseInt(c.Query("created_at_begin"), 10, 64)
+	createdAtEnd, _ := strconv.ParseInt(c.Query("created_at_end"), 10, 64)
+
+	var extraFields []map[string]interface{}
+	if createdAtBegin > 0 {
+		extraFields = append(extraFields, map[string]interface{}{"created_at_begin": createdAtBegin})
+	}
+	if createdAtEnd > 0 {
+		extraFields = append(extraFields, map[string]interface{}{"created_at_end": createdAtEnd})
+	}
+	logs, err := model.SearchUserLogs(userId, keyword, extraFields...)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

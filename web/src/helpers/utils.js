@@ -88,6 +88,18 @@ export function showError(error) {
           // toast.error('未登录或登录已过期，请重新登录！', showErrorOptions);
           // 清空 cookies session
           document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          if (localStorage.getItem('user')) {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+              localStorage.setItem(
+                'user',
+                JSON.stringify({
+                  ...user,
+                  is_login_expired: true,
+                }),
+              );
+            }
+          }
 
           // 跳转到登录页面
           window.location.href = '/login?expired=true';
