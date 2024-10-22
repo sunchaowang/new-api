@@ -66,14 +66,17 @@ const ChannelsTable = () => {
     {
       title: 'ID',
       dataIndex: 'id',
+      width: 100,
     },
     {
       title: '名称',
       dataIndex: 'name',
+      width: 100,
     },
     {
       title: '分组',
       dataIndex: 'group',
+      width: 100,
       render: (text, record, index) => {
         return (
           <div>
@@ -89,6 +92,7 @@ const ChannelsTable = () => {
     {
       title: '类型',
       dataIndex: 'type',
+      width: 100,
       render: (text, record, index) => {
         return <div>{renderType(text)}</div>;
       },
@@ -96,6 +100,7 @@ const ChannelsTable = () => {
     {
       title: '状态',
       dataIndex: 'status',
+      width: 100,
       render: (text, record, index) => {
         if (text === 3) {
           if (record.other_info === '') {
@@ -119,6 +124,7 @@ const ChannelsTable = () => {
     {
       title: '响应时间',
       dataIndex: 'response_time',
+      width: 100,
       render: (text, record, index) => {
         return <div>{renderResponseTime(text)}</div>;
       },
@@ -126,6 +132,7 @@ const ChannelsTable = () => {
     {
       title: '已用/剩余',
       dataIndex: 'expired_time',
+      width: 100,
       render: (text, record, index) => {
         return (
           <div>
@@ -155,6 +162,7 @@ const ChannelsTable = () => {
     {
       title: '优先级',
       dataIndex: 'priority',
+      width: 100,
       render: (text, record, index) => {
         return (
           <div>
@@ -177,6 +185,7 @@ const ChannelsTable = () => {
     {
       title: '权重',
       dataIndex: 'weight',
+      width: 100,
       render: (text, record, index) => {
         return (
           <div>
