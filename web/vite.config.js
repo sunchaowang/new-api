@@ -25,10 +25,7 @@ export default defineConfig(({ command, mode }) => {
         },
       },
       react(),
-      SemiPlugin({
-        theme: '@semi-bot/semi-theme-universedesign',
-        options: {},
-      }),
+
       svgr({ include: 'src/assets/svg/**/*.svg?react' }),
     ],
     optimizeDeps: {

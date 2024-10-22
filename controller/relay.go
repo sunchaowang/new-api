@@ -33,6 +33,8 @@ func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode 
 		err = relay.AudioHelper(c)
 	case relayconstant.RelayModeRerank:
 		err = relay.RerankHelper(c, relayMode)
+	case relayconstant.RelayModeRealtime:
+		err = relay.RealtimeHelper(c, relayMode)
 	default:
 		err = relay.TextHelper(c)
 	}

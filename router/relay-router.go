@@ -74,6 +74,7 @@ func registryV1RouterGroup(relayV1Router *gin.RouterGroup) {
 		relayV1Router.DELETE("/models/:model", controller.RelayNotImplemented)
 		relayV1Router.POST("/moderations", controller.Relay)
 		relayV1Router.POST("/rerank", controller.Relay)
+		relayV1Router.GET("/realtime", controller.Relay)
 	}
 }
 
