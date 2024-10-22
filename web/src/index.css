@@ -132,3 +132,9 @@ code {
     display: none !important;
   }
 }
+
+/* 首行不加margin-bottom */
+.semi-form-horizontal .semi-form-field {
+  margin-bottom: 8px;
+}
+ 

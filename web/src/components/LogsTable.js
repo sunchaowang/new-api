@@ -422,7 +422,6 @@ const LogsTable = ({ groups }) => {
               style={{ maxWidth: 240 }}
             >
               <div>{renderType(record.type)}</div>
-              <div>{record.request_ip}</div>
               {text}
             </Paragraph>
           );
@@ -465,13 +464,15 @@ const LogsTable = ({ groups }) => {
   // 初始化start_timestamp为今天0点
   const [inputs, setInputs] = useState({
     username: '',
+    user_id: '',
     token_name: '',
     model_name: '',
     start_timestamp: timestamp2string(getTodayStartTimestamp()),
     end_timestamp: timestamp2string(now.getTime() / 1000 + 3600),
     channel: '',
   });
-  const { username, token_name, model_name, start_timestamp, end_timestamp, channel } = inputs;
+  const { username, user_id, token_name, model_name, start_timestamp, end_timestamp, channel } =
+    inputs;
 
   const [stat, setStat] = useState({
     quota: 0,
@@ -499,7 +500,7 @@ const LogsTable = ({ groups }) => {
   const getLogStat = async () => {
     let localStartTimestamp = Date.parse(start_timestamp) / 1000;
     let localEndTimestamp = Date.parse(end_timestamp) / 1000;
-    let url = `/api/log/stat?type=${logType}&username=${username}&token_name=${token_name}&model_name=${model_name}&start_timestamp=${localStartTimestamp}&end_timestamp=${localEndTimestamp}&channel=${channel}`;
+    let url = `/api/log/stat?type=${logType}&username=${username}&user_id=${user_id}&token_name=${token_name}&model_name=${model_name}&start_timestamp=${localStartTimestamp}&end_timestamp=${localEndTimestamp}&channel=${channel}`;
     url = encodeURI(url);
     let res = await API.get(url);
     const { success, message, data } = res.data;
@@ -563,7 +564,7 @@ const LogsTable = ({ groups }) => {
     let localStartTimestamp = Date.parse(start_timestamp) / 1000;
     let localEndTimestamp = Date.parse(end_timestamp) / 1000;
     if (isAdminUser) {
-      url = `/api/log/?p=${startIdx}&page_size=${pageSize}&type=${logType}&username=${username}&token_name=${token_name}&model_name=${model_name}&start_timestamp=${localStartTimestamp}&end_timestamp=${localEndTimestamp}&channel=${channel}`;
+      url = `/api/log/?p=${startIdx}&page_size=${pageSize}&type=${logType}&username=${username}&token_name=${token_name}&model_name=${model_name}&start_timestamp=${localStartTimestamp}&end_timestamp=${localEndTimestamp}&channel=${channel}&user_id=${user_id}`;
     } else {
       url = `/api/log/self/?p=${startIdx}&page_size=${pageSize}&type=${logType}&token_name=${token_name}&model_name=${model_name}&start_timestamp=${localStartTimestamp}&end_timestamp=${localEndTimestamp}`;
     }
@@ -683,7 +684,7 @@ const LogsTable = ({ groups }) => {
             </Card>
           </Spin>
         </Header>
-        <Form layout={'horizontal'} style={{ marginTop: 10 }}>
+        <Form layout={'horizontal'} labelPosition={'inset'} style={{ marginTop: 10 }}>
           <Form.Input
             field="token_name"
             label="令牌名称"
@@ -760,21 +761,27 @@ const LogsTable = ({ groups }) => {
                 name="username"
                 onChange={(value) => handleInputChange(value, 'username')}
               />
+              <Form.Input
+                field="user_id"
+                label="用户ID"
+                style={{ width: 200 }}
+                value={user_id}
+                placeholder={'可选值'}
+                name="user_id"
+                onChange={(value) => handleInputChange(value, 'user_id')}
+              />
             </>
           )}
-          <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <Button
-              label="查询"
-              type="primary"
-              htmlType="submit"
-              className="btn-margin-right"
-              onClick={refresh}
-              loading={loading}
-              style={{ marginTop: 24 }}
-            >
-              查询
-            </Button>
-          </div>
+          <Button
+            label="查询"
+            type="primary"
+            htmlType="submit"
+            className="btn-margin-right"
+            onClick={refresh}
+            loading={loading}
+          >
+            查询
+          </Button>
         </Form>
         <Table
           style={{ marginTop: 5, width: '100%' }}
