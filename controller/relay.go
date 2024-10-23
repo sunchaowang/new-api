@@ -144,6 +144,11 @@ func relayRequest(c *gin.Context, relayMode int, channel *model.Channel) *dto.Op
 	return relayHandler(c, relayMode)
 }
 
+func relayRealtimeRequest(c *gin.Context, relayMode int, channel *model.Channel) *dto.OpenAIErrorWithStatusCode {
+	addUsedChannel(c, channel.Id)
+	return relayHandler(c, relayMode)
+}
+
 func addUsedChannel(c *gin.Context, channelId int) {
 	useChannel := c.GetStringSlice("use_channel")
 	useChannel = append(useChannel, fmt.Sprintf("%d", channelId))
@@ -380,4 +385,70 @@ func RelayLuma(c *gin.Context) {
 	case relayconstant.RelayModeLumaGenerations:
 		relay.RelayModeLumaGenerations(c)
 	}
+}
+
+// OpenAI realtime preview
+func RelayRealtime(c *gin.Context) {
+	modelName := c.Query("model")
+
+	var openaiErr *dto.OpenAIErrorWithStatusCode
+
+	if modelName == "" {
+		openaiErr = service.OpenAIErrorWrapperLocal(errors.New("model_name_required"), "model_name_required", http.StatusBadRequest)
+		c.JSON(openaiErr.StatusCode, gin.H{
+			"error": openaiErr.Error,
+		})
+		return
+	}
+
+	relayMode := constant.Path2RelayMode(c.Request.URL.Path)
+	if relayMode != relayconstant.RelayModeRealtime {
+		openaiErr = service.OpenAIErrorWrapperLocal(errors.New("invalid_relay_mode"), "invalid_relay_mode", http.StatusBadRequest)
+		c.JSON(openaiErr.StatusCode, gin.H{
+			"error": openaiErr.Error,
+		})
+		return
+	}
+	requestId := c.GetString(common.RequestIdKey)
+	group := c.GetString("group")
+	originalModel := c.GetString("original_model")
+
+	for i := 0; i <= common.RetryTimes; i++ {
+		channel, err := getChannel(c, group, originalModel, i)
+		if err != nil {
+			common.LogError(c, err.Error())
+			openaiErr = service.OpenAIErrorWrapperLocal(err, "get_channel_failed", http.StatusInternalServerError)
+			break
+		}
+
+		// relay websocket request
+		openaiErr = relayRealtimeRequest(c, relayMode, channel)
+
+		if openaiErr == nil {
+			return // 成功处理请求，直接返回
+		}
+
+		go processChannelError(c, channel.Id, channel.Type, channel.Name, channel.GetAutoBan(), openaiErr)
+
+		if !shouldRetry(c, openaiErr, common.RetryTimes-i) {
+			break
+		}
+	}
+
+	useChannel := c.GetStringSlice("use_channel")
+	if len(useChannel) > 1 {
+		retryLogStr := fmt.Sprintf("重试：%s", strings.Trim(strings.Join(strings.Fields(fmt.Sprint(useChannel)), "->"), "[]"))
+		common.LogInfo(c, retryLogStr)
+	}
+
+	if openaiErr != nil {
+		if openaiErr.StatusCode == http.StatusTooManyRequests {
+			openaiErr.Error.Message = "当前分组上游负载已饱和，请稍后再试"
+		}
+		openaiErr.Error.Message = common.MessageWithRequestId(openaiErr.Error.Message, requestId)
+		c.JSON(openaiErr.StatusCode, gin.H{
+			"error": openaiErr.Error,
+		})
+	}
+
 }
