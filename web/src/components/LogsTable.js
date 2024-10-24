@@ -300,7 +300,7 @@ const LogsTable = ({ groups }) => {
       dataIndex: 'model_name',
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? (
-          <div>
+          <>
             <Tag
               color={stringToColor(text)}
               size="large"
@@ -311,7 +311,7 @@ const LogsTable = ({ groups }) => {
               {' '}
               {text}{' '}
             </Tag>
-          </div>
+          </>
         ) : (
           <></>
         );
@@ -324,22 +324,22 @@ const LogsTable = ({ groups }) => {
         if (record.is_stream) {
           let other = getLogOther(record.other);
           return (
-            <div>
+            <>
               <Space>
                 {renderUseTime(text)}
                 {renderFirstUseTime(other.frt)}
                 {renderIsStream(record.is_stream)}
               </Space>
-            </div>
+            </>
           );
         } else {
           return (
-            <div>
+            <>
               <Space>
                 {renderUseTime(text)}
                 {renderIsStream(record.is_stream)}
               </Space>
-            </div>
+            </>
           );
         }
       },
@@ -348,15 +348,20 @@ const LogsTable = ({ groups }) => {
       title: '提示',
       dataIndex: 'prompt_tokens',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? <div>{<span> {text} </span>}</div> : <></>;
+        return record.type === 0 || record.type === 2 ? (
+          <>{<span> {text} </span>}</>
+        ) : (
+          <></>
+        );
       },
     },
     {
       title: '补全',
       dataIndex: 'completion_tokens',
       render: (text, record, index) => {
-        return parseInt(text) > 0 && (record.type === 0 || record.type === 2) ? (
-          <div>{<span> {text} </span>}</div>
+        return parseInt(text) > 0 &&
+          (record.type === 0 || record.type === 2) ? (
+          <>{<span> {text} </span>}</>
         ) : (
           <></>
         );
@@ -366,7 +371,11 @@ const LogsTable = ({ groups }) => {
       title: '花费',
       dataIndex: 'quota',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? <div>{renderQuota(text, 6)}</div> : <></>;
+        return record.type === 0 || record.type === 2 ? (
+          <>{renderQuota(text, 6)}</>
+        ) : (
+          <></>
+        );
       },
     },
     {
