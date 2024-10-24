@@ -137,4 +137,36 @@ code {
 .semi-form-horizontal .semi-form-field {
   margin-bottom: 8px;
 }
- 
+
+.header-bar-nav {
+  width: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.header-bar-nav .semi-navigation-inner {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+}
+.header-bar-nav .semi-navigation-inner .semi-navigation-header-list-outer {
+  width: 100%;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  position: relative;
+  z-index: 1;
+}
+.header-bar-nav .semi-navigation-inner .semi-navigation-header-list-outer .semi-navigation-header {
+  position: absolute;
+  z-index: 2;
+}
+.header-bar-nav .semi-navigation-inner .semi-navigation-list-wrapper {
+  width: 100%;
+  overflow-x: scroll;
+  scrollbar-width: none;
+  margin-left: 32px;
+  position: relative;
+  z-index: 3;
+}
+.header-bar-nav .semi-navigation-inner .semi-navigation-footer {
+  flex: 1;
+}

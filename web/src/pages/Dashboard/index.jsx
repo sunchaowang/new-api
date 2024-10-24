@@ -29,18 +29,8 @@ export default function Dashboard(children) {
             <SiderBar />
           </Layout.Sider>
         ) : (
-          // <Layout.Sider>
-          //   <SiderBar />
-          // </Layout.Sider>
-          <SideSheet
-            visible={configState.config.isCollapse}
-            onCancel={() => configDispatch({ type: 'set', payload: { isCollapse: false } })}
-            placement="left"
-            width={240}
-            bodyStyle={{ padding: 0 }}
-          >
-            <SiderBar />
-          </SideSheet>
+
+          <></>
         )}
         <Layout.Content style={{ padding: 16, height: '100%', overflow: 'hidden' }}>
           <div style={{ height: '100%', overflow: 'auto' }}>

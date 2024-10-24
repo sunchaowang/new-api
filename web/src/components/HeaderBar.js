@@ -152,13 +152,22 @@ const HeaderBar = () => {
     }
   }, []);
 
+  const [userInfo, setUserInfo] = useState(null)
+  useEffect(() => {
+    if (userState?.user) {
+      setUserInfo(userState.user)
+      return
+    }
+    setUserInfo(null)
+  }, [userState])
+
   return (
     <>
       <Layout>
         <div style={{ width: '100%' }}>
           <Nav
             mode={'horizontal'}
-            style={{ overflowX: 'auto' }}
+            className={isMobile ? 'header-bar-nav' : ''}
             renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
               const routerMap = {
                 login: '/login',
@@ -188,8 +197,13 @@ const HeaderBar = () => {
                     text: systemName,
                   }
             }
-            items={buttons}
-            footer={
+          >
+            {buttons.map((button) => (
+              <Nav.Item itemKey={button.itemKey} text={button.text} icon={button.icon} onClick={() => navigate(button.to)}>
+              </Nav.Item>
+            ))}
+
+            <Nav.Footer style={{paddingLeft: 0, paddingRight: 0, paddingTop: 16, paddingBottom: 16}}>
               <>
                 {isNewYear && (
                   // happy new year
@@ -222,8 +236,8 @@ const HeaderBar = () => {
                     />
                   )}
                 </>
-                {userState.user && !isLoginExpired ? (
-                  <>
+                {userInfo && !isLoginExpired ? (
+                  <div style={{width: 'max-content'}}>
                     {/* 签到 */}
                     <CheckInModal
                       visible={checkinModalVisible}
@@ -254,16 +268,16 @@ const HeaderBar = () => {
                       </Avatar>
                       <span>{userState.user.username}</span>
                     </Dropdown>
-                  </>
+                  </div>
                 ) : (
                   <>
-                    <Nav.Item itemKey={'login'} text={'登录'} icon={<IconKey />} />
-                    <Nav.Item itemKey={'register'} text={'注册'} icon={<IconUser />} />
+                    <Nav.Item style={{paddingLeft: 8, paddingRight: 8}} itemKey={'login'} text={'登录'} icon={<IconKey />} />
+                    <Nav.Item style={{paddingLeft: 8, paddingRight: 8}} itemKey={'register'} text={'注册'} icon={<IconUser />} />
                   </>
                 )}
               </>
-            }
-          ></Nav>
+            </Nav.Footer>
+          </Nav>
         </div>
       </Layout>
     </>

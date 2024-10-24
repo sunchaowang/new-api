@@ -1,17 +1,21 @@
-import React, { lazy, Suspense, useContext, useEffect } from 'react';
+import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
 import { getLogo, getSystemName } from './helpers';
 import { UserContext } from './context/User';
 import { ThemeProvider } from './context/Theme';
-import { Layout } from '@douyinfe/semi-ui';
+import { Layout, SideSheet } from '@douyinfe/semi-ui';
 import { ToastContainer } from 'react-toastify';
 import HeaderBar from './components/HeaderBar';
 import FooterBar from './components/Footer';
 
 import Routes from './routes';
+import { ConfigContext } from './context/Config/index.js';
+import SiderBar from './components/SiderBar.js';
+import { useIsMobile } from './helpers/hooks.js';
 
 function App() {
   const { Sider, Content, Header, Footer } = Layout;
 
+  const [configState, configDispatch] = useContext(ConfigContext);
   const [userState, userDispatch] = useContext(UserContext);
   // const [statusState, statusDispatch] = useContext(StatusContext);
 
@@ -38,6 +42,16 @@ function App() {
     }
   }, []);
 
+  const isMobile = useIsMobile();
+  const [showSidebar, setShowSidebar] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      console.log('isMobile', isMobile);
+      setShowSidebar(true);
+    }
+  }, [isMobile]);
+
   return (
     <>
       <ThemeProvider>
@@ -52,6 +66,22 @@ function App() {
             <HeaderBar />
           </Header>
           <Layout style={{ flex: 1, overflow: 'hidden' }}>
+            {!isMobile ? (
+              <></>
+            ) : (
+              // <Layout.Sider>
+              //   <SiderBar />
+              // </Layout.Sider>
+              <SideSheet
+                visible={configState.config.isCollapse}
+                onCancel={() => configDispatch({ type: 'set', payload: { isCollapse: false } })}
+                placement="left"
+                width={240}
+                bodyStyle={{ padding: 0 }}
+              >
+                <SiderBar />
+              </SideSheet>
+            )}
             <Layout style={{ height: '100%', overflow: 'auto' }}>
               <Content style={{ overflowY: 'auto' }}>
                 <Routes></Routes>
