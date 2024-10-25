@@ -2,7 +2,6 @@
   "github": {
     "silent": true
   },
-  "rewrites": [{ "source": "/:path*", "destination": "/index.html" }],
   "routes": [
     {
       "src": "/api/(.*)",
@@ -15,6 +14,10 @@
     {
       "src": "/pg/(.*)",
       "dest": "https://api.wochirou.com/pg/$1"
+    },
+    {
+      "src": "/:path*",
+      "dest": "/index.html"
     }
   ]
 }
