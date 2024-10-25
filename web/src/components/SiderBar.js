@@ -24,6 +24,7 @@ import {
   IconAccessibility,
   IconList,
   IconForm,
+  IconToast,
 } from '@douyinfe/semi-icons-lab';
 import { useIsMobile } from '../helpers/hooks.js';
 
@@ -82,16 +83,16 @@ const SiderBar = () => {
       //   to: "/dashboard/pricing",
       //   icon: <IconTag />,
       // },
-      // {
-      //   text: '聊天',
-      //   itemKey: 'chat',
-      //   // to: '/chat',
-      //   items: chatItems,
-      //   icon: <IconComment />,
-      //   // className: localStorage.getItem('chat_link')
-      //   //   ? 'semi-navigation-item-normal'
-      //   //   : 'tableHiddle',
-      // },
+      {
+        text: '聊天',
+        itemKey: 'chat',
+        // to: '/chat',
+        items: chatItems,
+        icon: <IconToast />,
+        // className: localStorage.getItem('chat_link')
+        //   ? 'semi-navigation-item-normal'
+        //   : 'tableHiddle',
+      },
       {
         text: 'API令牌',
         itemKey: 'token',

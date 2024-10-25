@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { UserContext } from '../context/User';
 import { API, getUserIdFromLocalStorage, showError } from '../helpers';
@@ -20,27 +20,32 @@ const defaultMessage = [
   }
 ];
 
+const defaultInputs = {
+  model: 'gpt-4o-mini',
+  group: '',
+  max_tokens: 0,
+  temperature: 0,
+};
+
 let id = 4;
 function getId() {
-  return `${id++}`
+  return `${id++}`;
 }
 
 const Playground = () => {
-  const [inputs, setInputs] = useState({
-    model: 'gpt-4o-mini',
-    group: '',
-    max_tokens: 0,
-    temperature: 0,
-  });
+  const [inputs, setInputs] = useState(defaultInputs);
   const [searchParams, setSearchParams] = useSearchParams();
   const [userState, userDispatch] = useContext(UserContext);
   const [status, setStatus] = useState({});
-  const [systemPrompt, setSystemPrompt] = useState('You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.');
+  const [systemPrompt, setSystemPrompt] = useState(
+    'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.',
+  );
   const [message, setMessage] = useState(defaultMessage);
   const [models, setModels] = useState([]);
   const [groups, setGroups] = useState([]);
 
   const handleInputChange = (name, value) => {
+    localStorage.setItem('playground_config', JSON.stringify({ ...inputs, [name]: value }));
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   };
 
@@ -56,6 +61,12 @@ const Playground = () => {
     loadModels();
     loadGroups();
   }, []);
+
+  useMemo(() => {
+    if (localStorage.getItem('playground_config')) {
+      setInputs(JSON.parse(localStorage.getItem('playground_config')))
+    }
+  }, [localStorage.getItem('playground_config')])
 
   const loadModels = async () => {
     let res = await API.get(`/api/user/models`);
@@ -87,14 +98,14 @@ const Playground = () => {
       } else {
         localGroupOptions = [
           {
-            label: "默认分组",
-            value: "default",
+            label: '默认分组',
+            value: 'default',
           },
         ];
         setGroups(localGroupOptions);
       }
       setGroups(localGroupOptions);
-      handleInputChange("group", "default");
+      handleInputChange('group', 'default');
     } else {
       showError(message);
     }
@@ -104,7 +115,7 @@ const Playground = () => {
     border: '1px solid var(--semi-color-border)',
     borderRadius: '16px',
     margin: '0px 8px',
-  }
+  };
 
   const getSystemMessage = () => {
     if (systemPrompt !== '') {
@@ -113,21 +124,21 @@ const Playground = () => {
         id: '1',
         createAt: 1715676751919,
         content: systemPrompt,
-      }
+      };
     }
-  }
+  };
 
   let handleSSE = (payload) => {
     let source = new SSE('/pg/chat/completions', {
       headers: {
-        "Content-Type": "application/json",
-        "New-Api-User": getUserIdFromLocalStorage(),
+        'Content-Type': 'application/json',
+        'New-Api-User': getUserIdFromLocalStorage(),
       },
-      method: "POST",
+      method: 'POST',
       payload: JSON.stringify(payload),
     });
-    source.addEventListener("message", (e) => {
-      if (e.data !== "[DONE]") {
+    source.addEventListener('message', (e) => {
+      if (e.data !== '[DONE]') {
         let payload = JSON.parse(e.data);
         // console.log("Payload: ", payload);
         if (payload.choices.length === 0) {
@@ -144,12 +155,12 @@ const Playground = () => {
       }
     });
 
-    source.addEventListener("error", (e) => {
-      generateMockResponse(e.data)
-      completeMessage('error')
+    source.addEventListener('error', (e) => {
+      generateMockResponse(e.data);
+      completeMessage('error');
     });
 
-    source.addEventListener("readystatechange", (e) => {
+    source.addEventListener('readystatechange', (e) => {
       if (e.readyState >= 2) {
         if (source.status === undefined) {
           source.close();
@@ -158,55 +169,58 @@ const Playground = () => {
       }
     });
     source.stream();
-  }
+  };
 
-  const onMessageSend = useCallback((content, attachment) => {
-    console.log("attachment: ", attachment);
-    setMessage((prevMessage) => {
-      const newMessage = [
-        ...prevMessage,
-        {
-          role: 'user',
-          content: content,
-          createAt: Date.now(),
-          id: getId()
-        }
-      ];
+  const onMessageSend = useCallback(
+    (content, attachment) => {
+      console.log('attachment: ', attachment);
+      setMessage((prevMessage) => {
+        const newMessage = [
+          ...prevMessage,
+          {
+            role: 'user',
+            content: content,
+            createAt: Date.now(),
+            id: getId(),
+          },
+        ];
 
-      // 将 getPayload 移到这里
-      const getPayload = () => {
-        let systemMessage = getSystemMessage();
-        let messages = newMessage.map((item) => {
-          return {
-            role: item.role,
-            content: item.content,
+        // 将 getPayload 移到这里
+        const getPayload = () => {
+          let systemMessage = getSystemMessage();
+          let messages = newMessage.map((item) => {
+            return {
+              role: item.role,
+              content: item.content,
+            };
+          });
+          if (systemMessage) {
+            messages.unshift(systemMessage);
           }
-        });
-        if (systemMessage) {
-          messages.unshift(systemMessage);
-        }
-        return {
-          messages: messages,
-          stream: true,
-          model: inputs.model,
-          group: inputs.group,
-          max_tokens: parseInt(inputs.max_tokens),
-          temperature: inputs.temperature,
+          return {
+            messages: messages,
+            stream: true,
+            model: inputs.model,
+            group: inputs.group,
+            max_tokens: parseInt(inputs.max_tokens),
+            temperature: inputs.temperature,
+          };
         };
-      };
 
-      // 使用更新后的消息状态调用 handleSSE
-      handleSSE(getPayload());
-      newMessage.push({
-        role: 'assistant',
-        content: '',
-        createAt: Date.now(),
-        id: getId(),
-        status: 'loading'
+        // 使用更新后的消息状态调用 handleSSE
+        handleSSE(getPayload());
+        newMessage.push({
+          role: 'assistant',
+          content: '',
+          createAt: Date.now(),
+          id: getId(),
+          status: 'loading',
+        });
+        return newMessage;
       });
-      return newMessage;
-    });
-  }, [getSystemMessage]);
+    },
+    [getSystemMessage],
+  );
 
   const completeMessage = useCallback((status = 'complete') => {
     // console.log("Complete Message: ", status)
@@ -216,31 +230,28 @@ const Playground = () => {
       if (lastMessage.status === 'complete' || lastMessage.status === 'error') {
         return prevMessage;
       }
-      return [
-        ...prevMessage.slice(0, -1),
-        { ...lastMessage, status: status }
-      ];
+      return [...prevMessage.slice(0, -1), { ...lastMessage, status: status }];
     });
-  }, [])
+  }, []);
 
   const generateMockResponse = useCallback((content) => {
     // console.log("Generate Mock Response: ", content);
     setMessage((message) => {
       const lastMessage = message[message.length - 1];
-      let newMessage = {...lastMessage};
+      let newMessage = { ...lastMessage };
       if (lastMessage.status === 'loading' || lastMessage.status === 'incomplete') {
         newMessage = {
           ...newMessage,
           content: (lastMessage.content || '') + content,
-          status: 'incomplete'
-        }
+          status: 'incomplete',
+        };
       }
-      return [ ...message.slice(0, -1), newMessage ]
-    })
+      return [...message.slice(0, -1), newMessage];
+    });
   }, []);
 
   return (
-    <Layout style={{height: '100%'}}>
+    <Layout style={{ height: '100%' }}>
       <Layout.Sider>
         <Card style={commonOuterStyle}>
           <div style={{ marginTop: 10 }}>
@@ -248,14 +259,14 @@ const Playground = () => {
           </div>
           <Select
             placeholder={'请选择分组'}
-            name='group'
+            name="group"
             required
             selection
             onChange={(value) => {
               handleInputChange('group', value);
             }}
             value={inputs.group}
-            autoComplete='new-password'
+            autoComplete="new-password"
             optionList={groups}
           />
           <div style={{ marginTop: 10 }}>
@@ -263,7 +274,7 @@ const Playground = () => {
           </div>
           <Select
             placeholder={'请选择模型'}
-            name='model'
+            name="model"
             required
             selection
             filter
@@ -271,7 +282,7 @@ const Playground = () => {
               handleInputChange('model', value);
             }}
             value={inputs.model}
-            autoComplete='new-password'
+            autoComplete="new-password"
             optionList={models}
           />
           <div style={{ marginTop: 10 }}>
@@ -290,10 +301,10 @@ const Playground = () => {
             <Typography.Text strong>MaxTokens：</Typography.Text>
           </div>
           <Input
-            placeholder='MaxTokens'
-            name='max_tokens'
+            placeholder="MaxTokens"
+            name="max_tokens"
             required
-            autoComplete='new-password'
+            autoComplete="new-password"
             defaultValue={0}
             value={inputs.max_tokens}
             onChange={(value) => {
@@ -305,10 +316,10 @@ const Playground = () => {
             <Typography.Text strong>System：</Typography.Text>
           </div>
           <TextArea
-            placeholder='System Prompt'
-            name='system'
+            placeholder="System Prompt"
+            name="system"
             required
-            autoComplete='new-password'
+            autoComplete="new-password"
             autosize
             defaultValue={systemPrompt}
             // value={systemPrompt}
@@ -316,16 +327,15 @@ const Playground = () => {
               setSystemPrompt(value);
             }}
           />
-
         </Card>
       </Layout.Sider>
       <Layout.Content>
-        <div style={{height: '100%'}}>
+        <div style={{ height: '100%' }}>
           <Chat
             chatBoxRenderConfig={{
               renderChatBoxAction: () => {
-                return <div></div>
-              }
+                return <div></div>;
+              },
             }}
             style={commonOuterStyle}
             chats={message}
