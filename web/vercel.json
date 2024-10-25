@@ -1,5 +1,19 @@
 {
   "github": {
     "silent": true
-  }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "https://api.wochirou.com/api/$1"
+    },
+    {
+      "src": "/v1/(.*)",
+      "dest": "https://api.wochirou.com/v1/$1"
+    },
+    {
+      "src": "/pg/(.*)",
+      "dest": "https://api.wochirou.com/pg/$1"
+    }
+  ]
 }
