@@ -5,6 +5,7 @@ export async function onRequest(context) {
   // 获取原始请求的信息
   const { request } = context;
   const url = new URL(request.url);
+  console.log('request api url: ', url)
 
   // 创建新的请求URL，包括查询字符串
   // `url.search` 包含了原始URL中的查询参数，如"?key=value"
