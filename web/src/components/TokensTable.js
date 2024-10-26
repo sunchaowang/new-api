@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import {
-  API,
-  copy,
-  showError,
-  showSuccess,
-  timestamp2string,
-} from '../helpers';
+import React, { useEffect, useMemo, useState } from 'react';
+import { API, copy, showError, showSuccess, timestamp2string } from '../helpers';
 
 import { ITEMS_PER_PAGE } from '../constants';
-import {renderGroup, renderQuota} from '../helpers/render';
+import { renderGroup, renderQuota } from '../helpers/render';
 import {
   Button,
   Dropdown,
   Form,
   Modal,
   Popconfirm,
-  Popover, Space,
+  Popover,
+  Space,
   SplitButtonGroup,
   Table,
   Tag,
@@ -33,41 +28,41 @@ function renderStatus(status, model_limits_enabled = false) {
     case 1:
       if (model_limits_enabled) {
         return (
-          <Tag color='green' size='large'>
+          <Tag color="green" size="large">
             已启用：限制模型
           </Tag>
         );
       } else {
         return (
-          <Tag color='green' size='large'>
+          <Tag color="green" size="large">
             已启用
           </Tag>
         );
       }
     case 2:
       return (
-        <Tag color='red' size='large'>
+        <Tag color="red" size="large">
           {' '}
           已禁用{' '}
         </Tag>
       );
     case 3:
       return (
-        <Tag color='yellow' size='large'>
+        <Tag color="yellow" size="large">
           {' '}
           已过期{' '}
         </Tag>
       );
     case 4:
       return (
-        <Tag color='grey' size='large'>
+        <Tag color="grey" size="large">
           {' '}
           已耗尽{' '}
         </Tag>
       );
     default:
       return (
-        <Tag color='black' size='large'>
+        <Tag color="black" size="large">
           {' '}
           未知状态{' '}
         </Tag>
@@ -76,16 +71,15 @@ function renderStatus(status, model_limits_enabled = false) {
 }
 
 const TokensTable = () => {
-
   const columns = [
     {
-      title: "名称",
-      dataIndex: "name",
+      title: '名称',
+      dataIndex: 'name',
     },
     {
-      title: "状态",
-      dataIndex: "status",
-      key: "status",
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
       render: (text, record, index) => {
         return (
           <div>
@@ -98,24 +92,24 @@ const TokensTable = () => {
       },
     },
     {
-      title: "已用额度",
-      dataIndex: "used_quota",
+      title: '已用额度',
+      dataIndex: 'used_quota',
       render: (text, record, index) => {
         return <div>{renderQuota(parseInt(text))}</div>;
       },
     },
     {
-      title: "剩余额度",
-      dataIndex: "remain_quota",
+      title: '剩余额度',
+      dataIndex: 'remain_quota',
       render: (text, record, index) => {
         return (
           <div>
             {record.unlimited_quota ? (
-              <Tag size={"large"} color={"white"}>
+              <Tag size={'large'} color={'white'}>
                 无限制
               </Tag>
             ) : (
-              <Tag size={"large"} color={"light-blue"}>
+              <Tag size={'large'} color={'light-blue'}>
                 {renderQuota(parseInt(text))}
               </Tag>
             )}
@@ -124,8 +118,8 @@ const TokensTable = () => {
       },
     },
     {
-      title: "创建时间",
-      dataIndex: "created_time",
+      title: '创建时间',
+      dataIndex: 'created_time',
       render: (text, record, index) => {
         return <div>{renderTimestamp(text)}</div>;
       },
@@ -134,11 +128,7 @@ const TokensTable = () => {
       title: '过期时间',
       dataIndex: 'expired_time',
       render: (text, record, index) => {
-        return (
-          <div>
-            {record.expired_time === -1 ? "永不过期" : renderTimestamp(text)}
-          </div>
-        );
+        return <div>{record.expired_time === -1 ? '永不过期' : renderTimestamp(text)}</div>;
       },
     },
     {
@@ -146,7 +136,7 @@ const TokensTable = () => {
       dataIndex: 'operate',
       render: (text, record, index) => {
         let chats = localStorage.getItem('chats');
-        let chatsArray = []
+        let chatsArray = [];
         let chatLink = localStorage.getItem('chat_link');
         let mjLink = localStorage.getItem('chat_link2');
         let shouldUseCustom = true;
@@ -181,7 +171,7 @@ const TokensTable = () => {
             // check chats is array
             if (Array.isArray(chats)) {
               for (let i = 0; i < chats.length; i++) {
-                let chat = {}
+                let chat = {};
                 chat.node = 'item';
                 // c is a map
                 // chat.key = chats[i].name;
@@ -192,13 +182,12 @@ const TokensTable = () => {
                     chat.name = key;
                     chat.onClick = () => {
                       onOpenLink(key, chats[i][key], record);
-                    }
+                    };
                   }
                 }
                 chatsArray.push(chat);
               }
             }
-
           } catch (e) {
             console.log(e);
             showError('聊天链接配置错误，请联系管理员');
@@ -206,18 +195,14 @@ const TokensTable = () => {
         }
         return (
           <div>
-            <Popover
-              content={'sk-' + record.key}
-              style={{ padding: 20 }}
-              position='top'
-            >
-              <Button theme='light' type='tertiary' style={{ marginRight: 1 }}>
+            <Popover content={'sk-' + record.key} style={{ padding: 20 }} position="top">
+              <Button theme="light" type="tertiary" style={{ marginRight: 1 }}>
                 查看
               </Button>
             </Popover>
             <Button
-              theme='light'
-              type='secondary'
+              theme="light"
+              type="secondary"
               style={{ marginRight: 1 }}
               onClick={async (text) => {
                 await copyText('sk-' + record.key);
@@ -225,12 +210,9 @@ const TokensTable = () => {
             >
               复制
             </Button>
-            <SplitButtonGroup
-              style={{ marginRight: 1 }}
-              aria-label='项目操作按钮组'
-            >
+            <SplitButtonGroup style={{ marginRight: 1 }} aria-label="项目操作按钮组">
               <Button
-                theme='light'
+                theme="light"
                 style={{ color: 'rgba(var(--semi-teal-7), 1)' }}
                 onClick={() => {
                   if (chatsArray.length === 0) {
@@ -242,24 +224,20 @@ const TokensTable = () => {
               >
                 聊天
               </Button>
-              <Dropdown
-                trigger='click'
-                position='bottomRight'
-                menu={chatsArray}
-              >
+              <Dropdown trigger="click" position="bottomRight" menu={chatsArray}>
                 <Button
                   style={{
                     padding: '8px 4px',
                     color: 'rgba(var(--semi-teal-7), 1)',
                   }}
-                  type='primary'
+                  type="primary"
                   icon={<IconTreeTriangleDown />}
                 ></Button>
               </Dropdown>
             </SplitButtonGroup>
             <Popconfirm
-              title='确定是否要删除此令牌？'
-              content='此修改将不可逆'
+              title="确定是否要删除此令牌？"
+              content="此修改将不可逆"
               okType={'danger'}
               position={'left'}
               onConfirm={() => {
@@ -268,14 +246,14 @@ const TokensTable = () => {
                 });
               }}
             >
-              <Button theme='light' type='danger' style={{ marginRight: 1 }}>
+              <Button theme="light" type="danger" style={{ marginRight: 1 }}>
                 删除
               </Button>
             </Popconfirm>
             {record.status === 1 ? (
               <Button
-                theme='light'
-                type='warning'
+                theme="light"
+                type="warning"
                 style={{ marginRight: 1 }}
                 onClick={async () => {
                   manageToken(record.id, 'disable', record);
@@ -285,8 +263,8 @@ const TokensTable = () => {
               </Button>
             ) : (
               <Button
-                theme='light'
-                type='secondary'
+                theme="light"
+                type="secondary"
                 style={{ marginRight: 1 }}
                 onClick={async () => {
                   manageToken(record.id, 'enable', record);
@@ -296,8 +274,8 @@ const TokensTable = () => {
               </Button>
             )}
             <Button
-              theme='light'
-              type='tertiary'
+              theme="light"
+              type="tertiary"
               style={{ marginRight: 1 }}
               onClick={() => {
                 setEditingToken(record);
@@ -334,19 +312,19 @@ const TokensTable = () => {
     if (success) {
       // return data is a map, key is group name, value is group description
       // label is group description, value is group name
-        let localGroupOptions = Object.keys(data).map((group) => ({
-            label: data[group],
-            value: group,
-        })).map((group) => (
-           [group.value, group.label]
-        ));
-        setGroups(new Map(localGroupOptions));
+      let localGroupOptions = Object.keys(data)
+        .map((group) => ({
+          label: data[group],
+          value: group,
+        }))
+        .map((group) => [group.value, group.label]);
+      setGroups(new Map(localGroupOptions));
     } else {
       showError(message);
     }
   };
 
-  useEffect(() => {
+  useMemo(() => {
     loadGroups();
   }, []);
 
@@ -368,10 +346,7 @@ const TokensTable = () => {
     }
   };
 
-  let pageData = tokens.slice(
-    (activePage - 1) * pageSize,
-    activePage * pageSize,
-  );
+  let pageData = tokens.slice((activePage - 1) * pageSize, activePage * pageSize);
   const loadTokens = async (startIdx) => {
     setLoading(true);
     const res = await API.get(`/api/token/?p=${startIdx}&size=${pageSize}`);
@@ -518,9 +493,7 @@ const TokensTable = () => {
       return;
     }
     setSearching(true);
-    const res = await API.get(
-      `/api/token/search?keyword=${searchKeyword}&token=${searchToken}`,
-    );
+    const res = await API.get(`/api/token/search?keyword=${searchKeyword}&token=${searchToken}`);
     const { success, message, data } = res.data;
     if (success) {
       setTokensFormat(data);
@@ -582,10 +555,10 @@ const TokensTable = () => {
   };
 
   const copyBaseUrl = () => {
-    let status = localStorage.getItem("status");
+    let status = localStorage.getItem('status');
     status = JSON.parse(status);
     copy(status.server_address);
-    showSuccess("复制成功");
+    showSuccess('复制成功');
   };
 
   return (
@@ -596,11 +569,7 @@ const TokensTable = () => {
         visiable={showEdit}
         handleClose={closeEdit}
       ></EditToken>
-      <Form
-        layout="horizontal"
-        style={{ marginTop: 10 }}
-        labelPosition={"left"}
-      >
+      <Form layout="horizontal" style={{ marginTop: 10 }} labelPosition={'left'}>
         <Form.Input
           field="keyword"
           label="搜索关键字"

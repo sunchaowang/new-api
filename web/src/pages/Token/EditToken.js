@@ -1,12 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  API,
-  isMobile,
-  showError,
-  showSuccess,
-  timestamp2string,
-} from '../../helpers';
+import { API, isMobile, showError, showSuccess, timestamp2string } from '../../helpers';
 import { renderQuotaWithPrompt } from '../../helpers/render';
 import {
   AutoComplete,
@@ -18,8 +12,9 @@ import {
   Select,
   SideSheet,
   Space,
-  Spin, TextArea,
-  Typography
+  Spin,
+  TextArea,
+  Typography,
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import { Divider } from 'semantic-ui-react';
@@ -46,7 +41,7 @@ const EditToken = (props) => {
     model_limits_enabled,
     model_limits,
     allow_ips,
-    group
+    group,
   } = inputs;
   // const [visible, setVisible] = useState(false);
   const [models, setModels] = useState([]);
@@ -92,16 +87,16 @@ const EditToken = (props) => {
   };
 
   const loadGroups = async () => {
-    let res = await API.get(`/api/user/self/groups`);
+    let res = await API.get(`/api/user/groups`);
     const { success, message, data } = res.data;
     if (success) {
       // return data is a map, key is group name, value is group description
       // label is group description, value is group name
-        let localGroupOptions = Object.keys(data).map((group) => ({
-            label: data[group],
-            value: group,
-        }));
-        setGroups(localGroupOptions);
+      let localGroupOptions = Object.keys(data).map((group) => ({
+        label: data[group],
+        value: group,
+      }));
+      setGroups(localGroupOptions);
     } else {
       showError(message);
     }
@@ -130,7 +125,7 @@ const EditToken = (props) => {
     setIsEdit(props.editingToken.id !== undefined);
   }, [props.editingToken.id]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (!isEdit) {
       setInputs(originInputs);
     } else {
@@ -156,13 +151,10 @@ const EditToken = (props) => {
 
   // 生成一个随机的四位字母数字字符串
   const generateRandomSuffix = () => {
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
     for (let i = 0; i < 6; i++) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length),
-      );
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
     }
     return result;
   };
@@ -228,9 +220,7 @@ const EditToken = (props) => {
       }
 
       if (successCount > 0) {
-        showSuccess(
-          `${successCount}个令牌创建成功，请在列表页面点击复制获取令牌！`,
-        );
+        showSuccess(`${successCount}个令牌创建成功，请在列表页面点击复制获取令牌！`);
         props.refresh();
         props.handleClose();
       }

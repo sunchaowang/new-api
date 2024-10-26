@@ -83,7 +83,7 @@ const Playground = () => {
   };
 
   const loadGroups = async () => {
-    let res = await API.get(`/api/user/self/groups`);
+    let res = await API.get(`/api/user/groups`);
     const { success, message, data } = res.data;
     if (success) {
       // return data is a map, key is group name, value is group description
