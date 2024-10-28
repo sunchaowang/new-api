@@ -206,7 +206,7 @@ const ChannelsTable = () => {
       },
     },
     {
-      title: '',
+      title: '操作',
       dataIndex: 'operate',
       fixed: 'right',
       width: 200,
@@ -214,7 +214,7 @@ const ChannelsTable = () => {
         <div>
           <SplitButtonGroup style={{ marginRight: 1 }} aria-label="测试操作项目组">
             <Button
-              theme="light"
+              theme="borderless"
               onClick={() => {
                 testChannel(record, record.test_model || record.models.split(',')[0]);
               }}
@@ -241,14 +241,13 @@ const ChannelsTable = () => {
               });
             }}
           >
-            <Button theme="light" type="danger" style={{ marginRight: 1 }}>
+            <Button theme="borderless" type="danger" style={{ marginRight: 1 }}>
               删除
             </Button>
           </Popconfirm>
-          ;
           {record.status === 1 ? (
             <Button
-              theme="light"
+              theme="borderless"
               type="warning"
               style={{ marginRight: 1 }}
               onClick={async () => {
@@ -259,7 +258,7 @@ const ChannelsTable = () => {
             </Button>
           ) : (
             <Button
-              theme="light"
+              theme="borderless"
               type="primary"
               style={{ marginRight: 1 }}
               onClick={async () => {
@@ -270,7 +269,7 @@ const ChannelsTable = () => {
             </Button>
           )}
           <Button
-            theme="light"
+            theme="borderless"
             type="tertiary"
             style={{ marginRight: 1 }}
             onClick={() => {
@@ -289,7 +288,7 @@ const ChannelsTable = () => {
               copySelectedChannel(record.id);
             }}
           >
-            <Button theme="light" type="primary" style={{ marginRight: 1 }}>
+            <Button theme="borderless" type="primary" style={{ marginRight: 1 }}>
               复制
             </Button>
           </Popconfirm>
@@ -779,6 +778,19 @@ const ChannelsTable = () => {
             >
               查询
             </Button>
+            <Button
+              theme="solid"
+              type="primary"
+              style={{ marginRight: 8 }}
+              onClick={() => {
+                setEditingChannel({
+                  id: undefined,
+                });
+                setShowEdit(true);
+              }}
+            >
+              添加渠道
+            </Button>
           </Space>
         </div>
       </Form>
@@ -848,19 +860,6 @@ const ChannelsTable = () => {
         }}
       >
         <Space style={{ pointerEvents: 'auto', marginTop: isMobile() ? 0 : 45 }}>
-          <Button
-            theme="light"
-            type="primary"
-            style={{ marginRight: 8 }}
-            onClick={() => {
-              setEditingChannel({
-                id: undefined,
-              });
-              setShowEdit(true);
-            }}
-          >
-            添加渠道
-          </Button>
           <Popconfirm
             title="确定？"
             okType={'warning'}

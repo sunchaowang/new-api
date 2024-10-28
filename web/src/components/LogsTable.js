@@ -636,167 +636,169 @@ const LogsTable = ({ groups }) => {
 
   return (
     <>
-      <Layout>
-        <Header>
-          <Spin spinning={loadingStat}>
-            <Card style={{ width: '100%' }}>
-              <Row>
-                <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                  <Descriptions
-                    layout={isMobile() ? 'vertical' : 'horizontal'}
-                    row={1}
-                    data={[
-                      {
-                        key: '总消耗额度',
-                        value: (
-                          <Tag color="green" size="large" style={{ marginTop: 15 }}>
-                            {renderQuota(stat.quota)}
-                          </Tag>
-                        ),
-                      },
-                    ]}
-                  />
-                </Col>
-                <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                  <Descriptions
-                    layout={isMobile() ? 'vertical' : 'horizontal'}
-                    row={1}
-                    data={[
-                      {
-                        key: '近一分钟内请求次数',
-                        value: (
-                          <Tag color="blue" size="large" style={{ marginTop: 15 }}>
-                            {stat.rpm}
-                          </Tag>
-                        ),
-                      },
-                    ]}
-                  />
-                </Col>
-                <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
-                  <Descriptions
-                    layout={isMobile() ? 'vertical' : 'horizontal'}
-                    row={1}
-                    data={[
-                      {
-                        key: '近一分钟内消耗Token数',
-                        value: (
-                          <Tag color="purple" size="large" style={{ marginTop: 15 }}>
-                            {stat.tpm}
-                          </Tag>
-                        ),
-                      },
-                    ]}
-                  />
-                </Col>
-              </Row>
-            </Card>
-          </Spin>
-        </Header>
-        <Form layout={'horizontal'} labelPosition={'inset'} style={{ marginTop: 10 }}>
-          <Form.Input
-            field="token_name"
-            label="令牌名称"
-            style={{ width: 200 }}
-            value={token_name}
-            placeholder={'可选值'}
-            name="token_name"
-            onChange={(value) => handleInputChange(value, 'token_name')}
-          />
-          <Form.Input
-            field="model_name"
-            label="模型名称"
-            style={{ width: 200 }}
-            value={model_name}
-            placeholder="可选值"
-            name="model_name"
-            onChange={(value) => handleInputChange(value, 'model_name')}
-          />
-          <Form.DatePicker
-            field="start_timestamp"
-            label="起始时间"
-            style={{ width: 272 }}
-            initValue={start_timestamp}
-            value={start_timestamp}
-            type="dateTime"
-            name="start_timestamp"
-            onChange={(value) => handleInputChange(value, 'start_timestamp')}
-          />
-          <Form.DatePicker
-            field="end_timestamp"
-            fluid
-            label="结束时间"
-            style={{ width: 272 }}
-            initValue={end_timestamp}
-            value={end_timestamp}
-            type="dateTime"
-            name="end_timestamp"
-            onChange={(value) => handleInputChange(value, 'end_timestamp')}
-          />
-          <Form.Select
-            field="log_type"
-            fluid
-            label="日志类型"
-            initValue="0"
-            onChange={(value) => {
-              setLogType(parseInt(value));
-              loadLogs(0, pageSize, parseInt(value));
-            }}
-          >
-            <Select.Option value="0">全部</Select.Option>
-            <Select.Option value="1">充值</Select.Option>
-            <Select.Option value="2">消费</Select.Option>
-            <Select.Option value="3">管理</Select.Option>
-            <Select.Option value="4">系统</Select.Option>
-            <Select.Option value="5">签到</Select.Option>
-          </Form.Select>
-          {isAdminUser && (
-            <>
-              <Form.Input
-                field="channel"
-                label="渠道 ID"
-                style={{ width: 200 }}
-                value={channel}
-                placeholder="可选值"
-                name="channel"
-                onChange={(value) => handleInputChange(value, 'channel')}
-              />
-              <Form.Input
-                field="username"
-                label="用户名称"
-                style={{ width: 200 }}
-                value={username}
-                placeholder={'可选值'}
-                name="username"
-                onChange={(value) => handleInputChange(value, 'username')}
-              />
-              <Form.Input
-                field="user_id"
-                label="用户ID"
-                style={{ width: 200 }}
-                value={user_id}
-                placeholder={'可选值'}
-                name="user_id"
-                onChange={(value) => handleInputChange(value, 'user_id')}
-              />
-            </>
-          )}
-          <Button
-            label="查询"
-            type="primary"
-            htmlType="submit"
-            className="btn-margin-right"
-            onClick={refresh}
-            loading={loading}
-          >
-            查询
-          </Button>
-        </Form>
+      <Card title="请求日志">
+        <Spin spinning={loadingStat}>
+          <Card style={{ width: '100%' }}>
+            <Row>
+              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                <Descriptions
+                  layout={isMobile() ? 'vertical' : 'horizontal'}
+                  row={1}
+                  data={[
+                    {
+                      key: '总消耗额度',
+                      value: (
+                        <Tag color="green" size="large" style={{ marginTop: 15 }}>
+                          {renderQuota(stat.quota)}
+                        </Tag>
+                      ),
+                    },
+                  ]}
+                />
+              </Col>
+              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                <Descriptions
+                  layout={isMobile() ? 'vertical' : 'horizontal'}
+                  row={1}
+                  data={[
+                    {
+                      key: '近一分钟内请求次数',
+                      value: (
+                        <Tag color="blue" size="large" style={{ marginTop: 15 }}>
+                          {stat.rpm}
+                        </Tag>
+                      ),
+                    },
+                  ]}
+                />
+              </Col>
+              <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
+                <Descriptions
+                  layout={isMobile() ? 'vertical' : 'horizontal'}
+                  row={1}
+                  data={[
+                    {
+                      key: '近一分钟内消耗Token数',
+                      value: (
+                        <Tag color="purple" size="large" style={{ marginTop: 15 }}>
+                          {stat.tpm}
+                        </Tag>
+                      ),
+                    },
+                  ]}
+                />
+              </Col>
+            </Row>
+          </Card>
+        </Spin>
+
+        <Card bordered={false} bodyStyle={{ paddingLeft: 0, paddingRight: 0 }}>
+          <Form layout={'horizontal'} labelPosition={'inset'} style={{ marginTop: 10 }}>
+            <Form.Input
+              field="token_name"
+              label="令牌名称"
+              style={{ width: 200 }}
+              value={token_name}
+              placeholder={'可选值'}
+              name="token_name"
+              onChange={(value) => handleInputChange(value, 'token_name')}
+            />
+            <Form.Input
+              field="model_name"
+              label="模型名称"
+              style={{ width: 200 }}
+              value={model_name}
+              placeholder="可选值"
+              name="model_name"
+              onChange={(value) => handleInputChange(value, 'model_name')}
+            />
+            <Form.DatePicker
+              field="start_timestamp"
+              label="起始时间"
+              style={{ width: 272 }}
+              initValue={start_timestamp}
+              value={start_timestamp}
+              type="dateTime"
+              name="start_timestamp"
+              onChange={(value) => handleInputChange(value, 'start_timestamp')}
+            />
+            <Form.DatePicker
+              field="end_timestamp"
+              fluid
+              label="结束时间"
+              style={{ width: 272 }}
+              initValue={end_timestamp}
+              value={end_timestamp}
+              type="dateTime"
+              name="end_timestamp"
+              onChange={(value) => handleInputChange(value, 'end_timestamp')}
+            />
+            <Form.Select
+              field="log_type"
+              fluid
+              label="日志类型"
+              initValue="0"
+              onChange={(value) => {
+                setLogType(parseInt(value));
+                loadLogs(0, pageSize, parseInt(value));
+              }}
+            >
+              <Select.Option value="0">全部</Select.Option>
+              <Select.Option value="1">充值</Select.Option>
+              <Select.Option value="2">消费</Select.Option>
+              <Select.Option value="3">管理</Select.Option>
+              <Select.Option value="4">系统</Select.Option>
+              <Select.Option value="5">签到</Select.Option>
+            </Form.Select>
+            {isAdminUser && (
+              <>
+                <Form.Input
+                  field="channel"
+                  label="渠道 ID"
+                  style={{ width: 200 }}
+                  value={channel}
+                  placeholder="可选值"
+                  name="channel"
+                  onChange={(value) => handleInputChange(value, 'channel')}
+                />
+                <Form.Input
+                  field="username"
+                  label="用户名称"
+                  style={{ width: 200 }}
+                  value={username}
+                  placeholder={'可选值'}
+                  name="username"
+                  onChange={(value) => handleInputChange(value, 'username')}
+                />
+                <Form.Input
+                  field="user_id"
+                  label="用户ID"
+                  style={{ width: 200 }}
+                  value={user_id}
+                  placeholder={'可选值'}
+                  name="user_id"
+                  onChange={(value) => handleInputChange(value, 'user_id')}
+                />
+              </>
+            )}
+            <Button
+              label="查询"
+              type="primary"
+              htmlType="submit"
+              className="btn-margin-right"
+              onClick={refresh}
+              loading={loading}
+            >
+              查询
+            </Button>
+          </Form>
+        </Card>
+
         <Table
-          style={{ marginTop: 5, width: '100%' }}
+          style={{ width: '100%' }}
           columns={columns}
           dataSource={logs}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'max-content', y: 'max-content' }}
           pagination={{
             currentPage: activePage,
             pageSize: pageSize,
@@ -812,7 +814,7 @@ const LogsTable = ({ groups }) => {
             showTotal: true,
           }}
         />
-      </Layout>
+      </Card>
     </>
   );
 };

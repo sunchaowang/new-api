@@ -42,38 +42,38 @@ function renderRole(role) {
 const UsersTable = () => {
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
+      title: 'ID',
+      dataIndex: 'id',
     },
     {
-      title: "用户名",
-      dataIndex: "username",
+      title: '用户名',
+      dataIndex: 'username',
     },
     {
-      title: "分组",
-      dataIndex: "group",
+      title: '分组',
+      dataIndex: 'group',
       render: (text, record, index) => {
         return <div>{renderGroup(text)}</div>;
       },
     },
     {
-      title: "统计信息",
-      dataIndex: "info",
+      title: '统计信息',
+      dataIndex: 'info',
       render: (text, record, index) => {
         return (
           <div>
             <Space spacing={1}>
-              <Tooltip content={"剩余额度"}>
+              <Tooltip content={'剩余额度'}>
                 <Tag color="white" size="large">
                   {renderQuota(record.quota)}
                 </Tag>
               </Tooltip>
-              <Tooltip content={"已用额度"}>
+              <Tooltip content={'已用额度'}>
                 <Tag color="white" size="large">
                   {renderQuota(record.used_quota)}
                 </Tag>
               </Tooltip>
-              <Tooltip content={"调用次数"}>
+              <Tooltip content={'调用次数'}>
                 <Tag color="white" size="large">
                   {renderNumber(record.request_count)}
                 </Tag>
@@ -84,23 +84,23 @@ const UsersTable = () => {
       },
     },
     {
-      title: "邀请信息",
-      dataIndex: "invite",
+      title: '邀请信息',
+      dataIndex: 'invite',
       render: (text, record, index) => {
         return (
           <div>
             <Space spacing={1}>
-              <Tooltip content={"邀请人数"}>
+              <Tooltip content={'邀请人数'}>
                 <Tag color="white" size="large">
                   {renderNumber(record.aff_count)}
                 </Tag>
               </Tooltip>
-              <Tooltip content={"邀请总收益"}>
+              <Tooltip content={'邀请总收益'}>
                 <Tag color="white" size="large">
                   {renderQuota(record.aff_history_quota)}
                 </Tag>
               </Tooltip>
-              <Tooltip content={"邀请人ID"}>
+              <Tooltip content={'邀请人ID'}>
                 {record.inviter_id === 0 ? (
                   <Tag color="white" size="large">
                     无
@@ -117,30 +117,26 @@ const UsersTable = () => {
       },
     },
     {
-      title: "角色",
-      dataIndex: "role",
+      title: '角色',
+      dataIndex: 'role',
       render: (text, record, index) => {
         return <div>{renderRole(text)}</div>;
       },
     },
     {
-      title: "状态",
-      dataIndex: "status",
+      title: '状态',
+      dataIndex: 'status',
       render: (text, record, index) => {
         return (
           <div>
-            {record.DeletedAt !== null ? (
-              <Tag color="red">已注销</Tag>
-            ) : (
-              renderStatus(text)
-            )}
+            {record.DeletedAt !== null ? <Tag color="red">已注销</Tag> : renderStatus(text)}
           </div>
         );
       },
     },
     {
-      title: "",
-      dataIndex: "operate",
+      title: '操作',
+      dataIndex: 'operate',
       render: (text, record, index) => (
         <div>
           {record.DeletedAt !== null ? (
@@ -149,44 +145,44 @@ const UsersTable = () => {
             <>
               <Popconfirm
                 title="确定？"
-                okType={"warning"}
+                okType={'warning'}
                 onConfirm={() => {
-                  manageUser(record.id, "promote", record);
+                  manageUser(record.id, 'promote', record);
                 }}
               >
-                <Button theme="light" type="warning" style={{ marginRight: 1 }}>
+                <Button theme="borderless" type="warning" style={{ marginRight: 1 }}>
                   提升
                 </Button>
               </Popconfirm>
               <Popconfirm
                 title="确定？"
-                okType={"warning"}
+                okType={'warning'}
                 onConfirm={() => {
-                  manageUser(record.id, "demote", record);
+                  manageUser(record.id, 'demote', record);
                 }}
               >
-                <Button theme="light" style={{ marginRight: 1 }}>
+                <Button theme="borderless" style={{ marginRight: 1 }}>
                   降级
                 </Button>
               </Popconfirm>
               {record.status === 1 ? (
                 <Button
-                  theme="light"
+                  theme="borderless"
                   type="warning"
                   style={{ marginRight: 1 }}
                   onClick={async () => {
-                    manageUser(record.id, "disable", record);
+                    manageUser(record.id, 'disable', record);
                   }}
                 >
                   禁用
                 </Button>
               ) : (
                 <Button
-                  theme="light"
+                  theme="borderless"
                   type="secondary"
                   style={{ marginRight: 1 }}
                   onClick={async () => {
-                    manageUser(record.id, "enable", record);
+                    manageUser(record.id, 'enable', record);
                   }}
                   disabled={record.status === 3}
                 >
@@ -194,7 +190,7 @@ const UsersTable = () => {
                 </Button>
               )}
               <Button
-                theme="light"
+                theme="borderless"
                 type="tertiary"
                 style={{ marginRight: 1 }}
                 onClick={() => {
@@ -207,15 +203,15 @@ const UsersTable = () => {
               <Popconfirm
                 title="确定是否要注销此用户？"
                 content="相当于删除用户，此修改将不可逆"
-                okType={"danger"}
-                position={"left"}
+                okType={'danger'}
+                position={'left'}
                 onConfirm={() => {
-                  manageUser(record.id, "delete", record).then(() => {
+                  manageUser(record.id, 'delete', record).then(() => {
                     removeRecord(record.id);
                   });
                 }}
               >
-                <Button theme="light" type="danger" style={{ marginRight: 1 }}>
+                <Button theme="borderless" type="danger" style={{ marginRight: 1 }}>
                   注销
                 </Button>
               </Popconfirm>

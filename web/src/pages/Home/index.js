@@ -58,8 +58,19 @@ const Home = () => {
     <>
       <HomeContent />
 
-      <Modal visible={homePageContentLoaded} title={'通知内容'} width={'80vw'} height={'60vh'} closable={true} hasCancel={false} onCancel={() => setHomePageContentLoaded(false)} onOk={() => setHomePageContentLoaded(false)}>
+      <Modal
+        visible={homePageContentLoaded}
+        title={'通知内容'}
+        width={'90vw'}
+        height={'75vh'}
+        closable={true}
+        hasCancel={true}
+        closeOnEsc={true}
+        onCancel={() => setHomePageContentLoaded(false)}
+        onOk={() => setHomePageContentLoaded(false)}
+      >
         <div
+          style={{ width: '100%', height: '100%', overflowY: 'scroll' }}
           dangerouslySetInnerHTML={{ __html: homePageContent }}
         ></div>
       </Modal>

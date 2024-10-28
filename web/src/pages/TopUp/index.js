@@ -17,7 +17,8 @@ import {
   Space,
   Modal,
   Toast,
-    Icon
+  Icon,
+  Descriptions,
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
@@ -118,8 +119,7 @@ const TopUp = () => {
           form.method = 'POST';
           // 判断是否为safari浏览器
           let isSafari =
-            navigator.userAgent.indexOf('Safari') > -1 &&
-            navigator.userAgent.indexOf('Chrome') < 1;
+            navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') < 1;
           if (!isSafari) {
             form.target = '_blank';
           }
@@ -213,134 +213,140 @@ const TopUp = () => {
   };
 
   return (
-    <div>
-      <Layout>
-        <Layout.Header>
-          <h3>我的钱包</h3>
-        </Layout.Header>
-        <Layout.Content>
-          <Modal
-            title='确定要充值吗'
-            visible={open}
-            onOk={onlineTopUp}
-            onCancel={handleCancel}
-            maskClosable={false}
-            size={'small'}
-            centered={true}
-          >
-            <p>充值数量：{topUpCount}</p>
-            <p>实付金额：{renderAmount()}</p>
-            <p>是否确认充值？</p>
-          </Modal>
-          <div
-            style={{ marginTop: 20, display: 'flex', justifyContent: 'center' }}
-          >
-            <Card style={{ width: '500px', padding: '20px' }}>
-              <Title level={3} style={{ textAlign: 'center' }}>
-                余额 {renderQuota(userQuota)}
-              </Title>
-              <div style={{ marginTop: 20 }}>
-                <Divider>兑换余额</Divider>
-                <Form>
-                  <Form.Input
-                    field={'redemptionCode'}
-                    label={'兑换码'}
-                    placeholder='兑换码'
-                    name='redemptionCode'
-                    value={redemptionCode}
-                    onChange={(value) => {
-                      setRedemptionCode(value);
-                    }}
-                  />
-                  <Space>
-                    {topUpLink ? (
-                      <Button
-                        type={'primary'}
-                        theme={'solid'}
-                        onClick={openTopUpLink}
-                      >
-                        获取兑换码
-                      </Button>
-                    ) : null}
-                    <Button
-                      type={'warning'}
-                      theme={'solid'}
-                      onClick={topUp}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? '兑换中...' : '兑换'}
-                    </Button>
-                  </Space>
-                </Form>
-              </div>
-              <div style={{ marginTop: 20 }}>
-                <Divider>在线充值</Divider>
-                <Form>
-                  <Form.Input
-                    disabled={!enableOnlineTopUp}
-                    field={'redemptionCount'}
-                    label={'实付金额：' + renderAmount()}
-                    placeholder={
-                      '充值数量，最低 ' + renderQuotaWithAmount(minTopUp)
-                    }
-                    name='redemptionCount'
-                    type={'number'}
-                    value={topUpCount}
-                    onChange={async (value) => {
-                      if (value < 1) {
-                        value = 1;
-                      }
-                      setTopUpCount(value);
-                      await getAmount(value);
-                    }}
-                  />
-                  <Space>
-                    <Button
-                        type={'primary'}
-                        theme={'solid'}
-                        onClick={async () => {
-                          preTopUp('zfb');
-                        }}
-
-                    >
-                      <Space spacing={8}>
-                        <i className="bi bi-alipay"></i>
-                        支付宝
-                      </Space>
-                    </Button>
-                    <Button
-                        style={{
-                          backgroundColor: 'rgba(var(--semi-green-5), 1)',
-                        }}
-                        type={'primary'}
-                      theme={'solid'}
-                      onClick={async () => {
-                        preTopUp('wx');
-                      }}
-                        disabled={true}
-                    >
-                      <Space spacing={8}>
-                        <i className="bi bi-wechat"></i>
-                        微信
-                      </Space>
-                    </Button>
-                  </Space>
-                </Form>
-              </div>
-              {/*<div style={{ display: 'flex', justifyContent: 'right' }}>*/}
-              {/*    <Text>*/}
-              {/*        <Link onClick={*/}
-              {/*            async () => {*/}
-              {/*                window.location.href = '/topup/history'*/}
-              {/*            }*/}
-              {/*        }>充值记录</Link>*/}
-              {/*    </Text>*/}
-              {/*</div>*/}
+    <>
+      <Modal
+        title="确定要充值吗"
+        visible={open}
+        onOk={onlineTopUp}
+        onCancel={handleCancel}
+        maskClosable={false}
+        size={'small'}
+        centered={true}
+      >
+        <p>充值数量：{topUpCount}</p>
+        <p>实付金额：{renderAmount()}</p>
+        <p>是否确认充值？</p>
+      </Modal>
+      <Card
+        title="我的钱包"
+        style={{
+          height: '100%',
+        }}
+      >
+        <Row>
+          <Col>
+            <Card
+              title="余额"
+              bordered={false}
+              style={{ width: '100%' }}
+              headerLine={false}
+              headerStyle={{ paddingLeft: 0, paddingRight: 0 }}
+              bodyStyle={{ padding: 0 }}
+            >
+              <Title>{renderQuota(userQuota)}</Title>
             </Card>
-          </div>
-        </Layout.Content>
-      </Layout>
-    </div>
+          </Col>
+        </Row>
+        <Divider
+          style={{
+            marginTop: 20,
+          }}
+        />
+        <Row gutter={16}>
+          <Col span={24} md={24} sm={24} xs={24} lg={24} xl={12}>
+            <Card
+              style={{ width: '100%' }}
+              title="在线充值"
+              bordered={false}
+              headerLine={false}
+              headerStyle={{ paddingLeft: 0, paddingRight: 0 }}
+              bodyStyle={{ padding: 0 }}
+            >
+              <Form>
+                <Form.Input
+                  disabled={!enableOnlineTopUp}
+                  field={'redemptionCount'}
+                  label={'实付金额：' + renderAmount()}
+                  placeholder={'充值数量，最低 ' + renderQuotaWithAmount(minTopUp)}
+                  name="redemptionCount"
+                  type={'number'}
+                  value={topUpCount}
+                  onChange={async (value) => {
+                    if (value < 1) {
+                      value = 1;
+                    }
+                    setTopUpCount(value);
+                    await getAmount(value);
+                  }}
+                />
+                <Space>
+                  <Button
+                    type={'primary'}
+                    theme={'solid'}
+                    onClick={async () => {
+                      preTopUp('zfb');
+                    }}
+                  >
+                    <Space spacing={8}>
+                      <i className="bi bi-alipay"></i>
+                      支付宝
+                    </Space>
+                  </Button>
+                  <Button
+                    style={{
+                      backgroundColor: 'rgba(var(--semi-green-5), 1)',
+                    }}
+                    type={'primary'}
+                    theme={'solid'}
+                    onClick={async () => {
+                      preTopUp('wx');
+                    }}
+                  >
+                    <Space spacing={8}>
+                      <i className="bi bi-wechat"></i>
+                      微信
+                    </Space>
+                  </Button>
+                </Space>
+              </Form>
+            </Card>
+          </Col>
+          <Col span={24} md={24} sm={24} xs={24} lg={24} xl={12}>
+            <Card
+              style={{ width: '100%' }}
+              title="兑换码充值"
+              bordered={false}
+              headerLine={false}
+              headerStyle={{ paddingLeft: 0, paddingRight: 0 }}
+              bodyStyle={{ padding: 0 }}
+            >
+              <Form>
+                <Form.Input
+                  field={'redemptionCode'}
+                  label={'兑换码'}
+                  placeholder="兑换码"
+                  name="redemptionCode"
+                  value={redemptionCode}
+                  onChange={(value) => {
+                    setRedemptionCode(value);
+                  }}
+                />
+                <Space>
+                  {topUpLink ? (
+                    <Button type={'primary'} theme={'solid'} onClick={openTopUpLink}>
+                      获取兑换码
+                    </Button>
+                  ) : null}
+                  <Button type={'warning'} theme={'solid'} onClick={topUp} disabled={isSubmitting}>
+                    {isSubmitting ? '兑换中...' : '兑换'}
+                  </Button>
+                </Space>
+              </Form>
+            </Card>
+          </Col>
+        </Row>
+      </Card>
+    </>
   );
 };
 

@@ -132,7 +132,7 @@ const TokensTable = () => {
       },
     },
     {
-      title: '',
+      title: '操作',
       dataIndex: 'operate',
       render: (text, record, index) => {
         let chats = localStorage.getItem('chats');
@@ -196,12 +196,12 @@ const TokensTable = () => {
         return (
           <div>
             <Popover content={'sk-' + record.key} style={{ padding: 20 }} position="top">
-              <Button theme="light" type="tertiary" style={{ marginRight: 1 }}>
+              <Button theme="borderless" type="primary" style={{ marginRight: 1 }}>
                 查看
               </Button>
             </Popover>
             <Button
-              theme="light"
+              theme="borderless"
               type="secondary"
               style={{ marginRight: 1 }}
               onClick={async (text) => {
@@ -212,7 +212,7 @@ const TokensTable = () => {
             </Button>
             <SplitButtonGroup style={{ marginRight: 1 }} aria-label="项目操作按钮组">
               <Button
-                theme="light"
+                theme="borderless"
                 style={{ color: 'rgba(var(--semi-teal-7), 1)' }}
                 onClick={() => {
                   if (chatsArray.length === 0) {
@@ -246,13 +246,13 @@ const TokensTable = () => {
                 });
               }}
             >
-              <Button theme="light" type="danger" style={{ marginRight: 1 }}>
+              <Button theme="borderless" type="danger" style={{ marginRight: 1 }}>
                 删除
               </Button>
             </Popconfirm>
             {record.status === 1 ? (
               <Button
-                theme="light"
+                theme="borderless"
                 type="warning"
                 style={{ marginRight: 1 }}
                 onClick={async () => {
@@ -263,7 +263,7 @@ const TokensTable = () => {
               </Button>
             ) : (
               <Button
-                theme="light"
+                theme="borderless"
                 type="secondary"
                 style={{ marginRight: 1 }}
                 onClick={async () => {
@@ -274,8 +274,8 @@ const TokensTable = () => {
               </Button>
             )}
             <Button
-              theme="light"
-              type="tertiary"
+              theme="borderless"
+              type="primary"
               style={{ marginRight: 1 }}
               onClick={() => {
                 setEditingToken(record);

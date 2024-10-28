@@ -1,6 +1,5 @@
-
-
 body {
+  --cell-size: 3.5rem;
   margin: 0;
   padding-top: 55px;
   overflow-y: scroll;
@@ -10,7 +9,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   scrollbar-width: none;
   color: var(--semi-color-text-0) !important;
-  background-color: var(--semi-color-bg-0) !important;
+  background-color: radial-gradient(var(--semi-color-primary), transparent 40%) no-repeat -170vw -55vh / 250vw 250vh, radial-gradient(closest-side, var(--semi-color-primary), transparent) no-repeat calc(100% + var(--cell-size) * 6) calc(var(--cell-size) * -7) / calc(var(--cell-size) * 12) calc(var(--cell-size) * 19) !important;
   height: 100vh;
 }
 
@@ -31,6 +30,7 @@ object {
 }
 
 @media only screen and (max-width: 767px) {
+
   .semi-table-tbody,
   .semi-table-row,
   .semi-table-row-cell {
@@ -38,12 +38,15 @@ object {
     width: auto !important;
     padding: 2px !important;
   }
+
   .semi-table-row-cell {
     border-bottom: 0 !important;
   }
-  .semi-table-tbody > .semi-table-row {
+
+  .semi-table-tbody>.semi-table-row {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
+
   .semi-space {
     /*display: block!important;*/
     display: flex;
@@ -54,12 +57,12 @@ object {
   }
 }
 
-.semi-table-tbody > .semi-table-row > .semi-table-row-cell {
+.semi-table-tbody>.semi-table-row>.semi-table-row-cell {
   padding: 16px 14px;
 }
 
 .channel-table {
-  .semi-table-tbody > .semi-table-row > .semi-table-row-cell {
+  .semi-table-tbody>.semi-table-row>.semi-table-row-cell {
     padding: 16px 8px;
   }
 }
@@ -143,11 +146,13 @@ code {
   padding-left: 16px;
   padding-right: 16px;
 }
+
 .header-bar-nav .semi-navigation-inner {
   width: 100%;
   display: inline-flex;
   justify-content: space-between;
 }
+
 .header-bar-nav .semi-navigation-inner .semi-navigation-header-list-outer {
   width: 100%;
   flex: 1 1 auto;
@@ -155,10 +160,12 @@ code {
   position: relative;
   z-index: 1;
 }
+
 .header-bar-nav .semi-navigation-inner .semi-navigation-header-list-outer .semi-navigation-header {
   position: absolute;
   z-index: 2;
 }
+
 .header-bar-nav .semi-navigation-inner .semi-navigation-list-wrapper {
   width: 100%;
   overflow-x: scroll;
@@ -167,6 +174,7 @@ code {
   position: relative;
   z-index: 3;
 }
+
 .header-bar-nav .semi-navigation-inner .semi-navigation-footer {
   flex: 1;
 }

@@ -297,7 +297,7 @@ const LogsTable = () => {
           <div>
             <Tag
               color={colors[parseInt(text) % colors.length]}
-              size='large'
+              size="large"
               onClick={() => {
                 copyText(text); // 假设copyText是用于文本复制的函数
               }}
@@ -307,6 +307,14 @@ const LogsTable = () => {
             </Tag>
           </div>
         );
+      },
+    },
+    {
+      title: '用户ID',
+      dataIndex: 'user_id',
+      className: isAdmin() ? 'tableShow' : 'tableHiddle',
+      render: (text, record, index) => {
+        return <div>{text}</div>;
       },
     },
     {
@@ -348,14 +356,10 @@ const LogsTable = () => {
             {
               // 转换例如100%为数字100，如果text未定义，返回0
               <Progress
-                stroke={
-                  record.status === 'FAILURE'
-                    ? 'var(--semi-color-warning)'
-                    : null
-                }
+                stroke={record.status === 'FAILURE' ? 'var(--semi-color-warning)' : null}
                 percent={text ? parseInt(text.replace('%', '')) : 0}
                 showInfo={true}
-                aria-label='drawing progress'
+                aria-label="drawing progress"
               />
             }
           </div>
@@ -564,65 +568,62 @@ const LogsTable = () => {
       <Layout>
         {isAdminUser && showBanner ? (
           <Banner
-            type='info'
-            description='当前未开启Midjourney回调，部分项目可能无法获得绘图结果，可在运营设置中开启。'
+            type="info"
+            description="当前未开启Midjourney回调，部分项目可能无法获得绘图结果，可在运营设置中开启。"
           />
         ) : (
           <></>
         )}
-        <Form layout='horizontal' style={{ marginTop: 10 }}>
+        <Form layout="horizontal" style={{ marginTop: 10 }} labelPosition="inset">
           <>
             <Form.Input
-              field='channel_id'
-              label='渠道 ID'
+              field="channel_id"
+              label="渠道 ID"
               style={{ width: 176 }}
               value={channel_id}
               placeholder={'可选值'}
-              name='channel_id'
+              name="channel_id"
               onChange={(value) => handleInputChange(value, 'channel_id')}
             />
             <Form.Input
-              field='mj_id'
-              label='任务 ID'
+              field="mj_id"
+              label="任务 ID"
               style={{ width: 176 }}
               value={mj_id}
-              placeholder='可选值'
-              name='mj_id'
+              placeholder="可选值"
+              name="mj_id"
               onChange={(value) => handleInputChange(value, 'mj_id')}
             />
             <Form.DatePicker
-              field='start_timestamp'
-              label='起始时间'
+              field="start_timestamp"
+              label="起始时间"
               style={{ width: 272 }}
               initValue={start_timestamp}
               value={start_timestamp}
-              type='dateTime'
-              name='start_timestamp'
+              type="dateTime"
+              name="start_timestamp"
               onChange={(value) => handleInputChange(value, 'start_timestamp')}
             />
             <Form.DatePicker
-              field='end_timestamp'
+              field="end_timestamp"
               fluid
-              label='结束时间'
+              label="结束时间"
               style={{ width: 272 }}
               initValue={end_timestamp}
               value={end_timestamp}
-              type='dateTime'
-              name='end_timestamp'
+              type="dateTime"
+              name="end_timestamp"
               onChange={(value) => handleInputChange(value, 'end_timestamp')}
             />
-
-            <Form.Section>
-              <Button
-                label='查询'
-                type='primary'
-                htmlType='submit'
-                className='btn-margin-right'
-                onClick={refresh}
-              >
-                查询
-              </Button>
-            </Form.Section>
+            <Button
+              label="查询"
+              type="primary"
+              htmlType="submit"
+              className="btn-margin-right"
+              onClick={refresh}
+            >
+              查询
+            </Button>
           </>
         </Form>
         <Table
