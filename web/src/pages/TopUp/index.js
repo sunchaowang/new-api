@@ -18,17 +18,16 @@ import {
   Modal,
   Toast,
   Icon,
-  Descriptions,
+  Tag,
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
-import Text from '@douyinfe/semi-ui/lib/es/typography/text';
-import { Link } from 'react-router-dom';
-import Alipay from '../../assets/svg/brand-alipay.svg?react';
+import { Decimal } from 'decimal.js';
 
 const TopUp = () => {
   const [redemptionCode, setRedemptionCode] = useState('');
   const [topUpCode, setTopUpCode] = useState('');
   const [topUpCount, setTopUpCount] = useState(0);
+  const [topUpCountDiscount, setTopUpCountDiscount] = useState(1);
   const [minTopupCount, setMinTopUpCount] = useState(1);
   const [amount, setAmount] = useState(0.0);
   const [minTopUp, setMinTopUp] = useState(1);
@@ -176,7 +175,7 @@ const TopUp = () => {
 
   const renderAmount = () => {
     // console.log(amount);
-    return amount + '元';
+    return new Decimal(amount).mul(topUpCountDiscount).toNumber() + '元';
   };
 
   const getAmount = async (value) => {
@@ -264,7 +263,7 @@ const TopUp = () => {
               bodyStyle={{ padding: 0 }}
             >
               <Form>
-                <Form.Input
+                <Form.Select
                   disabled={!enableOnlineTopUp}
                   field={'redemptionCount'}
                   label={'实付金额：' + renderAmount()}
@@ -273,13 +272,63 @@ const TopUp = () => {
                   type={'number'}
                   value={topUpCount}
                   onChange={async (value) => {
-                    if (value < 1) {
-                      value = 1;
-                    }
-                    setTopUpCount(value);
-                    await getAmount(value);
+                    const topUpValue = JSON.parse(value);
+                    console.log('topup value', topUpValue);
+                    // if (topUpValue[0] < 1) {
+                    //   topUpValue[0] = 1;
+                    // }
+                    setTopUpCount(topUpValue[0]);
+                    setTopUpCountDiscount(topUpValue[1]);
+                    await getAmount(topUpValue[0]);
                   }}
-                />
+                  style={{
+                    width: '100%',
+                  }}
+                >
+                  {[
+                    {
+                      label: '$5',
+                      value: [5, 1],
+                    },
+                    {
+                      label: '$10',
+                      value: [10, 1],
+                    },
+                    {
+                      label: '$20',
+                      value: [20, 1],
+                    },
+                    {
+                      label: '$50',
+                      value: [50, 1],
+                    },
+                    {
+                      label: '$100',
+                      value: [100, 1],
+                    },
+                    {
+                      label: '$250',
+                      value: [250, 1],
+                    },
+                    {
+                      label: '$500',
+                      value: [500, 1],
+                    },
+                  ].map((item) => {
+                    return (
+                      <Form.Select.Option key={item.value[0]} value={JSON.stringify(item.value)}>
+                        {item.label}
+                        {item.value[1] < 1 ? (
+                          <Tag style={{ marginLeft: 16 }} size="small" color="red">
+                            {'(' + item.value[1] + '折)'}
+                          </Tag>
+                        ) : (
+                          ''
+                        )}
+                      </Form.Select.Option>
+                    );
+                  })}
+                </Form.Select>
                 <Space>
                   <Button
                     type={'primary'}
