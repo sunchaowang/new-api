@@ -18,6 +18,7 @@ import {
 
 import { IconTreeTriangleDown } from '@douyinfe/semi-icons';
 import EditToken from '../pages/Token/EditToken';
+import { useIsMobile } from '../helpers/hooks';
 
 function renderTimestamp(timestamp) {
   return <>{timestamp2string(timestamp)}</>;
@@ -305,6 +306,7 @@ const TokensTable = () => {
     id: undefined,
   });
   const [groups, setGroups] = useState([]);
+  const isMobile = useIsMobile();
 
   const loadGroups = async () => {
     let res = await API.get(`/api/user/groups`);
@@ -609,6 +611,14 @@ const TokensTable = () => {
         >
           添加令牌
         </Button>
+        <Button
+          type="primary"
+          theme={'borderless'}
+          style={{ marginRight: 8 }}
+          onClick={copyBaseUrl}
+        >
+          复制 BaseURL
+        </Button>
       </Form>
 
       <Table
@@ -628,14 +638,14 @@ const TokensTable = () => {
             setActivePage(1);
           },
           onPageChange: handlePageChange,
+          formatPageText: false,
+          size: isMobile ? 'small' : 'default',
+          showTotal: true,
         }}
         loading={loading}
         rowSelection={rowSelection}
         onRow={handleRow}
       ></Table>
-      <Button type="primary" style={{ marginRight: 8 }} onClick={copyBaseUrl}>
-        复制 BaseURL
-      </Button>
 
       {/* <Button
         theme="solid"

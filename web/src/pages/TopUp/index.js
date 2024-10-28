@@ -231,6 +231,7 @@ const TopUp = () => {
         title="我的钱包"
         style={{
           height: '100%',
+          overflow: 'auto',
         }}
       >
         <Row>
