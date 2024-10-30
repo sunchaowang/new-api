@@ -132,6 +132,10 @@ func TextHelper(c *gin.Context) *dto.OpenAIErrorWithStatusCode {
 	// pre-consume quota 预消耗配额
 	preConsumedQuota, userQuota, openaiErr := preConsumeQuota(c, preConsumedQuota, relayInfo)
 	if openaiErr != nil {
+		model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
+			"RequestID": c.GetString("request_id"),
+			"IsError":   true,
+		})
 		return openaiErr
 	}
 
@@ -281,6 +285,10 @@ func preConsumeQuota(c *gin.Context, preConsumedQuota int, relayInfo *relaycommo
 	if preConsumedQuota > 0 {
 		userQuota, err = model.PreConsumeTokenQuota(relayInfo, preConsumedQuota)
 		if err != nil {
+			model.RecordLog(relayInfo.UserId, model.LogTypeConsume, fmt.Sprintf("error: %s", err.Error()), c.ClientIP(), map[string]interface{}{
+				"token_id": relayInfo.TokenId,
+				"IsError": true,
+			})
 			return 0, 0, service.OpenAIErrorWrapperLocal(err, "pre_consume_token_quota_failed", http.StatusForbidden)
 		}
 	}

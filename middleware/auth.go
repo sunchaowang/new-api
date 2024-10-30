@@ -159,63 +159,76 @@ func RootAuth() func(c *gin.Context) {
 func TokenAuth() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		key := c.Request.Header.Get("Authorization")
-		parts := make([]string, 0)
-		key = strings.TrimPrefix(key, "Bearer ")
-		if key == "" || key == "midjourney-proxy" {
-			key = c.Request.Header.Get("mj-api-secret")
-			key = strings.TrimPrefix(key, "Bearer ")
-			key = strings.TrimPrefix(key, "sk-")
-			parts = strings.Split(key, "-")
-			key = parts[0]
-		} else {
-			key = strings.TrimPrefix(key, "sk-")
-			parts = strings.Split(key, "-")
-			key = parts[0]
-		}
-		token, err := model.ValidateUserToken(key)
-		if token != nil {
-			id := c.GetInt("id")
-			if id == 0 {
-				c.Set("id", token.UserId)
-			}
-		}
-		if err != nil {
-			abortWithOpenAiMessage(c, http.StatusUnauthorized, err.Error())
-			return
-		}
-		userEnabled, err := model.CacheIsUserEnabled(token.UserId)
-		if err != nil {
-			abortWithOpenAiMessage(c, http.StatusInternalServerError, err.Error())
-			return
-		}
-		if !userEnabled {
-			abortWithOpenAiMessage(c, http.StatusForbidden, "用户已被封禁")
-			return
-		}
-		c.Set("id", token.UserId)
-		c.Set("token_id", token.Id)
-		c.Set("token_name", token.Name)
-		c.Set("token_group", token.Group)
-		c.Set("token_unlimited_quota", token.UnlimitedQuota)
-		if !token.UnlimitedQuota {
-			c.Set("token_quota", token.RemainQuota)
-		}
-		if token.ModelLimitsEnabled {
-			c.Set("token_model_limit_enabled", true)
-			c.Set("token_model_limit", token.GetModelLimitsMap())
-		} else {
-			c.Set("token_model_limit_enabled", false)
-		}
-		c.Set("allow_ips", token.GetIpLimitsMap())
-		c.Set("token_group", token.Group)
-		if len(parts) > 1 {
-			if model.IsAdmin(token.UserId) {
-				c.Set("specific_channel_id", parts[1])
-			} else {
-				abortWithOpenAiMessage(c, http.StatusForbidden, "普通用户不支持指定渠道")
-				return
-			}
-		}
-		c.Next()
+		c.Set("claude_original_request", false)
+		tokenAuth(c, key)
 	}
+}
+
+func ClaudeTokenAuth() func(c *gin.Context) {
+	return func(c *gin.Context) {
+		key := c.Request.Header.Get("x-api-key")
+		c.Set("claude_original_request", true)
+		tokenAuth(c, key)
+	}
+}
+
+func tokenAuth(c *gin.Context, key string) {
+	parts := make([]string, 0)
+	key = strings.TrimPrefix(key, "Bearer ")
+	if key == "" || key == "midjourney-proxy" {
+		key = c.Request.Header.Get("mj-api-secret")
+		key = strings.TrimPrefix(key, "Bearer ")
+		key = strings.TrimPrefix(key, "sk-")
+		parts = strings.Split(key, "-")
+		key = parts[0]
+	} else {
+		key = strings.TrimPrefix(key, "sk-")
+		parts = strings.Split(key, "-")
+		key = parts[0]
+	}
+	token, err := model.ValidateUserToken(key)
+	if token != nil {
+		id := c.GetInt("id")
+		if id == 0 {
+			c.Set("id", token.UserId)
+		}
+	}
+	if err != nil {
+		abortWithOpenAiMessage(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+	userEnabled, err := model.CacheIsUserEnabled(token.UserId)
+	if err != nil {
+		abortWithOpenAiMessage(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if !userEnabled {
+		abortWithOpenAiMessage(c, http.StatusForbidden, "用户已被封禁")
+		return
+	}
+	c.Set("id", token.UserId)
+	c.Set("token_id", token.Id)
+	c.Set("token_name", token.Name)
+	c.Set("token_group", token.Group)
+	c.Set("token_unlimited_quota", token.UnlimitedQuota)
+	if !token.UnlimitedQuota {
+		c.Set("token_quota", token.RemainQuota)
+	}
+	if token.ModelLimitsEnabled {
+		c.Set("token_model_limit_enabled", true)
+		c.Set("token_model_limit", token.GetModelLimitsMap())
+	} else {
+		c.Set("token_model_limit_enabled", false)
+	}
+	c.Set("allow_ips", token.GetIpLimitsMap())
+	c.Set("token_group", token.Group)
+	if len(parts) > 1 {
+		if model.IsAdmin(token.UserId) {
+			c.Set("specific_channel_id", parts[1])
+		} else {
+			abortWithOpenAiMessage(c, http.StatusForbidden, "普通用户不支持指定渠道")
+			return
+		}
+	}
+	c.Next()
 }

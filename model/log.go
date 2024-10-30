@@ -25,6 +25,7 @@ type Log struct {
 	CompletionTokens int    `json:"completion_tokens" gorm:"default:0"`
 	UseTime          int    `json:"use_time" gorm:"default:0"`
 	IsStream         bool   `json:"is_stream" gorm:"default:false"`
+	IsError          bool   `json:"is_error" gorm:"default:false"`
 	ChannelId        int    `json:"channel" gorm:"index"`
 	TokenId          int    `json:"token_id" gorm:"default:0;index"`
 	Other            string `json:"other"`
@@ -89,6 +90,8 @@ func RecordLog(userId int, logType int, content string, requestIP string, extraF
 				log.RequestID = value.(string)
 			case "TokenGroup":
 				log.TokenGroup = value.(string)
+			case "IsError":
+				log.IsError = value.(bool)
 			}
 		}
 	}
@@ -201,11 +204,12 @@ func GetUserLogs(userId int, logType int, startTimestamp int64, endTimestamp int
 	if endTimestamp != 0 {
 		tx = tx.Where("created_at <= ?", endTimestamp)
 	}
+	tx.Where("is_error = ?", false)
 	err = tx.Model(&Log{}).Count(&total).Error
 	if err != nil {
 		return nil, 0, err
 	}
-	err = tx.Order("id desc").Limit(num).Offset(startIdx).Omit("id").Find(&logs).Error
+	err = tx.Order("id desc").Limit(num).Offset(startIdx).Omit("id", "is_error").Find(&logs).Error
 	for i := range logs {
 		var otherMap map[string]interface{}
 		otherMap = common.StrToMap(logs[i].Other)

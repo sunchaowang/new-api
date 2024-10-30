@@ -45,6 +45,9 @@ func SetRelayRouter(router *gin.Engine) {
 
 	relayLumaRouter := router.Group("/luma")
 	registerLumaRouterGroup(relayLumaRouter)
+
+	relayClaudeRouter := router.Group("/claude")
+	registerClaudeRouterGroup(relayClaudeRouter)
 }
 
 func registryV1RouterGroup(relayV1Router *gin.RouterGroup) {
@@ -104,5 +107,14 @@ func registerLumaRouterGroup(relayLumaRouter *gin.RouterGroup) {
 	relayLumaRouter.Use(middleware.TokenAuth(), middleware.Distribute())
 	{
 		relayLumaRouter.POST("/generations", controller.RelayLuma)
+	}
+}
+
+// Claude
+func registerClaudeRouterGroup(relayRouter *gin.RouterGroup) {
+	relayClaudeRouter := relayRouter.Group("/v1")
+	relayClaudeRouter.Use(middleware.ClaudeTokenAuth(), middleware.Distribute())
+	{
+		relayClaudeRouter.POST("/messages", controller.RelayClaude)
 	}
 }

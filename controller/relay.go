@@ -381,3 +381,7 @@ func RelayLuma(c *gin.Context) {
 		relay.RelayModeLumaGenerations(c)
 	}
 }
+
+func RelayClaude(c *gin.Context) {
+	Relay(c)
+}
