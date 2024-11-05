@@ -1,4 +1,4 @@
-package ollama
+package mistral
 
 import (
 	"errors"
@@ -9,7 +9,6 @@ import (
 	"one-api/relay/channel"
 	"one-api/relay/channel/openai"
 	relaycommon "one-api/relay/common"
-	relayconstant "one-api/relay/constant"
 )
 
 type Adaptor struct {
@@ -29,16 +28,12 @@ func (a *Adaptor) Init(info *relaycommon.RelayInfo) {
 }
 
 func (a *Adaptor) GetRequestURL(info *relaycommon.RelayInfo) (string, error) {
-	switch info.RelayMode {
-	case relayconstant.RelayModeEmbeddings:
-		return info.BaseUrl + "/api/embed", nil
-	default:
-		return relaycommon.GetFullRequestURL(info.BaseUrl, info.RequestURLPath, info.ChannelType), nil
-	}
+	return relaycommon.GetFullRequestURL(info.BaseUrl, info.RequestURLPath, info.ChannelType), nil
 }
 
 func (a *Adaptor) SetupRequestHeader(c *gin.Context, req *http.Request, info *relaycommon.RelayInfo) error {
 	channel.SetupApiRequestHeader(info, c, req)
+	req.Header.Set("Authorization", "Bearer "+info.ApiKey)
 	return nil
 }
 
@@ -46,12 +41,9 @@ func (a *Adaptor) ConvertRequest(c *gin.Context, info *relaycommon.RelayInfo, re
 	if request == nil {
 		return nil, errors.New("request is nil")
 	}
-	switch info.RelayMode {
-	case relayconstant.RelayModeEmbeddings:
-		return requestOpenAI2Embeddings(*request), nil
-	default:
-		return requestOpenAI2Ollama(*request), nil
-	}
+	mistralReq := requestOpenAI2Mistral(*request)
+	//common.LogJson(c, "body", mistralReq)
+	return mistralReq, nil
 }
 
 func (a *Adaptor) ConvertRerankRequest(c *gin.Context, relayMode int, request dto.RerankRequest) (any, error) {
@@ -66,11 +58,7 @@ func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, info *relaycom
 	if info.IsStream {
 		err, usage = openai.OaiStreamHandler(c, resp, info)
 	} else {
-		if info.RelayMode == relayconstant.RelayModeEmbeddings {
-			err, usage = ollamaEmbeddingHandler(c, resp, info.PromptTokens, info.UpstreamModelName, info.RelayMode)
-		} else {
-			err, usage = openai.OpenaiHandler(c, resp, info.PromptTokens, info.UpstreamModelName)
-		}
+		err, usage = openai.OpenaiHandler(c, resp, info.PromptTokens, info.UpstreamModelName)
 	}
 	return
 }
