@@ -19,5 +19,6 @@ export const initialState = {
   config: {
     // 是否开启菜单折叠
     isCollapse: false,
+    theme: 'light',
   },
 };

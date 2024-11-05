@@ -287,6 +287,11 @@ const EditChannel = (props) => {
         });
       }
     });
+    // localModelOptions 去重
+    localModelOptions = localModelOptions.filter(
+      (option, index, self) =>
+        index === self.findIndex((t) => t.label === option.label),
+    );
     setModelOptions(localModelOptions);
   }, [originModelOptions, inputs.models]);
 
@@ -394,6 +399,12 @@ const EditChannel = (props) => {
     handleInputChange('models', localModels);
   };
 
+
+  function modelSearchLabel(sugInput, option) {
+    let label = option.label.toUpperCase();
+    let sug = sugInput.toUpperCase();
+    return label.includes(sug);
+  }
 
   return (
     <>
@@ -681,6 +692,9 @@ const EditChannel = (props) => {
             value={inputs.models}
             autoComplete='new-password'
             optionList={modelOptions}
+            filter={modelSearchLabel}
+            searchPlaceholder={'请输入模型名称'}
+            showClear
           />
           <div style={{ lineHeight: '40px', marginBottom: '12px' }}>
             <Space>

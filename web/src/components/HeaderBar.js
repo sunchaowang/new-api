@@ -199,7 +199,7 @@ const HeaderBar = () => {
             }
           >
             {buttons.map((button) => (
-              <Nav.Item itemKey={button.itemKey} text={button.text} icon={button.icon} onClick={() => navigate(button.to)}>
+              <Nav.Item itemKey={button.itemKey} text={button.text} onClick={() => navigate(button.to)}>
               </Nav.Item>
             ))}
 

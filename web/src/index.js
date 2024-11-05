@@ -14,7 +14,7 @@ import { Layout } from '@douyinfe/semi-ui';
 import { ThemeProvider } from './context/Theme';
 import FooterBar from './components/Footer';
 
-// initialization
+// initialization 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -23,11 +23,13 @@ root.render(
     <ConfigProvider>
       <StatusProvider>
         <UserProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <ThemeProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ThemeProvider>
         </UserProvider>
       </StatusProvider>
     </ConfigProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

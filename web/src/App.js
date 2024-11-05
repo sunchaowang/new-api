@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useContext, useEffect, useState } from 'react';
 import { getLogo, getSystemName } from './helpers';
 import { UserContext } from './context/User';
 import { ThemeProvider } from './context/Theme';
-import { Layout, SideSheet } from '@douyinfe/semi-ui';
+import {Card, Layout, SideSheet} from '@douyinfe/semi-ui';
 import { ToastContainer } from 'react-toastify';
 import HeaderBar from './components/HeaderBar';
 import FooterBar from './components/Footer';
@@ -53,48 +53,46 @@ function App() {
   }, [isMobile]);
 
   return (
-    <>
-      <ThemeProvider>
-        <Layout
-          style={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Header>
-            <HeaderBar />
-          </Header>
-          <Layout style={{ flex: 1, overflow: 'hidden' }}>
-            {!isMobile ? (
-              <></>
-            ) : (
-              // <Layout.Sider>
-              //   <SiderBar />
-              // </Layout.Sider>
-              <SideSheet
-                visible={configState.config.isCollapse}
-                onCancel={() => configDispatch({ type: 'set', payload: { isCollapse: false } })}
-                placement="left"
-                width={240}
-                bodyStyle={{ padding: 0 }}
-              >
-                <SiderBar />
-              </SideSheet>
-            )}
-            <Layout style={{ height: '100%', overflow: 'auto' }}>
-              <Content style={{ overflowY: 'auto' }}>
-                <Routes></Routes>
-              </Content>
-              <Layout.Footer>
-                <FooterBar></FooterBar>
-              </Layout.Footer>
-            </Layout>
+    <Card style={{ height: '100%', width: '100%' }} bodyStyle={{padding: 0, height: '100%'}} bordered={false}>
+      <Layout
+        style={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <Header>
+          <HeaderBar />
+        </Header>
+        <Layout style={{ flex: 1, overflow: 'hidden', height: '100%' }}>
+          {!isMobile ? (
+            <></>
+          ) : (
+            // <Layout.Sider>
+            //   <SiderBar />
+            // </Layout.Sider>
+            <SideSheet
+              visible={configState.config.isCollapse}
+              onCancel={() => configDispatch({ type: 'set', payload: { isCollapse: false } })}
+              placement="left"
+              width={240}
+              bodyStyle={{ padding: 0 }}
+            >
+              <SiderBar />
+            </SideSheet>
+          )}
+          <Layout style={{ height: '100%', overflow: 'auto' }}>
+            <Content style={{ overflowY: 'auto', height: '100%' }}>
+              <Routes></Routes>
+            </Content>
+            <Layout.Footer>
+              <FooterBar></FooterBar>
+            </Layout.Footer>
           </Layout>
-          <ToastContainer />
         </Layout>
-      </ThemeProvider>
-    </>
+        <ToastContainer />
+      </Layout>
+    </Card>
   );
 }
 

@@ -64,7 +64,7 @@ const Home = () => {
         width={'90vw'}
         height={'75vh'}
         closable={true}
-        hasCancel={true}
+        hasCancel={false}
         closeOnEsc={true}
         onCancel={() => setHomePageContentLoaded(false)}
         onOk={() => setHomePageContentLoaded(false)}

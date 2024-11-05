@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useState } from 'react';
+import {createContext, useCallback, useContext, useEffect, useState} from 'react';
+import {ConfigContext} from "../Config/index.js";
 
 const ThemeContext = createContext(null);
 export const useTheme = () => useContext(ThemeContext);
@@ -14,6 +15,13 @@ export const ThemeProvider = ({ children }) => {
       return null;
     }
   });
+  const [configState, configDispatch] = useContext(ConfigContext);
+
+  useEffect(() => {
+    if (theme) {
+      configDispatch({ type: 'set', payload: { theme } });
+    }
+  }, [theme]);
 
   const setTheme = useCallback((input) => {
     _setTheme(input ? 'dark' : 'light');
@@ -22,9 +30,13 @@ export const ThemeProvider = ({ children }) => {
     if (!input) {
       body.removeAttribute('theme-mode');
       localStorage.setItem('theme-mode', 'light');
+
+      configDispatch({ type: 'set', payload: { theme: 'light' } });
     } else {
       body.setAttribute('theme-mode', 'dark');
       localStorage.setItem('theme-mode', 'dark');
+
+      configDispatch({ type: 'set', payload: { theme: 'dark' } });
     }
   }, []);
 
