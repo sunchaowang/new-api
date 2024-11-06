@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, transformWithEsbuild, loadEnv } from 'vite';
-import SemiPlugin from "vite-plugin-semi-theme";
+// import SemiPlugin from "vite-plugin-semi-theme";
 import svgr from 'vite-plugin-svgr'; // 新增
 
 // https://vitejs.dev/config/
@@ -20,24 +20,24 @@ export default defineConfig(({ command, mode }) => {
           // transforming with esbuild
           return transformWithEsbuild(code, id, {
             loader: 'jsx',
-            jsx: 'automatic',
+            jsx: 'automatic'
           });
-        },
+        }
       },
       react(),
-      SemiPlugin({
-        theme: '@semi-bot/semi-theme-universedesign',
-        options: {},
-      }),
-      svgr({ include: 'src/assets/svg/**/*.svg?react' }),
+      // SemiPlugin({
+      //   theme: '@semi-bot/semi-theme-universedesign',
+      //   options: {},
+      // }),
+      svgr({ include: 'src/assets/svg/**/*.svg?react' })
     ],
     optimizeDeps: {
       force: true,
       esbuildOptions: {
         loader: {
-          '.js': 'jsx',
-        },
-      },
+          '.js': 'jsx'
+        }
+      }
     },
     build: {
       rollupOptions: {
@@ -48,29 +48,23 @@ export default defineConfig(({ command, mode }) => {
             semantic: ['semantic-ui-offline', 'semantic-ui-react'],
             visactor: ['@visactor/react-vchart', '@visactor/vchart'],
             tools: ['axios', 'history', 'marked'],
-            'react-components': [
-              'react-dropzone',
-              'react-fireworks',
-              'react-telegram-login',
-              'react-toastify',
-              'react-turnstile',
-            ],
-          },
-        },
-      },
+            'react-components': ['react-dropzone', 'react-fireworks', 'react-telegram-login', 'react-toastify', 'react-turnstile']
+          }
+        }
+      }
     },
     server: {
       // https: true,
       proxy: {
         '/api': {
           target: env.VITE_APP_SERVER || 'http://localhost:3000',
-          changeOrigin: true,
+          changeOrigin: true
         },
         '/pg': {
           target: env.VITE_APP_SERVER || 'http://localhost:3000',
-          changeOrigin: true,
-        },
-      },
-    },
+          changeOrigin: true
+        }
+      }
+    }
   };
 });
