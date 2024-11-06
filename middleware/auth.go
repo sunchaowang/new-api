@@ -156,8 +156,27 @@ func RootAuth() func(c *gin.Context) {
 	}
 }
 
+func WssAuth(c *gin.Context) {
+
+}
+
 func TokenAuth() func(c *gin.Context) {
 	return func(c *gin.Context) {
+		// 先检测是否为ws
+		if c.Request.Header.Get("Sec-WebSocket-Protocol") != "" {
+			// Sec-WebSocket-Protocol: realtime, openai-insecure-api-key.sk-xxx, openai-beta.realtime-v1
+			// read sk from Sec-WebSocket-Protocol
+			key := c.Request.Header.Get("Sec-WebSocket-Protocol")
+			parts := strings.Split(key, ",")
+			for _, part := range parts {
+				part = strings.TrimSpace(part)
+				if strings.HasPrefix(part, "openai-insecure-api-key") {
+					key = strings.TrimPrefix(part, "openai-insecure-api-key.")
+					break
+				}
+			}
+			c.Request.Header.Set("Authorization", "Bearer "+key)
+		}
 		key := c.Request.Header.Get("Authorization")
 		c.Set("claude_original_request", false)
 		tokenAuth(c, key)
