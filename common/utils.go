@@ -10,6 +10,7 @@ import (
 	"math/rand"
 	"net"
 	"os/exec"
+	"regexp"
 	"runtime"
 	"strconv"
 	"strings"
@@ -201,8 +202,11 @@ func Max(a int, b int) int {
 
 func MessageWithRequestId(message string, id string) string {
 	// return fmt.Sprintf("%s (request id: %s)", message, id)
-	if strings.Contains(message, "request id") {
-		return fmt.Sprintf("%s", message)
+	if len(message) > 0 {
+		// 定义正则表达式，匹配小括号及其后的内容
+		re := regexp.MustCompile(`\s*\(.*\)`)
+		// 替换匹配到的内容为空字符串
+		message = re.ReplaceAllString(message, "")
 	}
 	return fmt.Sprintf("%s (request id: %s)", message, id)
 }

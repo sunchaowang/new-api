@@ -215,7 +215,7 @@ const LogsTable = ({ groups }) => {
             </div>
           </Space>
         );
-      },
+      }
     },
     {
       title: '渠道',
@@ -238,7 +238,7 @@ const LogsTable = ({ groups }) => {
         ) : (
           <></>
         );
-      },
+      }
     },
     {
       title: '用户',
@@ -247,12 +247,7 @@ const LogsTable = ({ groups }) => {
       render: (text, record, index) => {
         return isAdminUser ? (
           <div>
-            <Avatar
-              size="small"
-              color={stringToColor(text)}
-              style={{ marginRight: 4 }}
-              onClick={() => showUserInfo(record.user_id)}
-            >
+            <Avatar size="small" color={stringToColor(text)} style={{ marginRight: 4 }} onClick={() => showUserInfo(record.user_id)}>
               {typeof text === 'string' && text.slice(0, 1)}
             </Avatar>
             {text}
@@ -260,7 +255,7 @@ const LogsTable = ({ groups }) => {
         ) : (
           <></>
         );
-      },
+      }
     },
     {
       title: '令牌',
@@ -282,18 +277,14 @@ const LogsTable = ({ groups }) => {
         ) : (
           <></>
         );
-      },
+      }
     },
     {
       title: '令牌分组',
       dataIndex: 'token_group',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? (
-          <div>{renderGroup(text, groups)}</div>
-        ) : (
-          <></>
-        );
-      },
+        return record.type === 0 || record.type === 2 ? <div>{renderGroup(text, groups)}</div> : <></>;
+      }
     },
     {
       title: '模型',
@@ -315,7 +306,7 @@ const LogsTable = ({ groups }) => {
         ) : (
           <></>
         );
-      },
+      }
     },
     {
       title: '用时/首字',
@@ -342,41 +333,28 @@ const LogsTable = ({ groups }) => {
             </>
           );
         }
-      },
+      }
     },
     {
       title: '提示',
       dataIndex: 'prompt_tokens',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? (
-          <>{<span> {text} </span>}</>
-        ) : (
-          <></>
-        );
-      },
+        return record.type === 0 || record.type === 2 ? <>{<span> {text} </span>}</> : <></>;
+      }
     },
     {
       title: '补全',
       dataIndex: 'completion_tokens',
       render: (text, record, index) => {
-        return parseInt(text) > 0 &&
-          (record.type === 0 || record.type === 2) ? (
-          <>{<span> {text} </span>}</>
-        ) : (
-          <></>
-        );
-      },
+        return parseInt(text) > 0 && (record.type === 0 || record.type === 2) ? <>{<span> {text} </span>}</> : <></>;
+      }
     },
     {
       title: '花费',
       dataIndex: 'quota',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? (
-          <>{renderQuota(text, 6)}</>
-        ) : (
-          <></>
-        );
-      },
+        return record.type === 0 || record.type === 2 ? <>{renderQuota(text, 6)}</> : <></>;
+      }
     },
     {
       title: '重试',
@@ -402,66 +380,9 @@ const LogsTable = ({ groups }) => {
             }
           }
         }
-        return isAdminUser ? (
-          record.type === 0 || record.type === 2 ? (
-            <div>{content}</div>
-          ) : (
-            <></>
-          )
-        ) : (
-          <></>
-        );
-      },
-    },
-    {
-      title: '详情',
-      dataIndex: 'content',
-      render: (text, record, index) => {
-        let other = getLogOther(record.other);
-        if (other == null || record.type !== 2) {
-          return (
-            <Paragraph
-              ellipsis={{
-                rows: 4,
-                showTooltip: {
-                  type: 'popover',
-                  opts: { style: { width: 240 } },
-                },
-              }}
-              style={{ maxWidth: 240 }}
-            >
-              <div>{renderType(record.type)}</div>
-              {text}
-            </Paragraph>
-          );
-        }
-
-        // let content = renderModelPrice(
-        //   record.prompt_tokens,
-        //   record.completion_tokens,
-        //   other.model_ratio,
-        //   other.model_price,
-        //   other.completion_ratio,
-        //   other.group_ratio,
-        // );
-        return (
-            <Paragraph
-              ellipsis={{
-                rows: 4,
-              }}
-              style={{ maxWidth: 240 }}
-                ellipsis={{
-                  rows: 2,
-                }}
-                style={{ maxWidth: 240 }}
-            >
-              <div>{renderType(record.type)}</div>
-              {text}
-              调用消费
-            </Paragraph>
-        );
-      },
-    },
+        return isAdminUser ? record.type === 0 || record.type === 2 ? <div>{content}</div> : <></> : <></>;
+      }
+    }
   ];
 
   const [logs, setLogs] = useState([]);

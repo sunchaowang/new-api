@@ -8,8 +8,6 @@ import (
 	"one-api/relay/constant"
 	"strings"
 	"time"
-
-	"github.com/gin-gonic/gin"
 )
 
 type RelayInfo struct {
@@ -44,6 +42,7 @@ type RelayInfo struct {
 	RealtimeTools        []dto.RealTimeTool
 	IsFirstRequest       bool
 	TokenGroup           string
+	UseClaudeFormate     bool
 }
 
 func GenRelayInfoWs(c *gin.Context, ws *websocket.Conn) *RelayInfo {

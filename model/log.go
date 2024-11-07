@@ -31,7 +31,7 @@ type Log struct {
 	Other            string `json:"other"`
 	RequestIP        string `json:"request_ip"`
 	RequestID        string `json:"request_id"`
-	TokenGroup       string `json:"token_group"`
+	TokenGroup       string `json:"token_group" gorm:"default:‘default’;index"`
 }
 
 const (
@@ -40,8 +40,10 @@ const (
 	LogTypeConsume
 	LogTypeManage
 	LogTypeSystem
-	LogTypeUserQperationCheckIn
+	LogTypeUserCheckIn
 	LogTypeLogin
+	LogTypeError
+	LogTypeWarning
 )
 
 func GetLogByKey(key string) (logs []*Log, err error) {
@@ -229,7 +231,7 @@ func SearchAllLogs(keyword string) (logs []*Log, err error) {
 
 func SearchUserLogs(userId int, keyword string, extraFields ...map[string]interface{}) (logs []*Log, err error) {
 	tx := LOG_DB.Where("user_id = ? and type = ?", userId, keyword)
-	
+
 	if len(extraFields) > 0 && extraFields[0] != nil {
 		if extraFields[0]["created_at_begin"] != nil {
 			tx = tx.Where("created_at >= ?", extraFields[0]["created_at_begin"])

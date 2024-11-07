@@ -18,8 +18,6 @@ import (
 	relayconstant "one-api/relay/constant"
 	"one-api/service"
 	"strings"
-
-	"github.com/gin-gonic/gin"
 )
 
 func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode {
@@ -35,6 +33,8 @@ func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode 
 		err = relay.AudioHelper(c)
 	case relayconstant.RelayModeRerank:
 		err = relay.RerankHelper(c, relayMode)
+	case relayconstant.RelayClaudeMessages:
+		err = relay.ClaudeTextHelper(c)
 	default:
 		err = relay.TextHelper(c)
 	}

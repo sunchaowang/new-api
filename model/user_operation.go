@@ -53,7 +53,7 @@ func InsertOperationCheckIn(userId int, lastDayUsed int64, requestIP string) (qu
 		return 0, err
 	}
 
-	RecordLog(userId, LogTypeUserQperationCheckIn, strings.Join(operationRemark, ""), requestIP, map[string]interface{}{
+	RecordLog(userId, LogTypeUserCheckIn, strings.Join(operationRemark, ""), requestIP, map[string]interface{}{
 		"Quota": quota,
 	})
 	err = insertOperation(UserOperation{

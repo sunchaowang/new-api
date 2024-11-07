@@ -533,3 +533,73 @@ func ClaudeHandler(c *gin.Context, resp *http.Response, requestMode int, info *r
 	_, err = c.Writer.Write(jsonResponse)
 	return nil, &usage
 }
+
+// ClaudeHandlerRaw 直接转发 Claude 的响应
+func ClaudeHandlerRaw(c *gin.Context, resp *http.Response, info *relaycommon.RelayInfo) (*dto.OpenAIErrorWithStatusCode, *dto.Usage) {
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return &dto.OpenAIErrorWithStatusCode{
+			Error: dto.OpenAIError{
+				Message: err.Error(),
+				Type:    "one_api_error",
+				Code:    "read_response_body_failed",
+			},
+			StatusCode: http.StatusInternalServerError,
+		}, nil
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return &dto.OpenAIErrorWithStatusCode{
+			Error: dto.OpenAIError{
+				Message: string(responseBody),
+				Type:    "claude_api_error",
+				Code:    fmt.Sprintf("claude_api_%d", resp.StatusCode),
+			},
+			StatusCode: resp.StatusCode,
+		}, nil
+	}
+
+	// 直接将 Claude 的响应写回
+	c.Data(http.StatusOK, "application/json", responseBody)
+	return nil, nil
+}
+
+// ClaudeStreamHandlerRaw 直接转发 Claude 的流式响应
+func ClaudeStreamHandlerRaw(c *gin.Context, resp *http.Response, info *relaycommon.RelayInfo) (*dto.OpenAIErrorWithStatusCode, *dto.Usage) {
+	defer resp.Body.Close()
+	reader := bufio.NewReader(resp.Body)
+	c.Header("Content-Type", "text/event-stream")
+
+	for {
+		line, err := reader.ReadBytes('\n')
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return &dto.OpenAIErrorWithStatusCode{
+				Error: dto.OpenAIError{
+					Message: err.Error(),
+					Type:    "one_api_error",
+					Code:    "read_response_body_failed",
+				},
+				StatusCode: http.StatusInternalServerError,
+			}, nil
+		}
+
+		// 直接将数据写回客户端
+		_, err = c.Writer.Write(line)
+		if err != nil {
+			return &dto.OpenAIErrorWithStatusCode{
+				Error: dto.OpenAIError{
+					Message: err.Error(),
+					Type:    "one_api_error",
+					Code:    "write_response_failed",
+				},
+				StatusCode: http.StatusInternalServerError,
+			}, nil
+		}
+		c.Writer.Flush()
+	}
+	return nil, nil
+}

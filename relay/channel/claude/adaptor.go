@@ -3,18 +3,22 @@ package claude
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"one-api/dto"
 	"one-api/relay/channel"
 	relaycommon "one-api/relay/common"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 const (
 	RequestModeCompletion = 1
 	RequestModeMessage    = 2
+
+	ResponseFormatOpenAI = "openai"
+	ResponseFormatClaude = "claude"
 )
 
 type Adaptor struct {
@@ -78,10 +82,28 @@ func (a *Adaptor) DoRequest(c *gin.Context, info *relaycommon.RelayInfo, request
 }
 
 func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, info *relaycommon.RelayInfo) (usage any, err *dto.OpenAIErrorWithStatusCode) {
+	// 获取响应格式，默认为 OpenAI 格式
+	var format = ResponseFormatOpenAI;
+	if info.UseClaudeFormate {
+		format = ResponseFormatClaude;
+	}
+
 	if info.IsStream {
-		err, usage = ClaudeStreamHandler(c, resp, info, a.RequestMode)
+		if format == ResponseFormatClaude {
+			// 直接转发 Claude 的流式响应
+			err, usage = ClaudeStreamHandlerRaw(c, resp, info)
+		} else {
+			// 转换为 OpenAI 格式
+			err, usage = ClaudeStreamHandler(c, resp, info, a.RequestMode)
+		}
 	} else {
-		err, usage = ClaudeHandler(c, resp, a.RequestMode, info)
+		if format == ResponseFormatClaude {
+			// 直接转发 Claude 的响应
+			err, usage = ClaudeHandlerRaw(c, resp, info)
+		} else {
+			// 转换为 OpenAI 格式
+			err, usage = ClaudeHandler(c, resp, a.RequestMode, info)
+		}
 	}
 	return
 }
