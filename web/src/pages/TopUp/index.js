@@ -30,6 +30,7 @@ const TopUp = () => {
   const [topUpCountDiscount, setTopUpCountDiscount] = useState(1);
   const [minTopupCount, setMinTopUpCount] = useState(1);
   const [amount, setAmount] = useState(0.0);
+  const [payMoney, setPayMoney] = useState(0.0);
   const [payMoneyFee, setPayMoneyFee] = useState(0.0);
   const [topUpRate, setTopUpRate] = useState(0.0);
   const [minTopUp, setMinTopUp] = useState(1);
@@ -175,9 +176,9 @@ const TopUp = () => {
     getUserQuota().then();
   }, []);
 
-  const renderAmount = () => {
+  const renderPayMoney = () => {
     // console.log(amount);
-    return new Decimal(amount).mul(topUpCountDiscount).toNumber() + '元';
+    return new Decimal(amount).add(payMoneyFee).mul(topUpCountDiscount).toNumber() + '元';
   };
 
   const renderTopUpRate = () => {
@@ -199,7 +200,8 @@ const TopUp = () => {
         const { message, data } = res.data;
         // showInfo(message);
         if (message === 'success') {
-          setAmount(parseFloat(data.payMoney));
+          setAmount(parseFloat(data.amount));
+          setPayMoney(parseFloat(data.payMoney));
           setTopUpRate(parseFloat(data.topUpRate));
           setPayMoneyFee(parseFloat(data.payMoneyFee));
         } else {
@@ -235,7 +237,7 @@ const TopUp = () => {
         centered={true}
       >
         <p>充值数量：{topUpCount}</p>
-        <p>预计支付金额：{renderAmount()}</p>
+        <p>预计支付金额：{renderPayMoney()}</p>
         <p>是否确认充值？</p>
       </Modal>
       <Card
@@ -375,7 +377,7 @@ const TopUp = () => {
                 {
                   amount > 0 ? (
                       <Descriptions style={{marginTop: 20}}>
-                        <Descriptions.Item itemKey="预计支付金额">{ renderAmount() }</Descriptions.Item>
+                        <Descriptions.Item itemKey="预计支付金额">{ renderPayMoney() }</Descriptions.Item>
                         <Descriptions.Item itemKey="本次充值费率">{ renderTopUpRate() }</Descriptions.Item>
                         <Descriptions.Item itemKey="本次优惠金额">0元</Descriptions.Item>
                       </Descriptions>
