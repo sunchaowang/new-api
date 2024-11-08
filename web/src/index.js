@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import HeaderBar from './components/HeaderBar';
 import 'semantic-ui-offline/semantic.min.css';
+import "@arco-design/web-react/dist/css/arco.css";
 import "./index.css";
 import { UserProvider } from './context/User';
 

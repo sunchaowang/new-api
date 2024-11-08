@@ -13,7 +13,6 @@ export function renderText(text, limit) {
  * @returns {JSX.Element} - The rendered group tags
  */
 export function renderGroup(group, groupsOptions ) {
-  console.log(groupsOptions);
   if (group === '') {
     return (
       <Tag size='large' key='default' color='orange'>

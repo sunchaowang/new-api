@@ -20,14 +20,15 @@ import {
   Select,
   Space,
   Spin,
-  Table,
+
   Tag,
   Tooltip,
   Row,
   Col,
   Typography,
-  Descriptions,
+
 } from "@douyinfe/semi-ui";
+import { Table,Descriptions } from '@arco-design/web-react'
 import { IconLightningStroked } from "@douyinfe/semi-icons";
 import { ITEMS_PER_PAGE } from "../constants";
 import {
@@ -197,30 +198,33 @@ const LogsTable = ({ groups }) => {
   const columns = [
     {
       title: '时间/IP',
-      fixed: true,
-      width: 150,
       dataIndex: 'timestamp2string',
+      fixed: 'left',
+      width: 150,
       render: (text, record, index) => {
         return (
-          <Space vertical wrap align="left" spacing={8}>
-            <div>{text}</div>
-            <div>
-              <Tag
-                onClick={() => {
-                  copyText(record.request_ip);
-                }}
-                color="grey"
-              >
-                {record.request_ip}
-              </Tag>
-            </div>
-          </Space>
+          <div>
+            <Space vertical wrap align="left" spacing={8}>
+              <div>{text}</div>
+              <div>
+                <Tag
+                    onClick={() => {
+                      copyText(record.request_ip);
+                    }}
+                    color="grey"
+                >
+                  {record.request_ip}
+                </Tag>
+              </div>
+            </Space>
+          </div>
         );
       }
     },
     {
       title: '渠道',
       dataIndex: 'channel',
+      width: 100,
       className: isAdmin() ? 'tableShow' : 'tableHiddle',
       render: (text, record, index) => {
         return isAdminUser ? (
@@ -261,6 +265,7 @@ const LogsTable = ({ groups }) => {
     {
       title: '令牌',
       dataIndex: 'token_name',
+      width: 120,
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? (
           <div>
@@ -283,6 +288,7 @@ const LogsTable = ({ groups }) => {
     {
       title: '令牌分组',
       dataIndex: 'token_group',
+      width: 120,
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? <div>{renderGroup(text, groups)}</div> : <></>;
       }
@@ -312,6 +318,9 @@ const LogsTable = ({ groups }) => {
     {
       title: '用时/首字',
       dataIndex: 'use_time',
+      headerCellStyle: {
+        'min-width': '150px',
+      },
       render: (text, record, index) => {
         if (record.is_stream) {
           let other = getLogOther(record.other);
@@ -339,6 +348,7 @@ const LogsTable = ({ groups }) => {
     {
       title: '提示',
       dataIndex: 'prompt_tokens',
+      width: 100,
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? <>{<span> {text} </span>}</> : <></>;
       }
@@ -346,6 +356,7 @@ const LogsTable = ({ groups }) => {
     {
       title: '补全',
       dataIndex: 'completion_tokens',
+      width: 100,
       render: (text, record, index) => {
         return parseInt(text) > 0 && (record.type === 0 || record.type === 2) ? <>{<span> {text} </span>}</> : <></>;
       }
@@ -383,7 +394,41 @@ const LogsTable = ({ groups }) => {
         }
         return isAdminUser ? record.type === 0 || record.type === 2 ? <div>{content}</div> : <></> : <></>;
       }
-    }
+    },
+    {
+      title: '详情',
+      dataIndex: 'content',
+      render: (text, record, index) => {
+        let other = getLogOther(record.other);
+        if (other == null || record.type !== 2) {
+          return (
+              <Paragraph
+                  ellipsis={{
+                    rows: 2,
+                    showTooltip: {
+                      type: 'popover',
+                      opts: { style: { width: 240 } },
+                    },
+                  }}
+                  style={{ maxWidth: 240 }}
+              >
+                {text}
+              </Paragraph>
+          );
+        }
+
+        return (
+            <Paragraph
+                ellipsis={{
+                  rows: 2,
+                }}
+                style={{ maxWidth: 240 }}
+            >
+              调用消费
+            </Paragraph>
+        );
+      },
+    },
   ];
 
   const [logs, setLogs] = useState([]);
@@ -413,6 +458,8 @@ const LogsTable = ({ groups }) => {
   const [stat, setStat] = useState({
     quota: 0,
     token: 0,
+    rpm: 0,
+    tpm: 0,
   });
 
   const handleInputChange = (value, name) => {
@@ -490,6 +537,7 @@ const LogsTable = ({ groups }) => {
     for (let i = 0; i < logs.length; i++) {
       logs[i].timestamp2string = timestamp2string(logs[i].created_at);
       logs[i].key = '' + logs[i].id;
+      logs[i].label = '' + logs[i].id;
       let other = getLogOther(logs[i].other);
       let expandDataLocal = [];
       if (isAdmin()) {
@@ -514,23 +562,28 @@ const LogsTable = ({ groups }) => {
       if (other?.ws || other?.audio) {
         expandDataLocal.push({
           key: '语音输入',
+          label: '语音输入',
           value: other.audio_input,
         });
         expandDataLocal.push({
           key: '语音输出',
+          label: '语音输出',
           value: other.audio_output,
         });
         expandDataLocal.push({
           key: '文字输入',
+          label: '文字输入',
           value: other.text_input,
         });
         expandDataLocal.push({
           key: '文字输出',
+          label: '文字输出',
           value: other.text_output,
         });
       }
       expandDataLocal.push({
         key: '日志详情',
+        label: '日志详情',
         value: logs[i].content,
       })
       if (logs[i].type === 2) {
@@ -560,6 +613,7 @@ const LogsTable = ({ groups }) => {
         }
         expandDataLocal.push({
           key: '计费过程',
+          label: '计费过程',
           value: content,
         });
       }
@@ -641,7 +695,7 @@ const LogsTable = ({ groups }) => {
   }, []);
 
   const expandRowRender = (record, index) => {
-    return <Descriptions data={expandData[record.key]} />;
+    return <Descriptions layout={'vertical'} column={1} data={expandData[record.key]} />;
   };
 
   return (
@@ -652,13 +706,13 @@ const LogsTable = ({ groups }) => {
             <Row>
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
-                  layout={isMobile() ? 'vertical' : 'horizontal'}
-                  row={1}
+                  layout={isMobile() ? 'vertical' : 'vertical'}
                   data={[
                     {
                       key: '总消耗额度',
+                      label: '总消耗额度',
                       value: (
-                        <Tag color="green" size="large" style={{ marginTop: 15 }}>
+                        <Tag color="green" size="large">
                           {renderQuota(stat.quota)}
                         </Tag>
                       ),
@@ -668,13 +722,13 @@ const LogsTable = ({ groups }) => {
               </Col>
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
-                  layout={isMobile() ? 'vertical' : 'horizontal'}
-                  row={1}
+                  layout={isMobile() ? 'vertical' : 'vertical'}
                   data={[
                     {
                       key: '近一分钟内请求次数',
+                      label: '近一分钟内请求次数',
                       value: (
-                        <Tag color="blue" size="large" style={{ marginTop: 15 }}>
+                        <Tag color="blue" size="large">
                           {stat.rpm}
                         </Tag>
                       ),
@@ -684,13 +738,13 @@ const LogsTable = ({ groups }) => {
               </Col>
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
-                  layout={isMobile() ? 'vertical' : 'horizontal'}
-                  row={1}
+                  layout={isMobile() ? 'vertical' : 'vertical'}
                   data={[
                     {
                       key: '近一分钟内消耗Token数',
+                      label: '近一分钟内消耗Token数',
                       value: (
-                        <Tag color="purple" size="large" style={{ marginTop: 15 }}>
+                        <Tag color="purple" size="large" >
                           {stat.tpm}
                         </Tag>
                       ),
@@ -805,14 +859,17 @@ const LogsTable = ({ groups }) => {
         </Card>
 
         <Table
-          style={{ width: '100%' }}
+          style={{width: '100%'}}
           columns={columns}
+          border={false}
           expandedRowRender={expandRowRender}
-          dataSource={logs}
+          data={logs}
+          loading={loading}
           rowKey="key"
-          scroll={{ x: 'max-content', y: 'max-content' }}
+          scroll={{ x: 'max-content', y: 'max-content', scrollToFirstRowOnChange: true }}
           pagination={{
             currentPage: activePage,
+            current: activePage,
             pageSize: pageSize,
             total: logCount,
             pageSizeOpts: [10, 20, 50, 100],
@@ -821,9 +878,11 @@ const LogsTable = ({ groups }) => {
               handlePageSizeChange(size);
             },
             onPageChange: handlePageChange,
+            onChange: handlePageChange,
             formatPageText: false,
             size: isMobile() ? 'small' : 'default',
             showTotal: true,
+            showJumper: true,
           }}
         />
       </Card>
