@@ -206,16 +206,6 @@ const LogsTable = ({ groups }) => {
           <div>
             <Space vertical wrap align="left" spacing={8}>
               <div>{text}</div>
-              <div>
-                <Tag
-                    onClick={() => {
-                      copyText(record.request_ip);
-                    }}
-                    color="grey"
-                >
-                  {record.request_ip}
-                </Tag>
-              </div>
             </Space>
           </div>
         );
@@ -319,7 +309,7 @@ const LogsTable = ({ groups }) => {
       title: '用时/首字',
       dataIndex: 'use_time',
       headerCellStyle: {
-        'min-width': '150px',
+        'min-width': '150px'
       },
       render: (text, record, index) => {
         if (record.is_stream) {
@@ -402,33 +392,33 @@ const LogsTable = ({ groups }) => {
         let other = getLogOther(record.other);
         if (other == null || record.type !== 2) {
           return (
-              <Paragraph
-                  ellipsis={{
-                    rows: 2,
-                    showTooltip: {
-                      type: 'popover',
-                      opts: { style: { width: 240 } },
-                    },
-                  }}
-                  style={{ maxWidth: 240 }}
-              >
-                {text}
-              </Paragraph>
+            <Paragraph
+              ellipsis={{
+                rows: 2,
+                showTooltip: {
+                  type: 'popover',
+                  opts: { style: { width: 240 } }
+                }
+              }}
+              style={{ maxWidth: 240 }}
+            >
+              {text}
+            </Paragraph>
           );
         }
 
         return (
-            <Paragraph
-                ellipsis={{
-                  rows: 2,
-                }}
-                style={{ maxWidth: 240 }}
-            >
-              调用消费
-            </Paragraph>
+          <Paragraph
+            ellipsis={{
+              rows: 2
+            }}
+            style={{ maxWidth: 240 }}
+          >
+            调用消费
+          </Paragraph>
         );
-      },
-    },
+      }
+    }
   ];
 
   const [logs, setLogs] = useState([]);
@@ -450,16 +440,15 @@ const LogsTable = ({ groups }) => {
     model_name: '',
     start_timestamp: timestamp2string(getTodayStartTimestamp()),
     end_timestamp: timestamp2string(now.getTime() / 1000 + 3600),
-    channel: '',
+    channel: ''
   });
-  const { username, user_id, token_name, model_name, start_timestamp, end_timestamp, channel } =
-    inputs;
+  const { username, user_id, token_name, model_name, start_timestamp, end_timestamp, channel } = inputs;
 
   const [stat, setStat] = useState({
     quota: 0,
     token: 0,
     rpm: 0,
-    tpm: 0,
+    tpm: 0
   });
 
   const handleInputChange = (value, name) => {
@@ -525,7 +514,7 @@ const LogsTable = ({ groups }) => {
             <p>请求次数：{renderNumber(data.request_count)}</p>
           </div>
         ),
-        centered: true,
+        centered: true
       });
     } else {
       showError(message);
@@ -563,29 +552,34 @@ const LogsTable = ({ groups }) => {
         expandDataLocal.push({
           key: '语音输入',
           label: '语音输入',
-          value: other.audio_input,
+          value: other.audio_input
         });
         expandDataLocal.push({
           key: '语音输出',
           label: '语音输出',
-          value: other.audio_output,
+          value: other.audio_output
         });
         expandDataLocal.push({
           key: '文字输入',
           label: '文字输入',
-          value: other.text_input,
+          value: other.text_input
         });
         expandDataLocal.push({
           key: '文字输出',
           label: '文字输出',
-          value: other.text_output,
+          value: other.text_output
         });
       }
       expandDataLocal.push({
+        key: '请求 IP',
+        label: '请求 IP',
+        value: logs[i].request_ip
+      });
+      expandDataLocal.push({
         key: '日志详情',
         label: '日志详情',
-        value: logs[i].content,
-      })
+        value: logs[i].content
+      });
       if (logs[i].type === 2) {
         let content = '';
         if (other?.ws || other?.audio) {
@@ -599,7 +593,7 @@ const LogsTable = ({ groups }) => {
             other.audio_output,
             other?.audio_ratio,
             other?.audio_completion_ratio,
-            other.group_ratio,
+            other.group_ratio
           );
         } else {
           content = renderModelPrice(
@@ -608,13 +602,13 @@ const LogsTable = ({ groups }) => {
             other.model_ratio,
             other.model_price,
             other.completion_ratio,
-            other.group_ratio,
+            other.group_ratio
           );
         }
         expandDataLocal.push({
           key: '计费过程',
           label: '计费过程',
-          value: content,
+          value: content
         });
       }
 
