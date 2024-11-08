@@ -86,6 +86,10 @@ func RequestEpay(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "error", "data": "充值金额过低"})
 		return
 	}
+	var topUpRateMoney float64
+	if constant.TopUpRate > 0 {
+		topUpRateMoney = payMoney * constant.TopUpRate
+	}
 
 	var payType epay.PurchaseType
 	if req.PaymentMethod == "zfb" {
@@ -108,8 +112,8 @@ func RequestEpay(c *gin.Context) {
 	uri, params, err := client.Purchase(&epay.PurchaseArgs{
 		Type:           payType,
 		ServiceTradeNo: tradeNo,
-		Name:           fmt.Sprintf("TUC%d", req.Amount),
-		Money:          strconv.FormatFloat(payMoney, 'f', 2, 64),
+		Name:           fmt.Sprintf("Chirou TUC%d", req.Amount),
+		Money:          strconv.FormatFloat(payMoney+topUpRateMoney, 'f', 2, 64),
 		Device:         epay.PC,
 		NotifyUrl:      notifyUrl,
 		ReturnUrl:      returnUrl,

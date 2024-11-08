@@ -235,7 +235,7 @@ const TopUp = () => {
         centered={true}
       >
         <p>充值数量：{topUpCount}</p>
-        <p>实付金额：{renderAmount()}</p>
+        <p>预计支付金额：{renderAmount()}</p>
         <p>是否确认充值？</p>
       </Modal>
       <Card
@@ -375,9 +375,9 @@ const TopUp = () => {
                 {
                   amount > 0 ? (
                       <Descriptions style={{marginTop: 20}}>
-                        <Descriptions.Item itemKey="实付金额">{ renderAmount() }</Descriptions.Item>
-                        <Descriptions.Item itemKey="充值费率">{ renderTopUpRate() }</Descriptions.Item>
-                        <Descriptions.Item itemKey="优惠金额">0元</Descriptions.Item>
+                        <Descriptions.Item itemKey="预计支付金额">{ renderAmount() }</Descriptions.Item>
+                        <Descriptions.Item itemKey="本次充值费率">{ renderTopUpRate() }</Descriptions.Item>
+                        <Descriptions.Item itemKey="本次优惠金额">0元</Descriptions.Item>
                       </Descriptions>
                   ) : null
                 }
