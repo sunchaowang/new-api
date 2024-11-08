@@ -68,6 +68,7 @@ func InitOptionMap() {
 	common.OptionMap["EpayId"] = ""
 	common.OptionMap["EpayKey"] = ""
 	common.OptionMap["Price"] = strconv.FormatFloat(constant.Price, 'f', -1, 64)
+	common.OptionMap["TopUpRate"] = strconv.FormatFloat(constant.TopUpRate, 'f', -1, 64)
 	common.OptionMap["MinTopUp"] = strconv.Itoa(constant.MinTopUp)
 	common.OptionMap["TopupGroupRatio"] = common.TopupGroupRatio2JSONString()
 	common.OptionMap["Chats"] = constant.Chats2JsonString()
@@ -266,6 +267,8 @@ func updateOptionMap(key string, value string) (err error) {
 		constant.EpayKey = value
 	case "Price":
 		constant.Price, _ = strconv.ParseFloat(value, 64)
+	case "TopUpRate":
+		constant.TopUpRate, _ = strconv.ParseFloat(value, 64)
 	case "MinTopUp":
 		constant.MinTopUp, _ = strconv.Atoi(value)
 	case "TopupGroupRatio":

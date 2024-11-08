@@ -47,6 +47,7 @@ func getAndValidateTextRequest(c *gin.Context, relayInfo *relaycommon.RelayInfo)
 			return nil, errors.New("field prompt is required")
 		}
 	case relayconstant.RelayModeChatCompletions:
+	case relayconstant.RelayClaudeMessages:
 		if textRequest.Messages == nil || len(textRequest.Messages) == 0 {
 			return nil, errors.New("field messages is required")
 		}

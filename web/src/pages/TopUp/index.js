@@ -18,7 +18,7 @@ import {
   Modal,
   Toast,
   Icon,
-  Tag,
+  Tag, Descriptions,
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import { Decimal } from 'decimal.js';
@@ -30,6 +30,8 @@ const TopUp = () => {
   const [topUpCountDiscount, setTopUpCountDiscount] = useState(1);
   const [minTopupCount, setMinTopUpCount] = useState(1);
   const [amount, setAmount] = useState(0.0);
+  const [payMoneyFee, setPayMoneyFee] = useState(0.0);
+  const [topUpRate, setTopUpRate] = useState(0.0);
   const [minTopUp, setMinTopUp] = useState(1);
   const [topUpLink, setTopUpLink] = useState('');
   const [enableOnlineTopUp, setEnableOnlineTopUp] = useState(false);
@@ -178,6 +180,12 @@ const TopUp = () => {
     return new Decimal(amount).mul(topUpCountDiscount).toNumber() + '元';
   };
 
+  const renderTopUpRate = () => {
+    // console.log(amount);
+    return new Decimal(topUpRate).toNumber() + '%';
+  };
+
+
   const getAmount = async (value) => {
     if (value === undefined) {
       value = topUpCount;
@@ -191,9 +199,13 @@ const TopUp = () => {
         const { message, data } = res.data;
         // showInfo(message);
         if (message === 'success') {
-          setAmount(parseFloat(data));
+          setAmount(parseFloat(data.payMoney));
+          setTopUpRate(parseFloat(data.topUpRate));
+          setPayMoneyFee(parseFloat(data.payMoneyFee));
         } else {
           setAmount(0);
+          setTopUpRate(0);
+          setPayMoneyFee(0);
           Toast.error({ content: '错误：' + data, id: 'getAmount' });
           // setTopUpCount(parseInt(res.data.count));
           // setAmount(parseInt(data));
@@ -266,7 +278,7 @@ const TopUp = () => {
                 <Form.Select
                   disabled={!enableOnlineTopUp}
                   field={'redemptionCount'}
-                  label={'实付金额：' + renderAmount()}
+                  label={'充值数量'}
                   placeholder={'充值数量，最低 ' + renderQuotaWithAmount(minTopUp)}
                   name="redemptionCount"
                   type={'number'}
@@ -329,6 +341,7 @@ const TopUp = () => {
                     );
                   })}
                 </Form.Select>
+
                 <Space>
                   <Button
                     type={'primary'}
@@ -358,6 +371,16 @@ const TopUp = () => {
                     </Space>
                   </Button>
                 </Space>
+                {/*Descriptions*/}
+                {
+                  amount > 0 ? (
+                      <Descriptions style={{marginTop: 20}}>
+                        <Descriptions.Item itemKey="实付金额">{ renderAmount() }</Descriptions.Item>
+                        <Descriptions.Item itemKey="充值费率">{ renderTopUpRate() }</Descriptions.Item>
+                        <Descriptions.Item itemKey="优惠金额">0元</Descriptions.Item>
+                      </Descriptions>
+                  ) : null
+                }
               </Form>
             </Card>
           </Col>

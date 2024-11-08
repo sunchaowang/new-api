@@ -248,5 +248,19 @@ func RequestAmount(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "error", "data": "充值金额过低"})
 		return
 	}
-	c.JSON(200, gin.H{"message": "success", "data": strconv.FormatFloat(payMoney, 'f', 2, 64)})
+	var topUpRateMoney float64
+	if constant.TopUpRate > 0 {
+		topUpRateMoney = payMoney * constant.TopUpRate
+	}
+	//组装 Map 结构数据
+
+	//返回数据
+	c.JSON(200, gin.H{
+		"message": "success",
+		"data": gin.H{
+			"payMoney":    strconv.FormatFloat(payMoney+topUpRateMoney, 'f', 2, 64),
+			"topUpRate":   constant.TopUpRate,
+			"payMoneyFee": strconv.FormatFloat(topUpRateMoney, 'f', 2, 64),
+		},
+	})
 }

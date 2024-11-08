@@ -33,8 +33,8 @@ func GetOperationCheckInByUserId(userId int) (userOperation UserOperation, err e
 }
 
 // 插入一条 UserOperation
-func insertOperation(user_operation UserOperation) (err error) {
-	err = DB.Model(&UserOperation{}).Create(&user_operation).Error
+func insertOperation(userOperation UserOperation) (err error) {
+	err = DB.Model(&UserOperation{}).Create(&userOperation).Error
 	return err
 }
 
@@ -120,11 +120,11 @@ func GetUserQuotaUsedByPeriod(userId int, zeroTime time.Time) (used int64, err e
 	// 保底值
 	if float64(used) < (common.QuotaPerUnit * 0.5) {
 		used = int64(common.QuotaPerUnit * 0.1)
-	} else if float64(used) < (common.QuotaPerUnit * 5) {
-		used = int64(float64(used) * 0.35)
 	} else if float64(used) < (common.QuotaPerUnit * 15) {
 		used = int64(float64(used) * 0.25)
 	} else if float64(used) < (common.QuotaPerUnit * 30) {
+		used = int64(float64(used) * 0.2)
+	} else if float64(used) < (common.QuotaPerUnit * 60) {
 		used = int64(float64(used) * 0.15)
 	} else {
 		used = int64(float64(used) * 0.1)

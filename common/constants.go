@@ -229,6 +229,7 @@ const (
 	ChannelTypeVertexAi       = 41
 	ChannelTypeMistral        = 42
 	ChannelTypeDeepseek       = 43
+	ChannelTypeDoubao         = 44
 
 	ChannelTypeDummy // this one is only for count, do not add any channel after this
 
@@ -279,4 +280,5 @@ var ChannelBaseURLs = []string{
 	"",                                          //41
 	"https://api.mistral.ai",                    //42
 	"https://api.deepseek.com",                  //43
+	"https://ark.cn-beijing.volces.com",
 }

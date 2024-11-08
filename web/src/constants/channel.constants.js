@@ -110,6 +110,8 @@ export const CHANNEL_OPTIONS = [
   { key: 38, text: 'Jina', value: 38, color: 'blue', label: 'Jina' },
   { key: 40, text: 'SiliconCloud', value: 40, color: 'purple', label: 'SiliconCloud' },
   { key: 42, text: 'Mistral AI', value: 42, color: 'blue', label: 'Mistral AI' },
+  { key: 43, text: 'Deepseek', value: 43, color: 'blue', label: 'Deepseek' },
+  { key: 44, text: 'Doubao', value: 44, color: 'blue', label: 'Doubao' },
   { key: 8, text: '自定义渠道', value: 8, color: 'pink', label: '自定义渠道' },
   {
     key: 22,
