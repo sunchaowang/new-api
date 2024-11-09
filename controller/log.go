@@ -26,8 +26,9 @@ func GetAllLogs(c *gin.Context) {
 	modelName := c.Query("model_name")
 	channel, _ := strconv.Atoi(c.Query("channel"))
 	requestIP := c.Query("request_ip")
+	requestId := c.Query("request_id")
 	userId, _ := strconv.Atoi(c.Query("user_id"))
-	logs, total, err := model.GetAllLogs(logType, startTimestamp, endTimestamp, modelName, username, tokenName, (p-1)*pageSize, pageSize, channel, requestIP, c.GetString("request_id"), userId)
+	logs, total, err := model.GetAllLogs(logType, startTimestamp, endTimestamp, modelName, username, tokenName, (p-1)*pageSize, pageSize, channel, requestIP, requestId, userId)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,

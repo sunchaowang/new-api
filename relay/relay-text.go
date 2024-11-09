@@ -134,7 +134,7 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 	preConsumedQuota, userQuota, openaiErr := preConsumeQuota(c, preConsumedQuota, relayInfo)
 	if openaiErr != nil {
 		model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
-			"RequestID": c.GetString("request_id"),
+			"RequestID": c.GetString(common.RequestIdKey),
 			"IsError":   true,
 		})
 		return openaiErr
@@ -292,7 +292,7 @@ func ClaudeTextHelper(c *gin.Context) *dto.OpenAIErrorWithStatusCode {
 	preConsumedQuota, userQuota, openaiErr := preConsumeQuota(c, preConsumedQuota, relayInfo)
 	if openaiErr != nil {
 		model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
-			"RequestID": c.GetString("request_id"),
+			"RequestID": c.GetString(common.RequestIdKey),
 			"IsError":   true,
 		})
 		return openaiErr
@@ -547,7 +547,7 @@ func postConsumeQuota(ctx *gin.Context, relayInfo *relaycommon.RelayInfo, modelN
 	}
 	other := service.GenerateTextOtherInfo(ctx, relayInfo, modelRatio, groupRatio, completionRatio, modelPrice)
 	model.RecordConsumeLog(ctx, relayInfo.UserId, relayInfo.ChannelId, promptTokens, completionTokens, logModel,
-		tokenName, quota, logContent, relayInfo.TokenId, userQuota, int(useTimeSeconds), relayInfo.IsStream, other, ctx.ClientIP(), ctx.GetString("request_id"), relayInfo.TokenGroup)
+		tokenName, quota, logContent, relayInfo.TokenId, userQuota, int(useTimeSeconds), relayInfo.IsStream, other, ctx.ClientIP(), ctx.GetString(common.RequestIdKey), relayInfo.TokenGroup)
 
 	//if quota != 0 {
 	//

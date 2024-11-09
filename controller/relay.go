@@ -38,6 +38,15 @@ func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode 
 	default:
 		err = relay.TextHelper(c)
 	}
+	if err != nil {
+		go func() {
+			userId := c.Value("id").(int)
+			model.RecordLog(userId, model.LogTypeConsume, err.Error.Message, c.ClientIP(), map[string]interface{}{
+				"RequestID": c.GetString(common.RequestIdKey),
+				"IsError":   true,
+			})
+		}()
+	}
 	return err
 }
 

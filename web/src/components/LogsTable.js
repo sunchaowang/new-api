@@ -585,11 +585,13 @@ const LogsTable = ({ groups }) => {
             other.group_ratio
           );
         }
-        expandDataLocal.push({
-          key: '计费过程',
-          label: '计费过程',
-          value: content
-        });
+        if (!logs[i].is_error) {
+          expandDataLocal.push({
+            key: '计费过程',
+            label: '计费过程',
+            value: content
+          });
+        }
       }
 
       expandDatesLocal[logs[i].key] = expandDataLocal;

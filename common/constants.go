@@ -122,6 +122,7 @@ var CohereSafetySetting = GetEnvOrDefaultString("COHERE_SAFETY_SETTING", "NONE")
 
 const (
 	RequestIdKey = "X-Oneapi-Request-Id"
+	RequestIPKey = "X-Oneapi-Request-IP"
 )
 
 const (

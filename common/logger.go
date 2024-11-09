@@ -75,6 +75,7 @@ func logHelper(ctx context.Context, level string, msg string) {
 		writer = gin.DefaultWriter
 	}
 	id := ctx.Value(RequestIdKey)
+
 	now := time.Now()
 	_, _ = fmt.Fprintf(writer, "[%s] %v | %s | %s \n", level, now.Format("2006/01/02 - 15:04:05"), id, msg)
 	logCount++ // we don't need accurate count, so no lock here

@@ -571,6 +571,8 @@ func ClaudeStreamHandlerRaw(c *gin.Context, resp *http.Response, info *relaycomm
 	reader := bufio.NewReader(resp.Body)
 	c.Header("Content-Type", "text/event-stream")
 
+	// 逐行读取响应数据
+	
 	for {
 		line, err := reader.ReadBytes('\n')
 		if err != nil {
@@ -580,7 +582,7 @@ func ClaudeStreamHandlerRaw(c *gin.Context, resp *http.Response, info *relaycomm
 			return &dto.OpenAIErrorWithStatusCode{
 				Error: dto.OpenAIError{
 					Message: err.Error(),
-					Type:    "one_api_error",
+					Type:    "chirou_api_error",
 					Code:    "read_response_body_failed",
 				},
 				StatusCode: http.StatusInternalServerError,
@@ -593,7 +595,7 @@ func ClaudeStreamHandlerRaw(c *gin.Context, resp *http.Response, info *relaycomm
 			return &dto.OpenAIErrorWithStatusCode{
 				Error: dto.OpenAIError{
 					Message: err.Error(),
-					Type:    "one_api_error",
+					Type:    "chirou_api_error",
 					Code:    "write_response_failed",
 				},
 				StatusCode: http.StatusInternalServerError,
@@ -601,5 +603,6 @@ func ClaudeStreamHandlerRaw(c *gin.Context, resp *http.Response, info *relaycomm
 		}
 		c.Writer.Flush()
 	}
+
 	return nil, nil
 }
