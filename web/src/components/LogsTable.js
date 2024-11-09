@@ -1,46 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import {
-  API,
-  copy,
-  getTodayStartTimestamp,
-  isAdmin,
-  isMobile,
-  showError,
-  showSuccess,
-  timestamp2string,
-} from "../helpers";
+import { API, copy, getTodayStartTimestamp, isAdmin, showError, showSuccess, timestamp2string } from '../helpers';
 
-import {
-  Avatar,
-  Button,
-  Card,
-  Form,
-  Layout,
-  Modal,
-  Select,
-  Space,
-  Spin,
-
-  Tag,
-  Tooltip,
-  Row,
-  Col,
-  Typography,
-
-} from "@douyinfe/semi-ui";
-import { Table,Descriptions } from '@arco-design/web-react'
-import { IconLightningStroked } from "@douyinfe/semi-icons";
-import { ITEMS_PER_PAGE } from "../constants";
-import {
-    renderAudioModelPrice,
-  renderGroup,
-  renderModelPrice,
-  renderNumber,
-  renderQuota,
-  stringToColor,
-} from "../helpers/render";
-import Paragraph from "@douyinfe/semi-ui/lib/es/typography/paragraph";
-import { getLogOther } from "../helpers/other.js";
+import { Avatar, Form, Layout, Modal, Select, Space, Spin, Tag, Tooltip, Row, Col, Typography } from '@douyinfe/semi-ui';
+import { Table, Descriptions, Card, Button } from '@arco-design/web-react';
+import { IconLightningStroked } from '@douyinfe/semi-icons';
+import { ITEMS_PER_PAGE } from '../constants';
+import { renderAudioModelPrice, renderGroup, renderModelPrice, renderNumber, renderQuota, stringToColor } from '../helpers/render';
+import Paragraph from '@douyinfe/semi-ui/lib/es/typography/paragraph';
+import { getLogOther } from '../helpers/other.js';
+import { useIsMobile } from '../helpers/hooks.js';
 
 const { Header } = Layout;
 
@@ -49,26 +17,26 @@ function renderTimestamp(timestamp) {
 }
 
 const MODE_OPTIONS = [
-  { key: "all", text: "全部用户", value: "all" },
-  { key: "self", text: "当前用户", value: "self" },
+  { key: 'all', text: '全部用户', value: 'all' },
+  { key: 'self', text: '当前用户', value: 'self' }
 ];
 
 const colors = [
-  "amber",
-  "blue",
-  "cyan",
-  "green",
-  "grey",
-  "indigo",
-  "light-blue",
-  "lime",
-  "orange",
-  "pink",
-  "purple",
-  "red",
-  "teal",
-  "violet",
-  "yellow",
+  'amber',
+  'blue',
+  'cyan',
+  'green',
+  'grey',
+  'indigo',
+  'light-blue',
+  'lime',
+  'orange',
+  'pink',
+  'purple',
+  'red',
+  'teal',
+  'violet',
+  'yellow'
 ];
 
 function renderType(type) {
@@ -76,50 +44,50 @@ function renderType(type) {
     case 1:
       return (
         <Tag color="cyan" size="large">
-          {" "}
-          充值{" "}
+          {' '}
+          充值{' '}
         </Tag>
       );
     case 2:
       return (
         <Tag color="lime" size="large">
-          {" "}
-          消费{" "}
+          {' '}
+          消费{' '}
         </Tag>
       );
     case 3:
       return (
         <Tag color="orange" size="large">
-          {" "}
-          管理{" "}
+          {' '}
+          管理{' '}
         </Tag>
       );
     case 4:
       return (
         <Tag color="purple" size="large">
-          {" "}
-          系统{" "}
+          {' '}
+          系统{' '}
         </Tag>
       );
     case 5:
       return (
         <Tag color="green" size="large">
-          {" "}
-          签到{" "}
+          {' '}
+          签到{' '}
         </Tag>
       );
     case 6:
       return (
         <Tag color="green" size="large">
-          {" "}
-          登录{" "}
+          {' '}
+          登录{' '}
         </Tag>
       );
     default:
       return (
         <Tag color="black" size="large">
-          {" "}
-          未知{" "}
+          {' '}
+          未知{' '}
         </Tag>
       );
   }
@@ -146,22 +114,22 @@ function renderUseTime(type) {
   if (time < 101) {
     return (
       <Tag color="green" size="large">
-        {" "}
-        {time} s{" "}
+        {' '}
+        {time} s{' '}
       </Tag>
     );
   } else if (time < 300) {
     return (
       <Tag color="orange" size="large">
-        {" "}
-        {time} s{" "}
+        {' '}
+        {time} s{' '}
       </Tag>
     );
   } else {
     return (
       <Tag color="red" size="large">
-        {" "}
-        {time} s{" "}
+        {' '}
+        {time} s{' '}
       </Tag>
     );
   }
@@ -173,22 +141,22 @@ function renderFirstUseTime(type) {
   if (time < 3) {
     return (
       <Tag color="green" size="large">
-        {" "}
-        {time} s{" "}
+        {' '}
+        {time} s{' '}
       </Tag>
     );
   } else if (time < 10) {
     return (
       <Tag color="orange" size="large">
-        {" "}
-        {time} s{" "}
+        {' '}
+        {time} s{' '}
       </Tag>
     );
   } else {
     return (
       <Tag color="red" size="large">
-        {" "}
-        {time} s{" "}
+        {' '}
+        {time} s{' '}
       </Tag>
     );
   }
@@ -199,8 +167,6 @@ const LogsTable = ({ groups }) => {
     {
       title: '时间/IP',
       dataIndex: 'timestamp2string',
-      fixed: 'left',
-      width: 150,
       render: (text, record, index) => {
         return (
           <div>
@@ -388,6 +354,7 @@ const LogsTable = ({ groups }) => {
     {
       title: '详情',
       dataIndex: 'content',
+      fixed: 'right',
       render: (text, record, index) => {
         let other = getLogOther(record.other);
         if (other == null || record.type !== 2) {
@@ -408,14 +375,23 @@ const LogsTable = ({ groups }) => {
         }
 
         return (
-          <Paragraph
-            ellipsis={{
-              rows: 2
-            }}
-            style={{ maxWidth: 240 }}
-          >
-            调用消费
-          </Paragraph>
+          <Space style={{ width: '100%' }} vertical align="left">
+            <Paragraph
+              ellipsis={{
+                rows: 2
+              }}
+              style={{ maxWidth: 240 }}
+            >
+              调用消费
+            </Paragraph>
+            <Paragraph
+              type="link"
+              link
+              onClick={() => (expandedRowKeys.includes(record.id) ? setExpandedRowKeys([]) : setExpandedRowKeys([record.id]))}
+            >
+              查看详情
+            </Paragraph>
+          </Space>
         );
       }
     }
@@ -430,6 +406,10 @@ const LogsTable = ({ groups }) => {
   const [logCount, setLogCount] = useState(ITEMS_PER_PAGE);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [logType, setLogType] = useState(0);
+  const [expandedRowKeys, setExpandedRowKeys] = useState([487050]);
+
+  const isMobile = useIsMobile();
+
   const isAdminUser = isAdmin();
   let now = new Date();
   // 初始化start_timestamp为今天0点
@@ -439,7 +419,7 @@ const LogsTable = ({ groups }) => {
     token_name: '',
     model_name: '',
     start_timestamp: timestamp2string(getTodayStartTimestamp()),
-    end_timestamp: timestamp2string(now.getTime() / 1000 + 3600),
+    end_timestamp: timestamp2string(getTodayStartTimestamp() + 3600 * 24),
     channel: ''
   });
   const { username, user_id, token_name, model_name, start_timestamp, end_timestamp, channel } = inputs;
@@ -689,18 +669,30 @@ const LogsTable = ({ groups }) => {
   }, []);
 
   const expandRowRender = (record, index) => {
-    return <Descriptions layout={'vertical'} column={1} data={expandData[record.key]} />;
+    return (
+      <Descriptions
+        style={{ width: '100%' }}
+        layout={'vertical'}
+        column={1}
+        data={expandData[record.key]}
+        labelStyle={{ whiteSpace: 'nowrap' }}
+        valueStyle={{
+          maxWidth: '100%',
+          overflow: 'auto'
+        }}
+      />
+    );
   };
 
   return (
     <>
-      <Card title="请求日志">
+      <Card title="请求日志" bordered={false} headerStyle={{ padding: 0 }} bodyStyle={{ paddingLeft: 0, paddingRight: 0 }}>
         <Spin spinning={loadingStat}>
           <Card style={{ width: '100%' }}>
             <Row>
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
-                  layout={isMobile() ? 'vertical' : 'vertical'}
+                  layout={isMobile ? 'vertical' : 'vertical'}
                   data={[
                     {
                       key: '总消耗额度',
@@ -709,14 +701,14 @@ const LogsTable = ({ groups }) => {
                         <Tag color="green" size="large">
                           {renderQuota(stat.quota)}
                         </Tag>
-                      ),
-                    },
+                      )
+                    }
                   ]}
                 />
               </Col>
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
-                  layout={isMobile() ? 'vertical' : 'vertical'}
+                  layout={isMobile ? 'vertical' : 'vertical'}
                   data={[
                     {
                       key: '近一分钟内请求次数',
@@ -725,24 +717,24 @@ const LogsTable = ({ groups }) => {
                         <Tag color="blue" size="large">
                           {stat.rpm}
                         </Tag>
-                      ),
-                    },
+                      )
+                    }
                   ]}
                 />
               </Col>
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
-                  layout={isMobile() ? 'vertical' : 'vertical'}
+                  layout={isMobile ? 'vertical' : 'vertical'}
                   data={[
                     {
                       key: '近一分钟内消耗Token数',
                       label: '近一分钟内消耗Token数',
                       value: (
-                        <Tag color="purple" size="large" >
+                        <Tag color="purple" size="large">
                           {stat.tpm}
                         </Tag>
-                      ),
-                    },
+                      )
+                    }
                   ]}
                 />
               </Col>
@@ -839,28 +831,26 @@ const LogsTable = ({ groups }) => {
                 />
               </>
             )}
-            <Button
-              label="查询"
-              type="primary"
-              htmlType="submit"
-              className="btn-margin-right"
-              onClick={refresh}
-              loading={loading}
-            >
+            <Button label="查询" type="primary" htmlType="submit" className="btn-margin-right" onClick={refresh} loading={loading}>
               查询
             </Button>
           </Form>
         </Card>
 
         <Table
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           columns={columns}
           border={false}
           expandedRowRender={expandRowRender}
+          expandedRowKeys={expandedRowKeys}
+          expandProps={{
+            width: 0,
+            icon: () => null
+          }}
           data={logs}
           loading={loading}
-          rowKey="key"
-          scroll={{ x: 'max-content', y: 'max-content', scrollToFirstRowOnChange: true }}
+          rowKey="id"
+          scroll={{ x: 'max-content', y: true, scrollToFirstRowOnChange: true }}
           pagination={{
             currentPage: activePage,
             current: activePage,
@@ -874,9 +864,9 @@ const LogsTable = ({ groups }) => {
             onPageChange: handlePageChange,
             onChange: handlePageChange,
             formatPageText: false,
-            size: isMobile() ? 'small' : 'default',
+            size: isMobile ? 'mini' : 'default',
             showTotal: true,
-            showJumper: true,
+            showJumper: !isMobile
           }}
         />
       </Card>
