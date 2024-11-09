@@ -34,12 +34,13 @@ import { setUserData } from "../helpers/data.js";
 
 import styles from "./login.module.scss";
 import { ConfigContext } from '../context/Config/index.js';
+import LogoSvg from '../assets/svg/logo.svg?react';
 
 const LoginForm = () => {
   const [inputs, setInputs] = useState({
-    username: "",
-    password: "",
-    wechat_verification_code: "",
+    username: '',
+    password: '',
+    wechat_verification_code: ''
   });
   const [searchParams, setSearchParams] = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
@@ -47,18 +48,18 @@ const LoginForm = () => {
   const [userState, userDispatch] = useContext(UserContext);
   const [configState, configDispatch] = useContext(ConfigContext);
   const [turnstileEnabled, setTurnstileEnabled] = useState(false);
-  const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
   let navigate = useNavigate();
   const [status, setStatus] = useState({});
   const logo = getLogo();
   const [loginLoading, setLoginLoading] = useState(false);
 
   useEffect(() => {
-    if (searchParams.get("expired")) {
-      showError("未登录或登录已过期，请重新登录！");
+    if (searchParams.get('expired')) {
+      showError('未登录或登录已过期，请重新登录！');
     }
-    let status = localStorage.getItem("status");
+    let status = localStorage.getItem('status');
     if (status) {
       status = JSON.parse(status);
       setStatus(status);
@@ -109,7 +110,7 @@ const LoginForm = () => {
     if (username && password) {
       const res = await API.post(`/api/user/login?turnstile=${turnstileToken}`, {
         username,
-        password,
+        password
       });
       const { success, message, data } = res.data;
       if (success) {
@@ -121,7 +122,7 @@ const LoginForm = () => {
           Modal.error({
             title: '您正在使用默认密码！',
             content: '请立刻修改默认密码！',
-            centered: true,
+            centered: true
           });
         }
         navigate('/dashboard/home');
@@ -136,16 +137,7 @@ const LoginForm = () => {
 
   // 添加Telegram登录处理函数
   const onTelegramLoginClicked = async (response) => {
-    const fields = [
-      "id",
-      "first_name",
-      "last_name",
-      "username",
-      "photo_url",
-      "auth_date",
-      "hash",
-      "lang",
-    ];
+    const fields = ['id', 'first_name', 'last_name', 'username', 'photo_url', 'auth_date', 'hash', 'lang'];
     const params = {};
     fields.forEach((field) => {
       if (response[field]) {
@@ -155,9 +147,9 @@ const LoginForm = () => {
     const res = await API.get(`/api/oauth/telegram/login`, { params });
     const { success, message, data } = res.data;
     if (success) {
-      userDispatch({ type: "login", payload: data });
-      localStorage.setItem("user", JSON.stringify(data));
-      showSuccess("登录成功！");
+      userDispatch({ type: 'login', payload: data });
+      localStorage.setItem('user', JSON.stringify(data));
+      showSuccess('登录成功！');
       setUserData(data);
       updateAPI();
       navigate('/dashboard/home');
@@ -167,17 +159,19 @@ const LoginForm = () => {
   };
 
   return (
-    <Layout style={{
-      width: '100%',
-      height: '100%',
-    }}>
+    <Layout
+      style={{
+        width: '100%',
+        height: '100%'
+      }}
+    >
       <Layout.Content>
         <Row type="flex" align="center" justify="center">
           <Col span={24} sm={20} md={16} lg={12} xl={8} xxl={6}>
             <Card title={'欢迎回来'}>
               <div style={{ width: '100%' }} className={styles.main}>
                 <div className={styles.login}>
-                  <img src={getLogo()} className={styles.logo} />
+                  <LogoSvg style={{ height: 64 }} className={styles.logo} />
                   <div className={styles.header}>
                     <p className={styles.title}></p>
                     <p className={styles.text}>

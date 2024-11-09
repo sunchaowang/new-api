@@ -18,6 +18,7 @@ import { stringToColor } from '../helpers/render';
 import { setStatusData } from '../helpers/data.js';
 import CheckInModal from './CheckInModal.js';
 import { useIsMobile } from '../helpers/hooks.js';
+import LogoSvg from '../assets/svg/logo.svg?react';
 
 // HeaderBar Buttons
 let headerButtons = [
@@ -25,15 +26,15 @@ let headerButtons = [
     text: '关于',
     itemKey: 'about',
     to: '/about',
-    icon: <IconHelpCircle />,
-  },
+    icon: <IconHelpCircle />
+  }
 ];
 
 if (localStorage.getItem('chat_link')) {
   headerButtons.splice(1, 0, {
     name: '聊天',
     to: '/chat',
-    icon: 'comments',
+    icon: 'comments'
   });
 }
 
@@ -64,20 +65,20 @@ const HeaderBar = () => {
         text: '首页',
         itemKey: 'home',
         to: '/',
-        icon: isMobile ? null : <IconIntro />,
+        icon: isMobile ? null : <IconIntro />
       },
       {
         text: '工作台',
         itemKey: 'dashboard',
         to: '/dashboard/home',
-        icon: isMobile ? null : <IconLayout />,
+        icon: isMobile ? null : <IconLayout />
       },
       {
         text: '模型价格',
         itemKey: 'pricing',
         to: '/pricing',
-        icon: isMobile ? null : <IconTag />,
-      },
+        icon: isMobile ? null : <IconTag />
+      }
     ],
     [
       localStorage.getItem('enable_data_export'),
@@ -85,8 +86,8 @@ const HeaderBar = () => {
       localStorage.getItem('enable_task'),
       localStorage.getItem('chat_link'),
       isAdmin(),
-      isMobile,
-    ],
+      isMobile
+    ]
   );
 
   const [userState, userDispatch] = useContext(UserContext);
@@ -152,14 +153,14 @@ const HeaderBar = () => {
     }
   }, []);
 
-  const [userInfo, setUserInfo] = useState(null)
+  const [userInfo, setUserInfo] = useState(null);
   useEffect(() => {
     if (userState?.user) {
-      setUserInfo(userState.user)
-      return
+      setUserInfo(userState.user);
+      return;
     }
-    setUserInfo(null)
-  }, [userState])
+    setUserInfo(null);
+  }, [userState]);
 
   return (
     <>
@@ -174,7 +175,7 @@ const HeaderBar = () => {
                 register: '/register',
                 home: '/',
                 dashboard: '/dashboard/home',
-                pricing: '/pricing',
+                pricing: '/pricing'
               };
               return (
                 <Link style={{ textDecoration: 'none' }} to={routerMap[props.itemKey]}>
@@ -189,21 +190,20 @@ const HeaderBar = () => {
               isMobile
                 ? !isLoginExpired
                   ? {
-                      text: <Button onClick={() => toggleSidebar()} icon={<IconMenu />}></Button>,
+                      text: <Button onClick={() => toggleSidebar()} icon={<IconMenu />}></Button>
                     }
                   : null
                 : {
-                    logo: <img src={logo} alt="logo" />,
-                    text: systemName,
+                    logo: <LogoSvg style={{ height: 36 }} alt="Chirou API" />,
+                    text: systemName
                   }
             }
           >
             {buttons.map((button) => (
-              <Nav.Item itemKey={button.itemKey} text={button.text} onClick={() => navigate(button.to)}>
-              </Nav.Item>
+              <Nav.Item itemKey={button.itemKey} text={button.text} onClick={() => navigate(button.to)}></Nav.Item>
             ))}
 
-            <Nav.Footer style={{paddingLeft: 0, paddingRight: 0, paddingTop: 16, paddingBottom: 16}}>
+            <Nav.Footer style={{ paddingLeft: 0, paddingRight: 0, paddingTop: 16, paddingBottom: 16 }}>
               <>
                 {isNewYear && (
                   // happy new year
@@ -211,9 +211,7 @@ const HeaderBar = () => {
                     position="bottomRight"
                     render={
                       <Dropdown.Menu>
-                        <Dropdown.Item onClick={handleNewYearClick}>
-                          Happy New Year!!!
-                        </Dropdown.Item>
+                        <Dropdown.Item onClick={handleNewYearClick}>Happy New Year!!!</Dropdown.Item>
                       </Dropdown.Menu>
                     }
                   >
@@ -237,33 +235,22 @@ const HeaderBar = () => {
                   )}
                 </>
                 {userInfo && !isLoginExpired ? (
-                  <div style={{width: 'max-content'}}>
+                  <div style={{ width: 'max-content' }}>
                     {/* 签到 */}
-                    <CheckInModal
-                      visible={checkinModalVisible}
-                      onClose={() => setCheckinModalVisible(false)}
-                    />
+                    <CheckInModal visible={checkinModalVisible} onClose={() => setCheckinModalVisible(false)} />
                     {/* <Modal visible={checkinModalVisible} onClose={() => setCheckinModalVisible(false)}></Modal> */}
                     <Dropdown
                       position="bottomRight"
                       render={
                         <Dropdown.Menu>
                           {/* 工作台 */}
-                          {isMobile && (
-                            <Dropdown.Item onClick={() => navigate('/dashboard/home')}>
-                              工作台
-                            </Dropdown.Item>
-                          )}
+                          {isMobile && <Dropdown.Item onClick={() => navigate('/dashboard/home')}>工作台</Dropdown.Item>}
                           <Dropdown.Item onClick={checkin}>立即签到</Dropdown.Item>
                           <Dropdown.Item onClick={logout}>退出</Dropdown.Item>
                         </Dropdown.Menu>
                       }
                     >
-                      <Avatar
-                        size="small"
-                        color={stringToColor(userState.user.username)}
-                        style={{ margin: 4 }}
-                      >
+                      <Avatar size="small" color={stringToColor(userState.user.username)} style={{ margin: 4 }}>
                         {userState.user.username[0]}
                       </Avatar>
                       <span>{userState.user.username}</span>
@@ -271,8 +258,8 @@ const HeaderBar = () => {
                   </div>
                 ) : (
                   <>
-                    <Nav.Item style={{paddingLeft: 8, paddingRight: 8}} itemKey={'login'} text={'登录'} icon={<IconKey />} />
-                    <Nav.Item style={{paddingLeft: 8, paddingRight: 8}} itemKey={'register'} text={'注册'} icon={<IconUser />} />
+                    <Nav.Item style={{ paddingLeft: 8, paddingRight: 8 }} itemKey={'login'} text={'登录'} icon={<IconKey />} />
+                    <Nav.Item style={{ paddingLeft: 8, paddingRight: 8 }} itemKey={'register'} text={'注册'} icon={<IconUser />} />
                   </>
                 )}
               </>
