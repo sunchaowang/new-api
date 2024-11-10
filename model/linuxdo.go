@@ -11,13 +11,13 @@ func (user User) QuotaForNewLinuxDoUser() {
 
 	switch {
 	case user.LinuxDoLevel == 0:
-		bonusMultiplier = 0.25
+		bonusMultiplier = 0.1
 	case user.LinuxDoLevel == 1:
-		bonusMultiplier = 0.5
+		bonusMultiplier = 0.25
 	case user.LinuxDoLevel == 2:
-		bonusMultiplier = 0.75
+		bonusMultiplier = 0.5
 	case user.LinuxDoLevel == 3:
-		bonusMultiplier = 1.5
+		bonusMultiplier = 1
 	default:
 		bonusMultiplier = float64(user.LinuxDoLevel) - 1
 	}

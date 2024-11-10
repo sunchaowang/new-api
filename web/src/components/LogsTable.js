@@ -1,8 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { API, copy, getTodayStartTimestamp, isAdmin, showError, showSuccess, timestamp2string } from '../helpers';
 
-import { Avatar, Form, Layout, Modal, Select, Space, Spin, Tag, Tooltip, Row, Col, Typography } from '@douyinfe/semi-ui';
-import { Table, Descriptions, Card, Button } from '@arco-design/web-react';
+import {
+  Table,
+  Avatar,
+  Button,
+  Card,
+  Form,
+  Layout,
+  Modal,
+  Select,
+  Space,
+  Spin,
+  Tag,
+  Tooltip,
+  Row,
+  Col,
+  Typography
+} from '@douyinfe/semi-ui';
+import { Descriptions } from '@arco-design/web-react';
 import { IconLightningStroked } from '@douyinfe/semi-icons';
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderAudioModelPrice, renderGroup, renderModelPrice, renderNumber, renderQuota, stringToColor } from '../helpers/render';
@@ -163,6 +179,8 @@ function renderFirstUseTime(type) {
 }
 
 const LogsTable = ({ groups }) => {
+  const isMobile = useIsMobile();
+
   const columns = [
     {
       title: '时间/IP',
@@ -354,23 +372,33 @@ const LogsTable = ({ groups }) => {
     {
       title: '详情',
       dataIndex: 'content',
-      fixed: 'right',
+      width: 120,
+      ...(isMobile ? {} : { fixed: 'right' }),
       render: (text, record, index) => {
         let other = getLogOther(record.other);
-        if (other == null || record.type !== 2) {
+        if (other == null || (record.type !== 2 && record.type !== 5)) {
           return (
-            <Paragraph
-              ellipsis={{
-                rows: 2,
-                showTooltip: {
-                  type: 'popover',
-                  opts: { style: { width: 240 } }
-                }
-              }}
-              style={{ maxWidth: 240 }}
-            >
-              {text}
-            </Paragraph>
+            <Space style={{ width: '100%' }} vertical align="left">
+              <Paragraph
+                ellipsis={{
+                  rows: 2,
+                  showTooltip: {
+                    type: 'popover',
+                    opts: { style: { width: 120 } }
+                  }
+                }}
+                style={{ maxWidth: 120 }}
+              >
+                {text}
+              </Paragraph>
+              <Paragraph
+                type="link"
+                link
+                onClick={() => (expandedRowKeys.includes(record.id) ? setExpandedRowKeys([]) : setExpandedRowKeys([record.id]))}
+              >
+                查看详情
+              </Paragraph>
+            </Space>
           );
         }
 
@@ -380,9 +408,9 @@ const LogsTable = ({ groups }) => {
               ellipsis={{
                 rows: 2
               }}
-              style={{ maxWidth: 240 }}
+              style={{ maxWidth: 120 }}
             >
-              调用消费
+              {record.type === 2 ? '调用消费' : '签到'}
             </Paragraph>
             <Paragraph
               type="link"
@@ -407,9 +435,6 @@ const LogsTable = ({ groups }) => {
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [logType, setLogType] = useState(0);
   const [expandedRowKeys, setExpandedRowKeys] = useState([487050]);
-
-  const isMobile = useIsMobile();
-
   const isAdminUser = isAdmin();
   let now = new Date();
   // 初始化start_timestamp为今天0点
@@ -845,11 +870,9 @@ const LogsTable = ({ groups }) => {
           border={false}
           expandedRowRender={expandRowRender}
           expandedRowKeys={expandedRowKeys}
-          expandProps={{
-            width: 0,
-            icon: () => null
-          }}
-          data={logs}
+          expandIcon={<></>}
+          hideExpandedColumn={true}
+          dataSource={logs}
           loading={loading}
           rowKey="id"
           scroll={{ x: 'max-content', y: true, scrollToFirstRowOnChange: true }}
