@@ -89,7 +89,6 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 		}
 		if modelMap[textRequest.Model] != "" {
 			isModelMapped = true
-			textRequest.OriginModelName = textRequest.Model
 			textRequest.Model = modelMap[textRequest.Model]
 			// set upstream model name
 			//isModelMapped = true
@@ -218,7 +217,7 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 	if strings.HasPrefix(relayInfo.UpstreamModelName, "gpt-4o-audio") {
 		service.PostAudioConsumeQuota(c, relayInfo, usage.(*dto.Usage), ratio, preConsumedQuota, userQuota, modelRatio, groupRatio, modelPrice, getModelPriceSuccess, "")
 	} else {
-		postConsumeQuota(c, relayInfo, textRequest.Model, usage.(*dto.Usage), ratio, preConsumedQuota, userQuota, modelRatio, groupRatio, modelPrice, getModelPriceSuccess, "")
+		postConsumeQuota(c, relayInfo, textRequest.OriginModelName, usage.(*dto.Usage), ratio, preConsumedQuota, userQuota, modelRatio, groupRatio, modelPrice, getModelPriceSuccess, "")
 	}
 	return nil
 }
