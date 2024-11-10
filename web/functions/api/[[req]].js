@@ -23,6 +23,7 @@ export async function onRequest(context) {
 
   const modifiedResponse = new Response(response.body, response);
   modifiedResponse.headers.set('Access-Control-Allow-Origin', headers_Origin);
+  modifiedResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 
   return modifiedResponse;
 }
