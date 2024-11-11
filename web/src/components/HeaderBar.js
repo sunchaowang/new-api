@@ -108,6 +108,7 @@ const HeaderBar = () => {
     showSuccess('注销成功!');
     userDispatch({ type: 'logout' });
     localStorage.removeItem('user');
+    setUserInfo(null);
     navigate('/login');
   }
 
@@ -144,6 +145,8 @@ const HeaderBar = () => {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user.is_login_expired) {
         setIsLoginExpired(true);
+      }else {
+        setIsLoginExpired(false)
       }
       console.log('isLoginExpired', isLoginExpired);
     }
@@ -250,10 +253,10 @@ const HeaderBar = () => {
                         </Dropdown.Menu>
                       }
                     >
-                      <Avatar size="small" color={stringToColor(userState.user.username)} style={{ margin: 4 }}>
-                        {userState.user.username[0]}
+                      <Avatar size="small" color={stringToColor(userState?.user?.username)} style={{ margin: 4 }}>
+                        {userState?.user?.username[0]}
                       </Avatar>
-                      <span>{userState.user.username}</span>
+                      <span>{userState?.user?.username}</span>
                     </Dropdown>
                   </div>
                 ) : (
