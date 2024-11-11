@@ -45,6 +45,17 @@ func InsertOperationCheckIn(userId int, lastDayUsed int64, requestIP string) (qu
 	// 随机生成一个额度
 	quota = int(rand.Float64() * float64(lastDayUsed))
 
+	// 查询用户现有额度
+	userQuota, err := GetUserQuota(userId)
+	if err != nil {
+		return 0, err
+	}
+
+	// 如果现有额度小于等于0, 减少签到奖励
+	if userQuota <= 0 {
+		quota = quota / 10
+	}
+
 	operationRemark := []string{"签到", ", ", fmt.Sprintf("获得额度 %v", common.LogQuota(quota))}
 
 	// 更新用户额度
