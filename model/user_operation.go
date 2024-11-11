@@ -130,19 +130,22 @@ func GetUserQuotaUsedByPeriod(userId int, zeroTime time.Time) (used int64, err e
 	// }
 	// 保底值
 	if float64(used) < (common.QuotaPerUnit * 0.5) {
-		used = int64(common.QuotaPerUnit * 0.1)
+		used = int64(common.QuotaPerUnit * 0.05)
 		return used, err
-	} else if float64(used) < (common.QuotaPerUnit * 15) {
-		used = int64(float64(used) * 0.2)
-		return used, err
-	} else if float64(used) < (common.QuotaPerUnit * 30) {
-		used = int64(float64(used) * 0.15)
-		return used, err
-	} else if float64(used) < (common.QuotaPerUnit * 60) {
+	}
+	if float64(used) < (common.QuotaPerUnit * 15) {
 		used = int64(float64(used) * 0.1)
 		return used, err
+	}
+	if float64(used) < (common.QuotaPerUnit * 30) {
+		used = int64(float64(used) * 0.125)
+		return used, err
+	}
+	if float64(used) < (common.QuotaPerUnit * 60) {
+		used = int64(float64(used) * 0.15)
+		return used, err
 	} else {
-		used = int64(float64(used) * 0.05)
+		used = int64(float64(used) * 0.175)
 		return used, err
 	}
 }
