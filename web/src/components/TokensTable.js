@@ -86,7 +86,7 @@ const TokensTable = () => {
           <div>
             <Space>
               {renderStatus(text, record.model_limits_enabled)}
-              {renderGroup(record.group, groups)}
+              {renderGroup(record.group, groupsMap)}
             </Space>
           </div>
         );
@@ -306,28 +306,33 @@ const TokensTable = () => {
     id: undefined,
   });
   const [groups, setGroups] = useState([]);
+  const [groupsMap, setGroupsMap] = useState(new Map([]));
+  const [groupsRatio, setGroupsRatio] = useState({});
   const isMobile = useIsMobile();
 
   const loadGroups = async () => {
     let res = await API.get(`/api/user/groups`);
     const { success, message, data } = res.data;
+    const { usableGroups, usableGroupsRatio } = data;
     if (success) {
       // return data is a map, key is group name, value is group description
       // label is group description, value is group name
-      let localGroupOptions = Object.keys(data)
+      let localGroupOptions = Object.keys(usableGroups)
         .map((group) => ({
-          label: data[group],
+          label: `${usableGroups[group]} (倍率: ${usableGroupsRatio[group]})`,
           value: group,
         }))
         .map((group) => [group.value, group.label]);
-      setGroups(new Map(localGroupOptions));
+      setGroups(() => localGroupOptions);
+      setGroupsMap(new Map(localGroupOptions));
+      setGroupsRatio(usableGroupsRatio);
     } else {
       showError(message);
     }
   };
 
-  useMemo(() => {
-    loadGroups();
+  useEffect(() => {
+    loadGroups().then();
   }, []);
 
   const closeEdit = () => {
@@ -570,6 +575,8 @@ const TokensTable = () => {
         editingToken={editingToken}
         visiable={showEdit}
         handleClose={closeEdit}
+        groups={groups}
+        groupsRatio={groupsRatio}
       ></EditToken>
       <Form layout="horizontal" style={{ marginTop: 10 }} labelPosition={'left'}>
         <Form.Input
