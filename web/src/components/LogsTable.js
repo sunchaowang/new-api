@@ -16,9 +16,9 @@ import {
   Tooltip,
   Row,
   Col,
-  Typography
+  Typography,
+  Descriptions
 } from '@douyinfe/semi-ui';
-import { Descriptions } from '@arco-design/web-react';
 import { IconLightningStroked } from '@douyinfe/semi-icons';
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderAudioModelPrice, renderGroup, renderModelPrice, renderNumber, renderQuota, stringToColor } from '../helpers/render';
@@ -720,12 +720,13 @@ const LogsTable = ({ groups }) => {
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
                   layout={isMobile ? 'vertical' : 'vertical'}
+                  row={1}
                   data={[
                     {
                       key: '总消耗额度',
                       label: '总消耗额度',
                       value: (
-                        <Tag color="green" size="large">
+                        <Tag color="green" size="large" style={{marginTop: 4, marginBottom: 4}}>
                           {renderQuota(stat.quota)}
                         </Tag>
                       )
@@ -736,12 +737,13 @@ const LogsTable = ({ groups }) => {
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
                   layout={isMobile ? 'vertical' : 'vertical'}
+                  row={1}
                   data={[
                     {
                       key: '近一分钟内请求次数',
                       label: '近一分钟内请求次数',
                       value: (
-                        <Tag color="blue" size="large">
+                        <Tag color="blue" size="large" style={{marginTop: 4, marginBottom: 4}}>
                           {stat.rpm}
                         </Tag>
                       )
@@ -752,12 +754,13 @@ const LogsTable = ({ groups }) => {
               <Col span={24} sm={24} md={8} lg={8} xl={8} xxl={8}>
                 <Descriptions
                   layout={isMobile ? 'vertical' : 'vertical'}
+                  row={1}
                   data={[
                     {
                       key: '近一分钟内消耗Token数',
                       label: '近一分钟内消耗Token数',
                       value: (
-                        <Tag color="purple" size="large">
+                        <Tag color="purple" size="large" style={{marginTop: 4, marginBottom: 4}}>
                           {stat.tpm}
                         </Tag>
                       )

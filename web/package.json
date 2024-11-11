@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@arco-design/web-react": "^2.64.1",
     "@douyinfe/semi-icons": "~2.67.0",
     "@douyinfe/semi-icons-lab": "^2.68.0",
     "@douyinfe/semi-ui": "~2.67.0",
