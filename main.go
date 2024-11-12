@@ -31,6 +31,11 @@ var buildFS embed.FS
 var indexPage []byte
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		common.SysLog("Can't load .env file")
+	}
+
 	common.SetupLogger()
 	common.SysLog("Chirou API " + common.Version + " started")
 
