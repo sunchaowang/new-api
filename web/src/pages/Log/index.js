@@ -8,11 +8,12 @@ const Token = () => {
   const loadGroups = async () => {
     let res = await API.get(`/api/user/groups`);
     const { success, message, data } = res.data;
+      const { usableGroups, usableGroupsRatio } = data;
     if (success) {
       // return data is a map, key is group name, value is group description
       // label is group description, value is group name
-        let localGroupOptions = Object.keys(data).map((group) => ({
-            label: data[group],
+        let localGroupOptions = Object.keys(usableGroups).map((group) => ({
+            label: usableGroups[group],
             value: group,
         })).map((group) => (
            [group.value, group.label]
