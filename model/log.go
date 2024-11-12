@@ -31,7 +31,7 @@ type Log struct {
 	Other            string `json:"other"`
 	RequestIP        string `json:"request_ip"`
 	RequestID        string `json:"request_id"`
-	TokenGroup       string `json:"token_group" gorm:"default:‘default’;index"`
+	TokenGroup       string `json:"token_group" gorm:"default:'default';index"`
 }
 
 const (
