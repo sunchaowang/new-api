@@ -183,7 +183,7 @@ const LogsTable = ({ groups }) => {
 
   const columns = [
     {
-      title: '时间/IP',
+      title: '时间',
       dataIndex: 'timestamp2string',
       render: (text, record, index) => {
         return (

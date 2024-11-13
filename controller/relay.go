@@ -43,6 +43,8 @@ func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode 
 			userId := c.Value("id").(int)
 			model.RecordLog(userId, model.LogTypeConsume, err.Error.Message, c.ClientIP(), map[string]interface{}{
 				"RequestID": c.GetString(common.RequestIdKey),
+				"TokenId":   c.GetInt("token_id"),
+				"TokenName": c.GetString("token_name"),
 				"IsError":   true,
 			})
 		}()

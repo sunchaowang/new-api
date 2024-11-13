@@ -135,6 +135,10 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 		model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
 			"RequestID": c.GetString(common.RequestIdKey),
 			"IsError":   true,
+			"TokenName": c.GetString("token_name"),
+			"TokenId":   c.GetInt("token_id"),
+			"ModelName": textRequest.OriginModelName,
+			"Messages":  textRequest.Messages,
 		})
 		return openaiErr
 	}

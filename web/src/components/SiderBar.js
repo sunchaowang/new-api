@@ -27,12 +27,15 @@ import {
   IconToast,
 } from '@douyinfe/semi-icons-lab';
 import { useIsMobile } from '../helpers/hooks.js';
+import { ConfigContext } from "../context/Config/index.js";
 
 // HeaderBar Buttons
 
 const SiderBar = () => {
   const [userState, userDispatch] = useContext(UserContext);
   const [statusState, statusDispatch] = useContext(StatusContext);
+  const [configState, configDispatch] = useContext(ConfigContext);
+
   const defaultIsCollapsed =
     isMobile() || localStorage.getItem('default_collapse_sidebar') === 'true';
 
@@ -286,6 +289,7 @@ const SiderBar = () => {
         items={menuButtons}
         onSelect={(key) => {
           setSelectedKeys([key.itemKey]);
+          configDispatch({ type: 'set', payload: { isCollapse: false } })
         }}
         footer={
           <>

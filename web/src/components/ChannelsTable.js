@@ -208,7 +208,6 @@ const ChannelsTable = () => {
     {
       title: '操作',
       dataIndex: 'operate',
-      fixed: 'right',
       width: 200,
       render: (text, record, index) => (
         <div>
@@ -906,7 +905,7 @@ const ChannelsTable = () => {
 
         <Table
             className={'channel-table'}
-            style={{marginTop: 15}}
+            style={{marginTop: 15, width: '100%'}}
             columns={columns}
             dataSource={pageData}
             pagination={{
@@ -935,7 +934,6 @@ const ChannelsTable = () => {
             }
             expandedRowRender={expandRowRender}
             hideExpandedColumn={false}
-            scroll={{ x: 'max-content' }}
         />
       </>
   );

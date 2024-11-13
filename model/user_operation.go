@@ -124,10 +124,10 @@ func GetUserQuotaUsedByPeriod(userId int, zeroTime time.Time) (used int64, err e
 	} else {
 		used = 0
 	}
-	// fmt.Printf("used: %v\n", used)
-	// if used == 0 {
-	// 	return -2, nil
-	// }
+	fmt.Printf("used: %v\n", used)
+	if used == 0 {
+		return -2, nil
+	}
 	// 保底值
 	if float64(used) < (common.QuotaPerUnit * 0.5) {
 		used = int64(common.QuotaPerUnit * 0.05)

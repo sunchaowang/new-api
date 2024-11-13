@@ -40,7 +40,7 @@ func main() {
 	common.SysLog("Chirou API " + common.Version + " started")
 
 	// 加载 .env 文件
-	err := godotenv.Load()
+	err = godotenv.Load()
 
 	if os.Getenv("GIN_MODE") != "debug" {
 		gin.SetMode(gin.ReleaseMode)
