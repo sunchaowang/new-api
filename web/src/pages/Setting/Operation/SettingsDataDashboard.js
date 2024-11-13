@@ -87,7 +87,9 @@ export default function DataDashboard(props) {
                 <Form.Switch
                   field={'DataExportEnabled'}
                   label={'启用数据看板（实验性）'}
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) => {
                     setInputs({
                       ...inputs,
@@ -133,7 +135,7 @@ export default function DataDashboard(props) {
               </Col>
             </Row>
             <Row>
-              <Button size='large' onClick={onSubmit}>
+              <Button size='default' onClick={onSubmit}>
                 保存数据看板设置
               </Button>
             </Row>

@@ -81,7 +81,9 @@ export default function SettingsDrawing(props) {
                 <Form.Switch
                   field={'DrawingEnabled'}
                   label={'启用绘图功能'}
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) => {
                     setInputs({
                       ...inputs,
@@ -94,7 +96,9 @@ export default function SettingsDrawing(props) {
                 <Form.Switch
                   field={'MjNotifyEnabled'}
                   label={'允许回调（会泄露服务器 IP 地址）'}
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) =>
                     setInputs({
                       ...inputs,
@@ -107,7 +111,9 @@ export default function SettingsDrawing(props) {
                 <Form.Switch
                   field={'MjAccountFilterEnabled'}
                   label={'允许 AccountFilter 参数'}
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) =>
                     setInputs({
                       ...inputs,
@@ -120,7 +126,9 @@ export default function SettingsDrawing(props) {
                 <Form.Switch
                   field={'MjForwardUrlEnabled'}
                   label={'开启之后将上游地址替换为服务器地址'}
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) =>
                     setInputs({
                       ...inputs,
@@ -138,7 +146,9 @@ export default function SettingsDrawing(props) {
                       <Tag>--relax</Tag> 以及 <Tag>--turbo</Tag> 参数
                     </>
                   }
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) =>
                     setInputs({
                       ...inputs,
@@ -155,7 +165,9 @@ export default function SettingsDrawing(props) {
                       检测必须等待绘图成功才能进行放大等操作
                     </>
                   }
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) =>
                     setInputs({
                       ...inputs,
@@ -166,7 +178,7 @@ export default function SettingsDrawing(props) {
               </Col>
             </Row>
             <Row>
-              <Button size='large' onClick={onSubmit}>
+              <Button size='default' onClick={onSubmit}>
                 保存绘图设置
               </Button>
             </Row>

@@ -444,41 +444,39 @@ const UsersTable = () => {
       >
         <div style={{ display: "flex" }}>
           <Space>
-            <Form.Input
-              label="搜索关键字"
-              icon="search"
-              field="keyword"
-              iconPosition="left"
-              placeholder="搜索用户的 ID，用户名，显示名称，以及邮箱地址 ..."
-              value={searchKeyword}
-              loading={searching}
-              onChange={(value) => handleKeywordChange(value)}
-            />
-            <Form.Select
-              field="group"
-              label="分组"
-              optionList={groupOptions}
-              onChange={(value) => {
-                setSearchGroup(value);
-                searchUsers(searchKeyword, value);
-              }}
-            />
+          <Form.Input
+            label='搜索关键字'
+            icon='search'
+            field='keyword'
+            iconPosition='left'
+            placeholder='搜索用户的 ID，用户名，显示名称，以及邮箱地址 ...'
+            value={searchKeyword}
+            loading={searching}
+            onChange={(value) => handleKeywordChange(value)}
+          />
+          <Form.Select
+            field='group'
+            label='分组'
+            optionList={groupOptions}
+            onChange={(value) => {
+              setSearchGroup(value);
+              searchUsers(searchKeyword, value);
+            }}
+          />
+          <Button
+            label='查询'
+            type='primary'
+            htmlType='submit'
+            className='btn-margin-right'
+          >
+            查询
+          </Button>
             <Button
-              label="查询"
-              type="primary"
-              htmlType="submit"
-              className="btn-margin-right"
-              style={{ marginRight: 8 }}
-            >
-              查询
-            </Button>
-            <Button
-              theme="solid"
-              type="primary"
-              style={{ marginRight: 8 }}
-              onClick={() => {
-                setShowAddUser(true);
-              }}
+                theme='light'
+                type='primary'
+                onClick={() => {
+                  setShowAddUser(true);
+                }}
             >
               添加用户
             </Button>

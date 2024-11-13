@@ -114,7 +114,9 @@ export default function SettingsMonitoring(props) {
                 <Form.Switch
                   field={'AutomaticDisableChannelEnabled'}
                   label={'失败时自动禁用通道'}
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) => {
                     setInputs({
                       ...inputs,
@@ -127,7 +129,9 @@ export default function SettingsMonitoring(props) {
                 <Form.Switch
                   field={'AutomaticEnableChannelEnabled'}
                   label={'成功时自动启用通道'}
-                  size='middle'
+                  size='default'
+                  checkedText='｜'
+                  uncheckedText='〇'
                   onChange={(value) =>
                     setInputs({
                       ...inputs,
@@ -138,7 +142,7 @@ export default function SettingsMonitoring(props) {
               </Col>
             </Row>
             <Row>
-              <Button size='large' onClick={onSubmit}>
+              <Button size='default' onClick={onSubmit}>
                 保存监控设置
               </Button>
             </Row>
