@@ -94,6 +94,7 @@ func InitOptionMap() {
 	common.OptionMap["GroupRatio"] = common.GroupRatio2JSONString()
 	common.OptionMap["TokenGroupRatio"] = common.TokenGroupRatio2JSONString()
 	common.OptionMap["UserUsableGroups"] = common.UserUsableGroups2JSONString()
+	common.OptionMap["HiddenGroups"] = common.HiddenGroups2JSONString()
 	common.OptionMap["CompletionRatio"] = common.CompletionRatio2JSONString()
 	common.OptionMap["TopUpLink"] = common.TopUpLink
 	common.OptionMap["ChatLink"] = common.ChatLink
@@ -114,6 +115,8 @@ func InitOptionMap() {
 	common.OptionMap["StopOnSensitiveEnabled"] = strconv.FormatBool(constant.StopOnSensitiveEnabled)
 	common.OptionMap["SensitiveWords"] = constant.SensitiveWordsToString()
 	common.OptionMap["StreamCacheQueueLength"] = strconv.Itoa(constant.StreamCacheQueueLength)
+
+	common.OptionMap["GroupModelMapping"] = common.GroupModelMapping2JSONString()
 
 	common.OptionMapRWMutex.Unlock()
 	loadOptionsFromDatabase()
@@ -327,6 +330,8 @@ func updateOptionMap(key string, value string) (err error) {
 		err = common.UpdateTokenGroupRatioByJSONString(value)
 	case "UserUsableGroups":
 		err = common.UpdateUserUsableGroupsByJSONString(value)
+	case "HiddenGroups":
+		err = common.UpdateHiddenGroupsByJSONString(value)
 	case "CompletionRatio":
 		err = common.UpdateCompletionRatioByJSONString(value)
 	case "ModelPrice":

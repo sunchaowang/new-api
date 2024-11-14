@@ -62,6 +62,18 @@ func getAndValidateTextRequest(c *gin.Context, relayInfo *relaycommon.RelayInfo)
 		}
 	}
 	relayInfo.IsStream = textRequest.Stream
+	// 全局模型映射处理
+	groupModelMapping := common.GroupModelMapping2JSONString()
+	if groupModelMapping != "" && groupModelMapping != "{}" {
+		modelMap := make(map[string]string)
+		err := json.Unmarshal([]byte(groupModelMapping), &modelMap)
+		if err != nil {
+			return nil, err
+		}
+		if modelMap[textRequest.Model] != "" {
+			textRequest.Model = modelMap[textRequest.Model]
+		}
+	}
 	return textRequest, nil
 }
 
@@ -80,6 +92,7 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 	// map model name
 	isModelMapped := false
 	modelMapping := c.GetString("model_mapping")
+
 	//isModelMapped := false
 	if modelMapping != "" && modelMapping != "{}" {
 		modelMap := make(map[string]string)

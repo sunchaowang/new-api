@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, transformWithEsbuild, loadEnv } from 'vite';
-// import SemiPlugin from "vite-plugin-semi-theme";
+import SemiPlugin from "vite-plugin-semi-theme";
 import svgr from 'vite-plugin-svgr'; // 新增
 
 // https://vitejs.dev/config/
@@ -25,10 +25,10 @@ export default defineConfig(({ command, mode }) => {
         }
       },
       react(),
-      // SemiPlugin({
-      //   theme: '@semi-bot/semi-theme-universedesign',
-      //   options: {},
-      // }),
+      SemiPlugin({
+        theme: '@semi-bot/semi-theme-universedesign',
+        options: {},
+      }),
       svgr({ include: 'src/assets/svg/**/*.svg?react' })
     ],
     optimizeDeps: {
@@ -64,6 +64,11 @@ export default defineConfig(({ command, mode }) => {
           target: env.VITE_APP_SERVER || 'http://localhost:3000',
           changeOrigin: true
         }
+      }
+    },
+    css: {
+      preprocessorOptions: {
+        sass: {}
       }
     }
   };

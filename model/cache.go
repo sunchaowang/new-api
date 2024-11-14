@@ -274,6 +274,20 @@ func CacheGetRandomSatisfiedChannel(group string, model string, retry int) (*Cha
 		model = "gpt-4o-gizmo-*"
 	}
 
+	// 全局模型映射处理
+	groupModelMapping := common.GroupModelMapping2JSONString()
+	if groupModelMapping != "" && groupModelMapping != "{}" {
+		// 如果模型映射不为空 修改textRequest.Model， 如果没有模型映射 不做任何处理
+		modelMap := make(map[string]string)
+		err := json.Unmarshal([]byte(groupModelMapping), &modelMap)
+		if err != nil {
+			return nil, err
+		}
+		if modelMap[model] != "" {
+			model = modelMap[model]
+		}
+	}
+
 	// if memory cache is disabled, get channel directly from database
 	if !common.MemoryCacheEnabled {
 		return GetRandomSatisfiedChannel(group, model, retry)

@@ -2,10 +2,9 @@ package controller
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"io"
 	"log"
 	"net/http"
@@ -18,6 +17,9 @@ import (
 	relayconstant "one-api/relay/constant"
 	"one-api/service"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
 func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode {
@@ -119,6 +121,23 @@ func Relay(c *gin.Context) {
 	group := c.GetString("group")
 	originalModel := c.GetString("original_model")
 	var openaiErr *dto.OpenAIErrorWithStatusCode
+
+	// 全局模型映射处理
+	groupModelMapping := common.GroupModelMapping2JSONString()
+	if groupModelMapping != "" && groupModelMapping != "{}" {
+		modelMap := make(map[string]string)
+		err := json.Unmarshal([]byte(groupModelMapping), &modelMap)
+		if err != nil {
+			common.LogError(c, fmt.Sprintf("unmarshal group model mapping failed: %s", err.Error()))
+			openaiErr = service.OpenAIErrorWrapperLocal(err, "unmarshal_model_mapping_failed", http.StatusInternalServerError)
+			return
+		}
+		if modelMap[originalModel] != "" {
+			originalModel = modelMap[originalModel]
+			// 修改request body
+			c.Set("original_model", originalModel)
+		}
+	}
 
 	for i := 0; i <= common.RetryTimes; i++ {
 		channel, err := getChannel(c, group, originalModel, i)

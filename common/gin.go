@@ -3,9 +3,11 @@ package common
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"io"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 const KeyRequestBody = "key_request_body"
@@ -21,6 +23,13 @@ func GetRequestBody(c *gin.Context) ([]byte, error) {
 	}
 	_ = c.Request.Body.Close()
 	c.Set(KeyRequestBody, requestBody)
+	// 获取requestBody 上的model
+	var jsonData map[string]interface{}
+	if err := json.Unmarshal(requestBody.([]byte), &jsonData); err == nil {
+		if model, exists := jsonData["model"]; exists {
+			fmt.Println("model", model)
+		}
+	}
 	return requestBody.([]byte), nil
 }
 

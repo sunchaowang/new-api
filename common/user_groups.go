@@ -9,6 +9,8 @@ var UserUsableGroups = map[string]string{
 	"vip":     "vip分组",
 }
 
+var HiddenGroups = []string{}
+
 func UserUsableGroups2JSONString() string {
 	jsonBytes, err := json.Marshal(UserUsableGroups)
 	if err != nil {
@@ -17,9 +19,22 @@ func UserUsableGroups2JSONString() string {
 	return string(jsonBytes)
 }
 
+func HiddenGroups2JSONString() string {
+	jsonBytes, err := json.Marshal(HiddenGroups)
+	if err != nil {
+		SysError("error marshalling hidden groups: " + err.Error())
+	}
+	return string(jsonBytes)
+}
+
 func UpdateUserUsableGroupsByJSONString(jsonStr string) error {
 	UserUsableGroups = make(map[string]string)
 	return json.Unmarshal([]byte(jsonStr), &UserUsableGroups)
+}
+
+func UpdateHiddenGroupsByJSONString(jsonStr string) error {
+	HiddenGroups = make([]string, 0)
+	return json.Unmarshal([]byte(jsonStr), &HiddenGroups)
 }
 
 func GetUserUsableGroups(userGroup string) map[string]string {
