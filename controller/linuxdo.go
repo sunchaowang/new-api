@@ -89,7 +89,6 @@ func getLinuxDoUserInfoByCode(code string) (*LinuxDoUser, error) {
 
 func LinuxDoOAuth(c *gin.Context) {
 	session := sessions.Default(c)
-	errorCode := c.Query("error")
 
 	state := c.Query("state")
 	if state == "" || session.Get("oauth_state") == nil || state != session.Get("oauth_state").(string) {
@@ -122,8 +121,8 @@ func LinuxDoOAuth(c *gin.Context) {
 		return
 	}
 	user := model.User{
-		LinuxDoId:    strconv.Itoa(linuxdoUser.ID),
-		LinuxDoLevel: linuxdoUser.TrustLevel,
+		LinuxDoId:       strconv.Itoa(linuxdoUser.ID),
+		LinuxDoLevel:    linuxdoUser.TrustLevel,
 		LinuxDoUserName: linuxdoUser.Username,
 		LinuxDoName:     linuxdoUser.Name,
 	}
@@ -148,9 +147,6 @@ func LinuxDoOAuth(c *gin.Context) {
 		}
 	} else {
 		if common.RegisterEnabled {
-			affCode := c.Query("aff")
-			user.InviterId, _ = model.GetUserIdByAffCode(affCode)
-
 			user.Username = "linuxdo_" + strconv.Itoa(model.GetMaxUserId()+1)
 			if linuxdoUser.Name != "" {
 				user.DisplayName = linuxdoUser.Name
@@ -166,6 +162,9 @@ func LinuxDoOAuth(c *gin.Context) {
 			inviterId := 0
 			if affCode != nil {
 				inviterId, _ = model.GetUserIdByAffCode(affCode.(string))
+				if inviterId != 0 {
+					user.InviterId = inviterId
+				}
 			}
 
 			if err := user.Insert(inviterId, c.ClientIP()); err != nil {
@@ -214,8 +213,8 @@ func LinuxDoBind(c *gin.Context) {
 		return
 	}
 	user := model.User{
-		LinuxDoId:    strconv.Itoa(linuxdoUser.ID),
-		LinuxDoLevel: linuxdoUser.TrustLevel,
+		LinuxDoId:       strconv.Itoa(linuxdoUser.ID),
+		LinuxDoLevel:    linuxdoUser.TrustLevel,
 		LinuxDoName:     linuxdoUser.Name,
 		LinuxDoUserName: linuxdoUser.Username,
 	}

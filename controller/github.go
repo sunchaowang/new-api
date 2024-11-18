@@ -154,6 +154,9 @@ func GitHubOAuth(c *gin.Context) {
 			inviterId := 0
 			if affCode != nil {
 				inviterId, _ = model.GetUserIdByAffCode(affCode.(string))
+				if inviterId != 0 {
+					user.InviterId = inviterId
+				}
 			}
 
 			if err := user.Insert(inviterId, c.ClientIP()); err != nil {
@@ -200,9 +203,9 @@ func GitHubBind(c *gin.Context) {
 		return
 	}
 	user := model.User{
-		GitHubId: githubUser.Login,
-		GitHubUserName: githubUser.Name,
-		GitHubEmail: githubUser.Email,
+		GitHubId:        githubUser.Login,
+		GitHubUserName:  githubUser.Name,
+		GitHubEmail:     githubUser.Email,
 		GitHubCreatedAt: githubUser.CreatedAt,
 	}
 	if model.IsGitHubIdAlreadyTaken(user.GitHubId) {

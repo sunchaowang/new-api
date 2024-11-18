@@ -6,7 +6,7 @@ import { Button, Card, Divider, Form, Icon, Layout, Modal } from '@douyinfe/semi
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import { IconGithubLogo } from '@douyinfe/semi-icons';
-import { onGitHubOAuthClicked, onLinuxDOOAuthClicked } from './utils.js';
+import { onGitHubOAuthClicked, onLinuxDoOAuthClicked } from './utils.js';
 import LinuxDoIcon from './LinuxDoIcon.js';
 import WeChatIcon from './WeChatIcon.js';
 import TelegramLoginButton from 'react-telegram-login/src';
