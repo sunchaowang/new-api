@@ -89,6 +89,8 @@ func getLinuxDoUserInfoByCode(code string) (*LinuxDoUser, error) {
 
 func LinuxDoOAuth(c *gin.Context) {
 	session := sessions.Default(c)
+	errorCode := c.Query("error")
+
 	state := c.Query("state")
 	if state == "" || session.Get("oauth_state") == nil || state != session.Get("oauth_state").(string) {
 		c.JSON(http.StatusForbidden, gin.H{
@@ -160,7 +162,13 @@ func LinuxDoOAuth(c *gin.Context) {
 			user.Role = common.RoleCommonUser
 			user.Status = common.UserStatusEnabled
 
-			if err := user.Insert(user.InviterId, c.ClientIP()); err != nil {
+			affCode := session.Get("aff")
+			inviterId := 0
+			if affCode != nil {
+				inviterId, _ = model.GetUserIdByAffCode(affCode.(string))
+			}
+
+			if err := user.Insert(inviterId, c.ClientIP()); err != nil {
 				c.JSON(http.StatusOK, gin.H{
 					"success": false,
 					"message": err.Error(),

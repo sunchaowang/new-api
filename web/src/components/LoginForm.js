@@ -52,8 +52,15 @@ const LoginForm = () => {
   const [turnstileToken, setTurnstileToken] = useState('');
   let navigate = useNavigate();
   const [status, setStatus] = useState({});
+  const [showWeChatLoginModal, setShowWeChatLoginModal] = useState(false);
+
   const logo = getLogo();
   const [loginLoading, setLoginLoading] = useState(false);
+
+  let affCode = new URLSearchParams(window.location.search).get('aff');
+  if (affCode) {
+    localStorage.setItem('aff', affCode);
+  }
 
   useEffect(() => {
     if (searchParams.get('expired')) {
@@ -70,7 +77,6 @@ const LoginForm = () => {
     }
   }, []);
 
-  const [showWeChatLoginModal, setShowWeChatLoginModal] = useState(false);
 
   const onWeChatLoginClicked = () => {
     setShowWeChatLoginModal(true);
