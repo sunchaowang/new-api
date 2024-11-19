@@ -47,6 +47,8 @@ func relayHandler(c *gin.Context, relayMode int) *dto.OpenAIErrorWithStatusCode 
 				"RequestID": c.GetString(common.RequestIdKey),
 				"TokenId":   c.GetInt("token_id"),
 				"TokenName": c.GetString("token_name"),
+				"ModelName": c.GetString("model"),
+				"ChannelId": c.GetInt("channel_id"),
 				"IsError":   true,
 			})
 		}()
@@ -123,10 +125,10 @@ func Relay(c *gin.Context) {
 	var openaiErr *dto.OpenAIErrorWithStatusCode
 
 	// 全局模型映射处理
-	groupModelMapping := common.GroupModelMapping2JSONString()
-	if groupModelMapping != "" && groupModelMapping != "{}" {
+	globalModelMapping := common.GlobalModelMapping2JSONString()
+	if globalModelMapping != "" && globalModelMapping != "{}" {
 		modelMap := make(map[string]string)
-		err := json.Unmarshal([]byte(groupModelMapping), &modelMap)
+		err := json.Unmarshal([]byte(globalModelMapping), &modelMap)
 		if err != nil {
 			common.LogError(c, fmt.Sprintf("unmarshal group model mapping failed: %s", err.Error()))
 			openaiErr = service.OpenAIErrorWrapperLocal(err, "unmarshal_model_mapping_failed", http.StatusInternalServerError)

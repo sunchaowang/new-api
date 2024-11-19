@@ -14,7 +14,12 @@ import { Layout } from '@douyinfe/semi-ui';
 import { ThemeProvider } from './context/Theme';
 import FooterBar from './components/Footer';
 
-// initialization 
+import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
+
+dayjs.locale('zh-cn');
+
+// initialization
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

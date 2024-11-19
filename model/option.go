@@ -116,7 +116,7 @@ func InitOptionMap() {
 	common.OptionMap["SensitiveWords"] = constant.SensitiveWordsToString()
 	common.OptionMap["StreamCacheQueueLength"] = strconv.Itoa(constant.StreamCacheQueueLength)
 
-	common.OptionMap["GroupModelMapping"] = common.GroupModelMapping2JSONString()
+	common.OptionMap["globalModelMapping"] = common.GlobalModelMapping2JSONString()
 
 	common.OptionMapRWMutex.Unlock()
 	loadOptionsFromDatabase()

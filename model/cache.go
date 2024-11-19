@@ -275,11 +275,11 @@ func CacheGetRandomSatisfiedChannel(group string, model string, retry int) (*Cha
 	}
 
 	// 全局模型映射处理
-	groupModelMapping := common.GroupModelMapping2JSONString()
-	if groupModelMapping != "" && groupModelMapping != "{}" {
+	globalModelMapping := common.GlobalModelMapping2JSONString()
+	if globalModelMapping != "" && globalModelMapping != "{}" {
 		// 如果模型映射不为空 修改textRequest.Model， 如果没有模型映射 不做任何处理
 		modelMap := make(map[string]string)
-		err := json.Unmarshal([]byte(groupModelMapping), &modelMap)
+		err := json.Unmarshal([]byte(globalModelMapping), &modelMap)
 		if err != nil {
 			return nil, err
 		}

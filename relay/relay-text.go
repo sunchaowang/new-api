@@ -63,10 +63,10 @@ func getAndValidateTextRequest(c *gin.Context, relayInfo *relaycommon.RelayInfo)
 	}
 	relayInfo.IsStream = textRequest.Stream
 	// 全局模型映射处理
-	groupModelMapping := common.GroupModelMapping2JSONString()
-	if groupModelMapping != "" && groupModelMapping != "{}" {
+	globalModelMapping := common.GlobalModelMapping2JSONString()
+	if globalModelMapping != "" && globalModelMapping != "{}" {
 		modelMap := make(map[string]string)
-		err := json.Unmarshal([]byte(groupModelMapping), &modelMap)
+		err := json.Unmarshal([]byte(globalModelMapping), &modelMap)
 		if err != nil {
 			return nil, err
 		}
@@ -150,8 +150,9 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 			"IsError":   true,
 			"TokenName": c.GetString("token_name"),
 			"TokenId":   c.GetInt("token_id"),
-			"ModelName": textRequest.OriginModelName,
 			"Messages":  textRequest.Messages,
+			"ModelName": c.GetString("model"),
+			"ChannelId": c.GetInt("channel_id"),
 		})
 		return openaiErr
 	}
@@ -309,6 +310,10 @@ func ClaudeTextHelper(c *gin.Context) *dto.OpenAIErrorWithStatusCode {
 	if openaiErr != nil {
 		model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
 			"RequestID": c.GetString(common.RequestIdKey),
+			"ModelName": c.GetString("model"),
+			"ChannelId": c.GetInt("channel_id"),
+			"TokenName": c.GetString("token_name"),
+			"TokenId":   c.GetInt("token_id"),
 			"IsError":   true,
 		})
 		return openaiErr
@@ -465,8 +470,12 @@ func preConsumeQuota(c *gin.Context, preConsumedQuota int, relayInfo *relaycommo
 		userQuota, err = model.PreConsumeTokenQuota(relayInfo, preConsumedQuota)
 		if err != nil {
 			model.RecordLog(relayInfo.UserId, model.LogTypeConsume, fmt.Sprintf("error: %s", err.Error()), c.ClientIP(), map[string]interface{}{
-				"token_id": relayInfo.TokenId,
-				"IsError":  true,
+				"RequestID": c.GetString(common.RequestIdKey),
+				"ModelName": c.GetString("model"),
+				"ChannelId": c.GetInt("channel_id"),
+				"TokenName": c.GetString("token_name"),
+				"TokenId":   c.GetInt("token_id"),
+				"IsError":   true,
 			})
 			return 0, 0, service.OpenAIErrorWrapperLocal(err, "pre_consume_token_quota_failed", http.StatusForbidden)
 		}

@@ -26,7 +26,7 @@ export default defineConfig(({ command, mode }) => {
       },
       react(),
       SemiPlugin({
-        theme: '@semi-bot/semi-theme-universedesign',
+        theme: '@semi-bot/semi-theme-wochirou',
         options: {},
       }),
       svgr({ include: 'src/assets/svg/**/*.svg?react' })
