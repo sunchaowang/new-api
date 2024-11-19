@@ -2,9 +2,10 @@ package model
 
 import (
 	"encoding/json"
-	"gorm.io/gorm"
 	"one-api/common"
 	"strings"
+
+	"gorm.io/gorm"
 )
 
 type Channel struct {
@@ -32,6 +33,7 @@ type Channel struct {
 	Priority          *int64  `json:"priority" gorm:"bigint;default:0"`
 	AutoBan           *int    `json:"auto_ban" gorm:"default:1"`
 	OtherInfo         string  `json:"other_info"`
+	Proxy             string  `json:"proxy" gorm:"type:varchar(1024);default:''"`
 }
 
 func (channel *Channel) GetModels() []string {

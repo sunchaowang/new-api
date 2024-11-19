@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"one-api/common"
@@ -16,6 +15,8 @@ import (
 	"one-api/service"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type TaskAdaptor struct {
@@ -128,10 +129,16 @@ func (a *TaskAdaptor) GetChannelName() string {
 
 func (a *TaskAdaptor) FetchTask(baseUrl, key string, body map[string]any) (*http.Response, error) {
 	requestUrl := fmt.Sprintf("%s/suno/fetch", baseUrl)
+	channelProxy := ""
+	if proxy, ok := body["channel_proxy"].(string); ok {
+		channelProxy = proxy
+		delete(body, "channel_proxy")
+	}
 	byteBody, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
+	// 获取 byteBody 的channel_proxy
 
 	req, err := http.NewRequest("POST", requestUrl, bytes.NewBuffer(byteBody))
 	if err != nil {
@@ -147,7 +154,7 @@ func (a *TaskAdaptor) FetchTask(baseUrl, key string, body map[string]any) (*http
 	req = req.WithContext(ctx)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+key)
-	resp, err := service.GetHttpClient().Do(req)
+	resp, err := service.GetHttpClient(channelProxy).Do(req)
 	if err != nil {
 		return nil, err
 	}

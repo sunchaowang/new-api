@@ -216,6 +216,9 @@ func SetupContextForSelectedChannel(c *gin.Context, channel *model.Channel, mode
 	if nil != channel.OpenAIOrganization && "" != *channel.OpenAIOrganization {
 		c.Set("channel_organization", *channel.OpenAIOrganization)
 	}
+	if len(channel.Proxy) > 0 {
+		c.Set("channel_proxy", channel.Proxy)
+	}
 	c.Set("auto_ban", channel.GetAutoBan())
 	c.Set("model_mapping", channel.GetModelMapping())
 	c.Set("status_code_mapping", channel.GetStatusCodeMapping())

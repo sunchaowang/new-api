@@ -83,6 +83,9 @@ func RelayTaskSubmit(c *gin.Context, relayMode int) (taskErr *dto.TaskError) {
 			}
 			c.Set("base_url", channel.GetBaseURL())
 			c.Set("channel_id", originTask.ChannelId)
+			if len(channel.Proxy) > 0 {
+				c.Set("channel_proxy", channel.Proxy)
+			}
 			c.Request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", channel.Key))
 
 			relayInfo.BaseUrl = channel.GetBaseURL()

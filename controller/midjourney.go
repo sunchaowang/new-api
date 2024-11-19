@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"log"
 	"net/http"
@@ -16,6 +15,8 @@ import (
 	"one-api/service"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func UpdateMidjourneyTaskBulk() {
@@ -92,7 +93,7 @@ func UpdateMidjourneyTaskBulk() {
 			req = req.WithContext(ctx)
 			req.Header.Set("Content-Type", "application/json")
 			req.Header.Set("mj-api-secret", midjourneyChannel.Key)
-			resp, err := service.GetHttpClient().Do(req)
+			resp, err := service.GetHttpClient(midjourneyChannel.Proxy).Do(req)
 			if err != nil {
 				common.LogError(ctx, fmt.Sprintf("Get Task Do req error: %v", err))
 				continue
