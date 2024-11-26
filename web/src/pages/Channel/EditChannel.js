@@ -84,6 +84,7 @@ const EditChannel = (props) => {
     auto_ban: 1,
     test_model: '',
     groups: ['default'],
+    proxy: ''
   };
   const [batch, setBatch] = useState(false);
   const [autoBan, setAutoBan] = useState(true);
@@ -296,6 +297,7 @@ const EditChannel = (props) => {
   }, [originModelOptions, inputs.models]);
 
   useEffect(() => {
+    if (!props.visible) return;
     fetchModels().then();
     fetchGroups().then();
     if (isEdit) {
@@ -306,7 +308,7 @@ const EditChannel = (props) => {
       setBasicModels(localModels);
       setInputs((inputs) => ({ ...inputs, models: localModels }));
     }
-  }, [props.editingChannel.id]);
+  }, [props.editingChannel.id, props.visible]);
 
   const submit = async () => {
     if (!isEdit && (inputs.name === '' || inputs.key === '')) {
@@ -343,26 +345,32 @@ const EditChannel = (props) => {
     localInputs.auto_ban = autoBan ? 1 : 0;
     localInputs.models = localInputs.models.join(',');
     localInputs.group = localInputs.groups.join(',');
-    if (isEdit) {
-      res = await API.put(`/api/channel/`, {
-        ...localInputs,
-        id: parseInt(channelId),
-      });
-    } else {
-      res = await API.post(`/api/channel/`, localInputs);
-    }
-    const { success, message } = res.data;
-    if (success) {
+    setLoading(true)
+    try {
       if (isEdit) {
-        showSuccess('渠道更新成功！');
+        res = await API.put(`/api/channel/`, {
+          ...localInputs,
+          id: parseInt(channelId),
+        });
       } else {
-        showSuccess('渠道创建成功！');
-        setInputs(originInputs);
+        res = await API.post(`/api/channel/`, localInputs);
       }
-      props.refresh();
-      props.handleClose();
-    } else {
-      showError(message);
+      const { success, message } = res.data;
+      setLoading(false)
+      if (success) {
+        if (isEdit) {
+          showSuccess('渠道更新成功！');
+        } else {
+          showSuccess('渠道创建成功！');
+          setInputs(originInputs);
+        }
+        props.refresh();
+        props.handleClose();
+      } else {
+        showError(message);
+      }
+    } catch (e) {
+      setLoading(false)
     }
   };
 
@@ -419,10 +427,10 @@ const EditChannel = (props) => {
         footer={
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Space>
-              <Button theme="solid" size={'large'} onClick={submit}>
+              <Button theme="solid" onClick={submit}>
                 提交
               </Button>
-              <Button theme="solid" size={'large'} type={'tertiary'} onClick={handleCancel}>
+              <Button theme="solid" type={'tertiary'} onClick={handleCancel}>
                 取消
               </Button>
             </Space>
@@ -853,10 +861,10 @@ const EditChannel = (props) => {
           {inputs.type !== 3 && inputs.type !== 8 && inputs.type !== 22 && inputs.type !== 36 && (
             <>
               <div style={{ marginTop: 10 }}>
-                <Typography.Text strong>代理：</Typography.Text>
+                <Typography.Text strong>渠道API代理：</Typography.Text>
               </div>
               <Input
-                label="代理"
+                label="渠道API代理"
                 name="base_url"
                 placeholder={'此项可选，用于通过代理站来进行 API 调用'}
                 onChange={(value) => {
@@ -908,6 +916,20 @@ const EditChannel = (props) => {
           >
             填入模板
           </Typography.Text>
+          <div style={{ marginTop: 10 }}>
+            <Typography.Text strong>
+              Proxy代理
+            </Typography.Text>
+          </div>
+          <Input
+            label='Proxy代理'
+            name='proxy'
+            placeholder='默认无代理'
+            onChange={(value) => {
+              handleInputChange('proxy', value);
+            }}
+            value={inputs.proxy}
+          />
           {/*<div style={{ marginTop: 10 }}>*/}
           {/*  <Typography.Text strong>*/}
           {/*    最大请求token（0表示不限制）：*/}
