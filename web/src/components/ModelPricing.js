@@ -2,17 +2,17 @@ import React, { useContext, useEffect, useRef, useMemo, useState } from 'react';
 import { API, copy, showError, showInfo, showSuccess } from '../helpers';
 
 import {
-  Banner,
-  Input,
-  Layout,
-  Modal,
-  Space,
-  Table,
-  Tag,
-  Tooltip,
-  Popover,
-  ImagePreview,
-  Button,
+    Banner,
+    Input,
+    Layout,
+    Modal,
+    Space,
+    Table,
+    Tag,
+    Tooltip,
+    Popover,
+    ImagePreview,
+    Button, Select,
 } from '@douyinfe/semi-ui';
 import {
   IconMore,
@@ -88,6 +88,7 @@ const ModelPricing = () => {
   const [modalImageUrl, setModalImageUrl] = useState('');
   const [isModalOpenurl, setIsModalOpenurl] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState('default');
+  const [userUsableGroups, setUserUsableGroups] = useState([]);
 
   const rowSelection = useMemo(
       () => ({
@@ -169,36 +170,50 @@ const ModelPricing = () => {
       sorter: (a, b) => a.quota_type - b.quota_type,
     },
     {
-      title: '可用分组',
-      dataIndex: 'enable_groups',
-      render: (text, record, index) => {
-        // enable_groups is a string array
-        return (
-          <Space>
-            {Object.entries(userUsableGroups).map(([group,groupName]) => {
-              if (group === selectedGroup) {
-                return (
-                  <Tag
-                    color='blue'
-                    size='large'
+      title: (<>
+          <Space spacing={8}>
+              <span>可用分组</span>
+              {/*<Select value={selectedGroup} style={{width: '200px'}} onChange={(e) => setSelectedGroup(e)} placeholder="选择分组">*/}
+              {/*    {*/}
+              {/*        Object.keys(userUsableGroups).map((group) => {*/}
+              {/*            return <Select.Option value={group}>{userUsableGroups[group]}</Select.Option>*/}
+
+              {/*        })*/}
+              {/*    }*/}
+              {/*</Select>*/}
+          </Space>
+      </>),
+        dataIndex: 'enable_groups',
+        render: (text, record, index) => {
+            // enable_groups is a string array
+            return (
+                <Space wrap={true} style={{'max-width': '500px'}}>
+                    {record.enable_groups.map((group) => {
+                        if (group === selectedGroup) {
+                            return (
+                                <Tag
+                                    color='blue'
+                                    size='large'
                     prefixIcon={<IconVerify />}
                   >
-                    {groupName}
+                    {userUsableGroups[group]}
                   </Tag>
                 );
-              } else {
+              } else if (userUsableGroups[group] && !['admin'].includes(group)){
                 return (
                   <Tag
                     color='blue'
                     size='large'
                     onClick={() => {
                       setSelectedGroup(group);
-                      showInfo('当前查看的分组为：' + groupName + '，倍率为：' + groupRatio[group]);
+                      showInfo('当前查看的分组为：' + userUsableGroups[group] + '，倍率为：' + groupRatio[group]);
                     }}
                   >
-                    {groupName}
+                      {userUsableGroups[group]}
                   </Tag>
                 );
+              } else {
+                  return <></>
               }
             })}
           </Space>
@@ -279,7 +294,6 @@ const ModelPricing = () => {
   const [loading, setLoading] = useState(true);
   const [userState, userDispatch] = useContext(UserContext);
   const [groupRatio, setGroupRatio] = useState({});
-  const [userUsableGroups, setUserUsableGroups] = useState([]);
 
   const setModelsFormat = (models, groupRatio) => {
     for (let i = 0; i < models.length; i++) {
