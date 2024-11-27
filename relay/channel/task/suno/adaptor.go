@@ -129,11 +129,11 @@ func (a *TaskAdaptor) GetChannelName() string {
 
 func (a *TaskAdaptor) FetchTask(baseUrl, key string, body map[string]any) (*http.Response, error) {
 	requestUrl := fmt.Sprintf("%s/suno/fetch", baseUrl)
-	channelProxy := ""
-	if proxy, ok := body["channel_proxy"].(string); ok {
-		channelProxy = proxy
-		delete(body, "channel_proxy")
-	}
+	//channelProxy := ""
+	//if proxy, ok := body["channel_proxy"].(string); ok {
+	//	channelProxy = proxy
+	//	delete(body, "channel_proxy")
+	//}
 	byteBody, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
@@ -154,7 +154,7 @@ func (a *TaskAdaptor) FetchTask(baseUrl, key string, body map[string]any) (*http
 	req = req.WithContext(ctx)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+key)
-	resp, err := service.GetHttpClient(channelProxy).Do(req)
+	resp, err := service.GetHttpClient().Do(req)
 	if err != nil {
 		return nil, err
 	}

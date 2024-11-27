@@ -91,7 +91,7 @@ func DoWssRequest(a Adaptor, c *gin.Context, info *common.RelayInfo, requestBody
 }
 
 func doRequest(c *gin.Context, req *http.Request) (*http.Response, error) {
-	resp, err := service.GetHttpClient(c.GetString("channel_proxy")).Do(req)
+	resp, err := service.GetHttpClient().Do(req)
 	if err != nil {
 		return nil, err
 	}
