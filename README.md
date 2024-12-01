@@ -88,6 +88,17 @@
 [图文教程](BT.md)
 
 ### 基于 Docker 进行部署
+### 使用 Docker Compose 部署（推荐）
+```shell
+# 下载项目
+git clone https://github.com/Calcium-Ion/new-api.git
+cd new-api
+# 按需编辑 docker-compose.yml
+# 启动
+docker-compose up -d
+```
+
+### 直接使用 Docker 镜像
 ```shell
 # 使用 SQLite 的部署命令：
 docker run --name new-api -d --restart always -p 3000:3000 -e TZ=Asia/Shanghai -v /home/ubuntu/data/new-api:/data calciumion/new-api:latest
@@ -125,6 +136,7 @@ docker run --name new-api -d --restart always -p 3000:3000 -e SQL_DSN="root:1234
 ![796df8d287b7b7bd7853b2497e7df511](https://github.com/user-attachments/assets/255b5e97-2d3a-4434-b4fa-e922ad88ff5a)
 
 ![image](https://github.com/Calcium-Ion/new-api/assets/61247483/ad0e7aae-0203-471c-9716-2d83768927d4)
+![image](https://github.com/user-attachments/assets/29f81de5-33fc-4fc5-a5ff-f9b54b653c7c)
 
 ![image](https://github.com/Calcium-Ion/new-api/assets/61247483/3ca0b282-00ff-4c96-bf9d-e29ef615c605)
 夜间模式  

@@ -6,7 +6,7 @@ import {
   showError,
   showInfo,
   showSuccess,
-  verifyJSON,
+  verifyJSON
 } from '../../helpers';
 import { CHANNEL_OPTIONS } from '../../constants';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
@@ -21,28 +21,26 @@ import {
   Select,
   TextArea,
   Checkbox,
-  Banner,
+  Banner
 } from '@douyinfe/semi-ui';
 import { Divider } from 'semantic-ui-react';
 import { getChannelModels, loadChannelModels } from '../../components/utils.js';
 import axios from 'axios';
 
 const MODEL_MAPPING_EXAMPLE = {
-  'gpt-3.5-turbo-0301': 'gpt-3.5-turbo',
-  'gpt-4-0314': 'gpt-4',
-  'gpt-4-32k-0314': 'gpt-4-32k',
+  'gpt-3.5-turbo': 'gpt-3.5-turbo-0125'
 };
 
 const STATUS_CODE_MAPPING_EXAMPLE = {
-  400: '500',
+  400: '500'
 };
 
 const REGION_EXAMPLE = {
-  "default": "us-central1",
-  "claude-3-5-sonnet-20240620": "europe-west1"
-}
+  'default': 'us-central1',
+  'claude-3-5-sonnet-20240620': 'europe-west1'
+};
 
-const fetchButtonTips = "1. 新建渠道时，请求通过当前浏览器发出；2. 编辑已有渠道，请求通过后端服务器发出"
+const fetchButtonTips = '1. 新建渠道时，请求通过当前浏览器发出；2. 编辑已有渠道，请求通过后端服务器发出';
 
 function type2secretPrompt(type) {
   // inputs.type === 15 ? '按照如下格式输入：APIKey|SecretKey' : (inputs.type === 18 ? '按照如下格式输入：APPID|APISecret|APIKey' : '请输入渠道对应的鉴权密钥')
@@ -84,6 +82,9 @@ const EditChannel = (props) => {
     auto_ban: 1,
     test_model: '',
     groups: ['default'],
+    priority: 0,
+    weight: 0,
+    tag: '',
     proxy: ''
   };
   const [batch, setBatch] = useState(false);
@@ -109,7 +110,7 @@ const EditChannel = (props) => {
             'mj_blend',
             'mj_upscale',
             'mj_describe',
-            'mj_uploads',
+            'mj_uploads'
           ];
           break;
         case 5:
@@ -129,13 +130,13 @@ const EditChannel = (props) => {
             'mj_high_variation',
             'mj_low_variation',
             'mj_pan',
-            'mj_uploads',
+            'mj_uploads'
           ];
           break;
         case 36:
           localModels = [
             'suno_music',
-            'suno_lyrics',
+            'suno_lyrics'
           ];
           break;
         default:
@@ -172,7 +173,7 @@ const EditChannel = (props) => {
         data.model_mapping = JSON.stringify(
           JSON.parse(data.model_mapping),
           null,
-          2,
+          2
         );
       }
       setInputs(data);
@@ -191,70 +192,69 @@ const EditChannel = (props) => {
 
 
   const fetchUpstreamModelList = async (name) => {
-    if (inputs["type"] !== 1) {
-      showError("仅支持 OpenAI 接口格式")
+    if (inputs['type'] !== 1) {
+      showError('仅支持 OpenAI 接口格式');
       return;
     }
-    setLoading(true)
-    const models = inputs["models"] || []
+    setLoading(true);
+    const models = inputs['models'] || [];
     let err = false;
     if (isEdit) {
-      const res = await API.get("/api/channel/fetch_models/" + channelId)
+      const res = await API.get('/api/channel/fetch_models/' + channelId);
       if (res.data && res.data?.success) {
-        models.push(...res.data.data)
+        models.push(...res.data.data);
       } else {
-        err = true
+        err = true;
       }
     } else {
-      if (!inputs?.["key"]) {
-        showError("请填写密钥")
-        err = true
+      if (!inputs?.['key']) {
+        showError('请填写密钥');
+        err = true;
       } else {
         try {
-          const host = new URL((inputs["base_url"] || "https://api.openai.com"))
+          const host = new URL((inputs['base_url'] || 'https://api.openai.com'));
 
           const url = `https://${host.hostname}/v1/models`;
-          const key = inputs["key"];
+          const key = inputs['key'];
           const res = await axios.get(url, {
             headers: {
               'Authorization': `Bearer ${key}`
             }
-          })
+          });
           if (res.data && res.data?.success) {
-            models.push(...res.data.data.map((model) => model.id))
+            models.push(...res.data.data.map((model) => model.id));
           } else {
-            err = true
+            err = true;
           }
-        }
-        catch (error) {
-          err = true
+        } catch (error) {
+          err = true;
         }
       }
     }
     if (!err) {
       handleInputChange(name, Array.from(new Set(models)));
-      showSuccess("获取模型列表成功");
+      showSuccess('获取模型列表成功');
     } else {
       showError('获取模型列表失败');
     }
     setLoading(false);
-  }
+  };
 
   const fetchModels = async () => {
     try {
       let res = await API.get(`/api/channel/models`);
       let localModelOptions = res.data.data.map((model) => ({
         label: model.id,
-        value: model.id,
+        value: model.id
       }));
       setOriginModelOptions(localModelOptions);
       setFullModels(res.data.data.map((model) => model.id));
       setBasicModels(
         res.data.data
           .filter((model) => {
-            return model.id.startsWith('gpt-3') || model.id.startsWith('text-');
+            return model.id.startsWith('gpt-') || model.id.startsWith('text-');
           })
-          .map((model) => model.id),
+          .map((model) => model.id)
       );
     } catch (error) {
       showError(error.message);
@@ -270,8 +270,8 @@ const EditChannel = (props) => {
       setGroupOptions(
         res.data.data.map((group) => ({
           label: group,
-          value: group,
-        })),
+          value: group
+        }))
       );
     } catch (error) {
       showError(error.message);
@@ -281,10 +281,10 @@ const EditChannel = (props) => {
   useEffect(() => {
     let localModelOptions = [...originModelOptions];
     inputs.models.forEach((model) => {
-      if (!localModelOptions.find((option) => option.key === model)) {
+      if (!localModelOptions.find((option) => option.label === model)) {
         localModelOptions.push({
           label: model,
-          value: model,
+          value: model
         });
       }
     });
@@ -327,7 +327,7 @@ const EditChannel = (props) => {
     if (localInputs.base_url && localInputs.base_url.endsWith('/')) {
       localInputs.base_url = localInputs.base_url.slice(
         0,
-        localInputs.base_url.length - 1,
+        localInputs.base_url.length - 1
       );
     }
     if (localInputs.type === 3 && localInputs.other === '') {
@@ -345,32 +345,31 @@ const EditChannel = (props) => {
     localInputs.auto_ban = autoBan ? 1 : 0;
     localInputs.models = localInputs.models.join(',');
     localInputs.group = localInputs.groups.join(',');
-    setLoading(true)
+  setLoading(true)
     try {
-      if (isEdit) {
-        res = await API.put(`/api/channel/`, {
-          ...localInputs,
-          id: parseInt(channelId),
-        });
-      } else {
-        res = await API.post(`/api/channel/`, localInputs);
-      }
-      const { success, message } = res.data;
-      setLoading(false)
-      if (success) {
         if (isEdit) {
-          showSuccess('渠道更新成功！');
+            res = await API.put(`/api/channel/`, {
+                ...localInputs,
+                id: parseInt(channelId)
+            });
         } else {
-          showSuccess('渠道创建成功！');
-          setInputs(originInputs);
+            res = await API.post(`/api/channel/`, localInputs);
         }
-        props.refresh();
-        props.handleClose();
-      } else {
-        showError(message);
-      }
+        const { success, message } = res.data;
+        if (success) {
+            if (isEdit) {
+                showSuccess('渠道更新成功！');
+            } else {
+                showSuccess('渠道创建成功！');
+                setInputs(originInputs);
+            }
+            props.refresh();
+            props.handleClose();
+        } else {
+            showError(message);
+        }
     } catch (e) {
-      setLoading(false)
+        setLoading(false)
     }
   };
 
@@ -391,7 +390,7 @@ const EditChannel = (props) => {
           // 添加到下拉选项
           key: model,
           text: model,
-          value: model,
+          value: model
         });
       } else if (model) {
         showError('某些模型已存在！');
@@ -430,7 +429,11 @@ const EditChannel = (props) => {
               <Button theme="solid" onClick={submit}>
                 提交
               </Button>
-              <Button theme="solid" type={'tertiary'} onClick={handleCancel}>
+              <Button
+                theme="solid"
+                type={'tertiary'}
+                onClick={handleCancel}
+              >
                 取消
               </Button>
             </Space>
@@ -478,7 +481,9 @@ const EditChannel = (props) => {
               <Input
                 label="AZURE_OPENAI_ENDPOINT"
                 name="azure_base_url"
-                placeholder={'请输入 AZURE_OPENAI_ENDPOINT，例如：https://docs-test-001.openai.azure.com'}
+                placeholder={
+                  '请输入 AZURE_OPENAI_ENDPOINT，例如：https://docs-test-001.openai.azure.com'
+                }
                 onChange={(value) => {
                   handleInputChange('base_url', value);
                 }}
@@ -491,7 +496,9 @@ const EditChannel = (props) => {
               <Input
                 label="默认 API 版本"
                 name="azure_other"
-                placeholder={'请输入默认 API 版本，例如：2023-06-01-preview，该配置可以被实际的请求查询参数所覆盖'}
+                placeholder={
+                  '请输入默认 API 版本，例如：2023-06-01-preview，该配置可以被实际的请求查询参数所覆盖'
+                }
                 onChange={(value) => {
                   handleInputChange('other', value);
                 }}
@@ -515,7 +522,44 @@ const EditChannel = (props) => {
               </div>
               <Input
                 name="base_url"
-                placeholder={'请输入完整的URL，例如：https://api.openai.com/v1/chat/completions'}
+                placeholder={
+                  '请输入完整的URL，例如：https://api.openai.com/v1/chat/completions'
+                }
+                onChange={(value) => {
+                  handleInputChange('base_url', value);
+                }}
+                value={inputs.base_url}
+                autoComplete="new-password"
+              />
+            </>
+          )}
+          {inputs.type !== 3 && inputs.type !== 8 && inputs.type !== 22 && inputs.type !== 36 && (
+            <>
+              <div style={{ marginTop: 10 }}>
+                <Typography.Text strong>代理：</Typography.Text>
+              </div>
+              <Input
+                label="代理"
+                name="base_url"
+                placeholder={'此项可选，用于通过代理站来进行 API 调用'}
+                onChange={(value) => {
+                  handleInputChange('base_url', value);
+                }}
+                value={inputs.base_url}
+                autoComplete="new-password"
+              />
+            </>
+          )}
+          {inputs.type === 22 && (
+            <>
+              <div style={{ marginTop: 10 }}>
+                <Typography.Text strong>私有部署地址：</Typography.Text>
+              </div>
+              <Input
+                name="base_url"
+                placeholder={
+                  '请输入私有部署地址，格式为：https://fastgpt.run/api/openapi'
+                }
                 onChange={(value) => {
                   handleInputChange('base_url', value);
                 }}
@@ -527,11 +571,15 @@ const EditChannel = (props) => {
           {inputs.type === 36 && (
             <>
               <div style={{ marginTop: 10 }}>
-                <Typography.Text strong>注意非Chat API，请务必填写正确的API地址，否则可能导致无法使用</Typography.Text>
+                <Typography.Text strong>
+                  注意非Chat API，请务必填写正确的API地址，否则可能导致无法使用
+                </Typography.Text>
               </div>
               <Input
                 name="base_url"
-                placeholder={'请输入到 /suno 前的路径，通常就是域名，例如：https://api.example.com '}
+                placeholder={
+                  '请输入到 /suno 前的路径，通常就是域名，例如：https://api.example.com '
+                }
                 onChange={(value) => {
                   handleInputChange('base_url', value);
                 }}
@@ -578,7 +626,9 @@ const EditChannel = (props) => {
               </div>
               <Input
                 name="other"
-                placeholder={'请输入星火大模型版本，注意是接口地址中的版本号，例如：v2.1'}
+                placeholder={
+                  '请输入星火大模型版本，注意是接口地址中的版本号，例如：v2.1'
+                }
                 onChange={(value) => {
                   handleInputChange('other', value);
                 }}
@@ -615,7 +665,10 @@ const EditChannel = (props) => {
                   cursor: 'pointer'
                 }}
                 onClick={() => {
-                  handleInputChange('other', JSON.stringify(REGION_EXAMPLE, null, 2));
+                  handleInputChange(
+                    'other',
+                    JSON.stringify(REGION_EXAMPLE, null, 2)
+                  );
                 }}
               >
                 填入模板
@@ -646,7 +699,9 @@ const EditChannel = (props) => {
               </div>
               <Input
                 name="other"
-                placeholder={'请输入Account ID，例如：d6b5da8hk1awo8nap34ube6gh'}
+                placeholder={
+                  '请输入Account ID，例如：d6b5da8hk1awo8nap34ube6gh'
+                }
                 onChange={(value) => {
                   handleInputChange('other', value);
                 }}
@@ -744,7 +799,10 @@ const EditChannel = (props) => {
               cursor: 'pointer'
             }}
             onClick={() => {
-              handleInputChange('model_mapping', JSON.stringify(MODEL_MAPPING_EXAMPLE, null, 2));
+              handleInputChange(
+                'model_mapping',
+                JSON.stringify(MODEL_MAPPING_EXAMPLE, null, 2)
+              );
             }}
           >
             填入模板
@@ -806,8 +864,22 @@ const EditChannel = (props) => {
                   value={inputs.key}
                   autoComplete="new-password"
                 />
-              )}
+              )
+              }
             </>
+          )}
+          {!isEdit && (
+            <div style={{ marginTop: 10, display: 'flex' }}>
+              <Space>
+                <Checkbox
+                  checked={batch}
+                  label="批量创建"
+                  name="batch"
+                  onChange={() => setBatch(!batch)}
+                />
+                <Typography.Text strong>批量创建</Typography.Text>
+              </Space>
+            </div>
           )}
           {inputs.type === 1 && (
             <>
@@ -849,48 +921,6 @@ const EditChannel = (props) => {
               <Typography.Text strong>是否自动禁用（仅当自动禁用开启时有效），关闭后不会自动禁用该渠道：</Typography.Text>
             </Space>
           </div>
-
-          {!isEdit && (
-            <div style={{ marginTop: 10, display: 'flex' }}>
-              <Space>
-                <Checkbox checked={batch} label="批量创建" name="batch" onChange={() => setBatch(!batch)} />
-                <Typography.Text strong>批量创建</Typography.Text>
-              </Space>
-            </div>
-          )}
-          {inputs.type !== 3 && inputs.type !== 8 && inputs.type !== 22 && inputs.type !== 36 && (
-            <>
-              <div style={{ marginTop: 10 }}>
-                <Typography.Text strong>渠道API代理：</Typography.Text>
-              </div>
-              <Input
-                label="渠道API代理"
-                name="base_url"
-                placeholder={'此项可选，用于通过代理站来进行 API 调用'}
-                onChange={(value) => {
-                  handleInputChange('base_url', value);
-                }}
-                value={inputs.base_url}
-                autoComplete="new-password"
-              />
-            </>
-          )}
-          {inputs.type === 22 && (
-            <>
-              <div style={{ marginTop: 10 }}>
-                <Typography.Text strong>私有部署地址：</Typography.Text>
-              </div>
-              <Input
-                name="base_url"
-                placeholder={'请输入私有部署地址，格式为：https://fastgpt.run/api/openapi'}
-                onChange={(value) => {
-                  handleInputChange('base_url', value);
-                }}
-                value={inputs.base_url}
-                autoComplete="new-password"
-              />
-            </>
-          )}
           <div style={{ marginTop: 10 }}>
             <Typography.Text strong>状态码复写（仅影响本地判断，不修改返回到上游的状态码）：</Typography.Text>
           </div>
@@ -911,39 +941,73 @@ const EditChannel = (props) => {
               cursor: 'pointer'
             }}
             onClick={() => {
-              handleInputChange('status_code_mapping', JSON.stringify(STATUS_CODE_MAPPING_EXAMPLE, null, 2));
+              handleInputChange(
+                'status_code_mapping',
+                JSON.stringify(STATUS_CODE_MAPPING_EXAMPLE, null, 2)
+              );
             }}
           >
             填入模板
           </Typography.Text>
           <div style={{ marginTop: 10 }}>
             <Typography.Text strong>
-              Proxy代理
+              渠道标签
             </Typography.Text>
           </div>
           <Input
-            label='Proxy代理'
-            name='proxy'
-            placeholder='默认无代理'
+            label="渠道标签"
+            name="tag"
+            placeholder={'渠道标签'}
             onChange={(value) => {
-              handleInputChange('proxy', value);
+              handleInputChange('tag', value);
             }}
-            value={inputs.proxy}
+            value={inputs.tag}
+            autoComplete="new-password"
           />
-          {/*<div style={{ marginTop: 10 }}>*/}
-          {/*  <Typography.Text strong>*/}
-          {/*    最大请求token（0表示不限制）：*/}
-          {/*  </Typography.Text>*/}
-          {/*</div>*/}
-          {/*<Input*/}
-          {/*  label='最大请求token'*/}
-          {/*  name='max_input_tokens'*/}
-          {/*  placeholder='默认为0，表示不限制'*/}
-          {/*  onChange={(value) => {*/}
-          {/*    handleInputChange('max_input_tokens', value);*/}
-          {/*  }}*/}
-          {/*  value={inputs.max_input_tokens}*/}
-          {/*/>*/}
+          <div style={{ marginTop: 10 }}>
+            <Typography.Text strong>
+              渠道优先级
+            </Typography.Text>
+          </div>
+          <Input
+            label="渠道优先级"
+            name="priority"
+            placeholder={'渠道优先级'}
+            onChange={(value) => {
+              handleInputChange('priority', parseInt(value));
+            }}
+            value={inputs.priority}
+            autoComplete="new-password"
+          />
+          <div style={{ marginTop: 10 }}>
+            <Typography.Text strong>
+              渠道权重
+            </Typography.Text>
+          </div>
+          <Input
+            label="渠道权重"
+            name="weight"
+            placeholder={'渠道权重'}
+            onChange={(value) => {
+              handleInputChange('weight', parseInt(value));
+            }}
+            value={inputs.weight}
+            autoComplete="new-password"
+          />
+            <div style={{ marginTop: 10 }}>
+                <Typography.Text strong>
+                    Proxy代理
+                </Typography.Text>
+            </div>
+            <Input
+                label='Proxy代理'
+                name='proxy'
+                placeholder='默认无代理'
+                onChange={(value) => {
+                    handleInputChange('proxy', value);
+                }}
+                value={inputs.proxy}
+            />
         </Spin>
       </SideSheet>
     </>

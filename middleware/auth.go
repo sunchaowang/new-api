@@ -227,6 +227,7 @@ func tokenAuth(c *gin.Context, key string) {
 	}
 	c.Set("id", token.UserId)
 	c.Set("token_id", token.Id)
+	c.Set("token_key", token.Key)
 	c.Set("token_name", token.Name)
 	c.Set("token_group", token.Group)
 	c.Set("token_unlimited_quota", token.UnlimitedQuota)
