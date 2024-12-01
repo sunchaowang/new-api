@@ -17,6 +17,8 @@ import FooterBar from './components/Footer';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 
+import { NextUIProvider } from '@nextui-org/react';
+
 dayjs.locale('zh-cn');
 
 // initialization
@@ -25,6 +27,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
+    {/* <NextUIProvider> */}
     <ConfigProvider>
       <StatusProvider>
         <UserProvider>
@@ -36,5 +39,6 @@ root.render(
         </UserProvider>
       </StatusProvider>
     </ConfigProvider>
+    {/* </NextUIProvider> */}
   </React.StrictMode>
 );

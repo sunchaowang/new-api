@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"one-api/common"
+	"time"
 )
 
 type Redemption struct {
@@ -78,6 +79,20 @@ func Redeem(key string, userId int, requestIP string) (quota int, err error) {
 	if err != nil {
 		return 0, errors.New("兑换失败，" + err.Error())
 	}
+	go func() {
+		topUp := &TopUp{
+			UserId:       userId,
+			Amount:       redemption.Quota / int(common.QuotaPerUnit),
+			Money:        0,
+			TradeNo:      key,
+			CreateTime:   time.Now().Unix(),
+			UpdateTime:   time.Now().Unix(),
+			Status:       TopUpStatusSuccess,
+			CurrencyType: CurrencyTypeUSD,
+			TopUpChannel: TopUpChannelRedemption,
+		}
+		err = topUp.Insert()
+	}()
 	RecordLog(userId, LogTypeTopup, fmt.Sprintf("通过兑换码充值 %s，兑换码ID %d", common.LogQuota(redemption.Quota), redemption.Id), requestIP)
 	return redemption.Quota, nil
 }

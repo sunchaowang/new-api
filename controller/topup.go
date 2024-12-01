@@ -127,12 +127,14 @@ func RequestEpay(c *gin.Context) {
 		amount = amount / int(common.QuotaPerUnit)
 	}
 	topUp := &model.TopUp{
-		UserId:     id,
-		Amount:     amount,
-		Money:      payMoney + topUpRateMoney,
-		TradeNo:    tradeNo,
-		CreateTime: time.Now().Unix(),
-		Status:     "pending",
+		UserId:       id,
+		Amount:       amount,
+		Money:        payMoney + topUpRateMoney,
+		TradeNo:      tradeNo,
+		CreateTime:   time.Now().Unix(),
+		Status:       model.TopUpStatusPending,
+		CurrencyType: model.CurrencyTypeCNY,
+		TopUpChannel: model.TopUpChannelOnline,
 	}
 	err = topUp.Insert()
 	if err != nil {
@@ -207,8 +209,9 @@ func EpayNotify(c *gin.Context) {
 			log.Printf("易支付回调未找到订单: %v", verifyInfo)
 			return
 		}
-		if topUp.Status == "pending" {
-			topUp.Status = "success"
+		if topUp.Status == model.TopUpStatusPending {
+			topUp.Status = model.TopUpStatusSuccess
+			topUp.UpdateTime = time.Now().Unix()
 			err := topUp.Update()
 			if err != nil {
 				log.Printf("易支付回调更新订单失败: %v", topUp)

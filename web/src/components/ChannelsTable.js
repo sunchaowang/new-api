@@ -132,9 +132,7 @@ const ChannelsTable = () => {
           let time = otherInfo['status_time'];
           return (
             <div>
-              <Tooltip content={'原因：' + reason + '，时间：' + timestamp2string(time)}>
-                {renderStatus(text)}
-              </Tooltip>
+              <Tooltip content={'原因：' + reason + '，时间：' + timestamp2string(time)}>{renderStatus(text)}</Tooltip>
             </div>
           );
         } else {
@@ -178,62 +176,66 @@ const ChannelsTable = () => {
             </div>
           );
         } else {
-          return <Tooltip content={'已用额度'}>
-            <Tag color="white" type="ghost" size="large">
-              {renderQuota(record.used_quota)}
-            </Tag>
-          </Tooltip>;
+          return (
+            <Tooltip content={'已用额度'}>
+              <Tag color="white" type="ghost" size="large">
+                {renderQuota(record.used_quota)}
+              </Tag>
+            </Tooltip>
+          );
         }
       }
     },
     {
       title: '优先级',
       dataIndex: 'priority',
-        render: (text, record, index) => {
-            if (record.children === undefined) {
-                return (
-                    <div>
-                        <InputNumber
-                            style={{ width: 70 }}
-                            name="priority"
-                            onBlur={(e) => {
-                                manageChannel(record.id, 'priority', record, e.target.value);
-                            }}
-                            keepFocus={true}
-                            innerButtons
-                            defaultValue={record.priority}
-                            min={-999}
-                        />
-                    </div>
-                );
-            } else {
-                return <>
-                    <InputNumber
-                        style={{ width: 70 }}
-                        name="priority"
-                        keepFocus={true}
-                        onBlur={(e) => {
-                            Modal.warning({
-                                title: '修改子渠道优先级',
-                                content: '确定要修改所有子渠道优先级为 ' + e.target.value + ' 吗？',
-                                onOk: () => {
-                                    if (e.target.value === '') {
-                                        return;
-                                    }
-                                    submitTagEdit('priority', {
-                                        tag: record.key,
-                                        priority: e.target.value
-                                    })
-                                },
-                            })
-                        }}
-                        innerButtons
-                        defaultValue={record.priority}
-                        min={-999}
-                    />
-                </>;
-            }
+      render: (text, record, index) => {
+        if (record.children === undefined) {
+          return (
+            <div>
+              <InputNumber
+                style={{ width: 70 }}
+                name="priority"
+                onBlur={(e) => {
+                  manageChannel(record.id, 'priority', record, e.target.value);
+                }}
+                keepFocus={true}
+                innerButtons
+                defaultValue={record.priority}
+                min={-999}
+              />
+            </div>
+          );
+        } else {
+          return (
+            <>
+              <InputNumber
+                style={{ width: 70 }}
+                name="priority"
+                keepFocus={true}
+                onBlur={(e) => {
+                  Modal.warning({
+                    title: '修改子渠道优先级',
+                    content: '确定要修改所有子渠道优先级为 ' + e.target.value + ' 吗？',
+                    onOk: () => {
+                      if (e.target.value === '') {
+                        return;
+                      }
+                      submitTagEdit('priority', {
+                        tag: record.key,
+                        priority: e.target.value
+                      });
+                    }
+                  });
+                }}
+                innerButtons
+                defaultValue={record.priority}
+                min={-999}
+              />
+            </>
+          );
         }
+      }
     },
     {
       title: '权重',
@@ -272,9 +274,9 @@ const ChannelsTable = () => {
                     submitTagEdit('weight', {
                       tag: record.key,
                       weight: e.target.value
-                    })
-                  },
-                })
+                    });
+                  }
+                });
               }}
               innerButtons
               defaultValue={record.weight}
@@ -291,28 +293,17 @@ const ChannelsTable = () => {
         if (record.children === undefined) {
           return (
             <div>
-              <SplitButtonGroup
-                style={{ marginRight: 1 }}
-                aria-label="测试单个渠道操作项目组"
-              >
+              <SplitButtonGroup style={{ marginRight: 1 }} aria-label="测试单个渠道操作项目组">
                 <Button
                   theme="light"
                   onClick={() => {
-                    testChannel(record, '');
+                    testChannel(record, record.test_model || record.models.split(',')[0]);
                   }}
                 >
                   测试
                 </Button>
-                <Dropdown
-                  trigger="click"
-                  position="bottomRight"
-                  menu={record.test_models}
-                >
-                  <Button
-                    style={{ padding: '8px 4px' }}
-                    type="primary"
-                    icon={<IconTreeTriangleDown />}
-                  ></Button>
+                <Dropdown trigger="click" position="bottomRight" menu={record.test_models}>
+                  <Button style={{ padding: '8px 4px' }} type="primary" icon={<IconTreeTriangleDown />}></Button>
                 </Dropdown>
               </SplitButtonGroup>
               {/*<Button theme='light' type='primary' style={{marginRight: 1}} onClick={()=>testChannel(record)}>测试</Button>*/}

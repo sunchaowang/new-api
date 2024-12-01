@@ -3,13 +3,14 @@ package channel
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"io"
 	"net/http"
 	"one-api/relay/common"
 	"one-api/relay/constant"
 	"one-api/service"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
 func SetupApiRequestHeader(info *common.RelayInfo, c *gin.Context, req *http.Header) {
@@ -91,7 +92,9 @@ func DoWssRequest(a Adaptor, c *gin.Context, info *common.RelayInfo, requestBody
 }
 
 func doRequest(c *gin.Context, req *http.Request) (*http.Response, error) {
-	resp, err := service.GetHttpClient().Do(req)
+	client := service.GetHttpClient()
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}

@@ -1,5 +1,6 @@
 import { Card, Tag, Typography, Row, Col } from "@douyinfe/semi-ui";
-import { Grid } from "semantic-ui-react";
+import {Button, ButtonGroup} from "@nextui-org/react";
+
 const { Title, Paragraph, Text } = Typography;
 
 const Index = () => {
@@ -25,12 +26,16 @@ const Index = () => {
       }}
     >
       <Row style={{ width: "100%" }}>
+        <Row>
+          <Col span={24}>
+          </Col>
+        </Row>
         <Typography>
           <Title level={3}>更新日志</Title>
           {changelog.map((item, index) => (
-            <Paragraph key={index}>
-              {index + 1}.{item}
-            </Paragraph>
+              <Paragraph key={index}>
+                {index + 1}.{item}
+              </Paragraph>
           ))}
         </Typography>
 
@@ -46,11 +51,11 @@ const Index = () => {
           <Paragraph>4.支持模型请查看下方模型介绍</Paragraph>
           <Paragraph>
             5.使用过程中有问题请发邮件至
-            <Text copyable style={{ padding: "0 5px" }}>
+            <Text copyable style={{padding: "0 5px"}}>
               <a href="mailto:chirou.api@outlook.com">chirou.api@outlook.com</a>
             </Text>
             或者加入QQ群{" "}
-            <Text copyable style={{ padding: "0 5px" }}>
+            <Text copyable style={{padding: "0 5px"}}>
               924076327
             </Text>
           </Paragraph>
@@ -68,8 +73,8 @@ const Index = () => {
           <Paragraph>
             7.
             <Tag
-              type="text"
-              onClick={() => window.open("https://linux.do", "blank")}
+                type="text"
+                onClick={() => window.open("https://linux.do", "blank")}
             >
               LinuxDo 论坛
             </Tag>
@@ -120,10 +125,10 @@ const Index = () => {
           <Paragraph>
             2.接口转发地址请修改为：
             <Text
-              style={{
-                margin: "0 5px",
-              }}
-              copyable
+                style={{
+                  margin: "0 5px",
+                }}
+                copyable
             >
               https://api.wochirou.com
             </Text>

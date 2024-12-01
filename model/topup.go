@@ -1,13 +1,37 @@
 package model
 
+type TopUpStatus string
+type CurrencyType string
+type TopUpChannel string // 充值渠道
+
+const (
+	TopUpStatusPending TopUpStatus = "pending"
+	TopUpStatusSuccess TopUpStatus = "success"
+	TopUpStatusFailed  TopUpStatus = "failed"
+	TopUpStatusClosed  TopUpStatus = "closed"
+)
+
+const (
+	CurrencyTypeUSD CurrencyType = "USD"
+	CurrencyTypeCNY CurrencyType = "CNY"
+)
+
+const (
+	TopUpChannelOnline     TopUpChannel = "online"     // 在线充值
+	TopUpChannelRedemption TopUpChannel = "redemption" // 兑换码充值
+)
+
 type TopUp struct {
-	Id         int     `json:"id"`
-	UserId     int     `json:"user_id" gorm:"index"`
-	Amount     int     `json:"amount"`
-	Money      float64 `json:"money"`
-	TradeNo    string  `json:"trade_no"`
-	CreateTime int64   `json:"create_time"`
-	Status     string  `json:"status"`
+	Id           int          `json:"id"`
+	UserId       int          `json:"user_id" gorm:"index"`
+	Amount       int          `json:"amount"`
+	Money        float64      `json:"money"`
+	TradeNo      string       `json:"trade_no"`
+	CreateTime   int64        `json:"create_time"`
+	UpdateTime   int64        `json:"update_time"`
+	Status       TopUpStatus  `json:"status" gorm:"default:'pending'"`
+	CurrencyType CurrencyType `json:"currency_type" gorm:"default:'CNY'"`
+	TopUpChannel TopUpChannel `json:"topup_type" gorm:"default:'online'"`
 }
 
 func (topUp *TopUp) Insert() error {

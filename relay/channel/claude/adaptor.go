@@ -83,9 +83,9 @@ func (a *Adaptor) DoRequest(c *gin.Context, info *relaycommon.RelayInfo, request
 
 func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, info *relaycommon.RelayInfo) (usage any, err *dto.OpenAIErrorWithStatusCode) {
 	// 获取响应格式，默认为 OpenAI 格式
-	var format = ResponseFormatOpenAI;
-	if info.UseClaudeFormate {
-		format = ResponseFormatClaude;
+	var format = ResponseFormatOpenAI
+	if info.UseClaudeFormat {
+		format = ResponseFormatClaude
 	}
 
 	if info.IsStream {

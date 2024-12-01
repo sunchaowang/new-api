@@ -44,7 +44,8 @@ type RelayInfo struct {
 	IsFirstRequest       bool
 	AudioUsage           bool
 	TokenGroup           string
-	UseClaudeFormate     bool
+	UseClaudeFormat      bool
+	ChannelProxy         string
 }
 
 func GenRelayInfoWs(c *gin.Context, ws *websocket.Conn) *RelayInfo {
@@ -91,6 +92,7 @@ func GenRelayInfo(c *gin.Context) *RelayInfo {
 		ApiKey:            strings.TrimPrefix(c.Request.Header.Get("Authorization"), "Bearer "),
 		Organization:      c.GetString("channel_organization"),
 		TokenGroup:        tokenGroup,
+		ChannelProxy:      c.GetString("channel_proxy"),
 	}
 	if strings.HasPrefix(c.Request.URL.Path, "/pg") {
 		info.IsPlayground = true

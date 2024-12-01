@@ -172,6 +172,10 @@ const HeaderBar = () => {
           <Nav
             mode={'horizontal'}
             className={isMobile ? 'header-bar-nav' : ''}
+            style={{
+              backgroundColor: '#f4f7f9',
+              borderBottom:  'none'
+            }}
             renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
               const routerMap = {
                 login: '/login',

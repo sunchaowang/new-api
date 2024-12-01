@@ -10,11 +10,19 @@ var httpClient *http.Client
 var impatientHTTPClient *http.Client
 
 func init() {
+	trans := &http.Transport{
+		DialContext: common.Socks5ProxyFunc,
+		Proxy:       common.ProxyFunc,
+	}
+
 	if common.RelayTimeout == 0 {
-		httpClient = &http.Client{}
+		httpClient = &http.Client{
+			Transport: trans,
+		}
 	} else {
 		httpClient = &http.Client{
-			Timeout: time.Duration(common.RelayTimeout) * time.Second,
+			Transport: trans,
+			Timeout:   time.Duration(common.RelayTimeout) * time.Second,
 		}
 	}
 

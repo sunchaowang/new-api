@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useMemo, useState } from 'react';
-import { API, copy, showError, showInfo, showSuccess } from '../helpers';
+import { API, copy, showError, showInfo, showSuccess, stringToRGB, stringToTagColor } from '../helpers';
 
 import {
     Banner,
@@ -191,25 +191,21 @@ const ModelPricing = () => {
                     {record.enable_groups.map((group) => {
                         if (group === selectedGroup) {
                             return (
-                                <Tag
-                                    color='blue'
-                                    size='large'
-                    prefixIcon={<IconVerify />}
-                  >
-                    {userUsableGroups[group]}
-                  </Tag>
-                );
+                              <Tag color={stringToTagColor(group)} size="large" prefixIcon={<IconVerify />}>
+                                {userUsableGroups[group]}
+                              </Tag>
+                            );
               } else if (userUsableGroups[group] && !['admin'].includes(group)){
                 return (
                   <Tag
-                    color='blue'
-                    size='large'
+                    color={stringToTagColor(group)}
+                    size="large"
                     onClick={() => {
                       setSelectedGroup(group);
                       showInfo('当前查看的分组为：' + userUsableGroups[group] + '，倍率为：' + groupRatio[group]);
                     }}
                   >
-                      {userUsableGroups[group]}
+                    {userUsableGroups[group]}
                   </Tag>
                 );
               } else {

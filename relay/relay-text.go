@@ -245,7 +245,7 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 func ClaudeTextHelper(c *gin.Context) *dto.OpenAIErrorWithStatusCode {
 
 	relayInfo := relaycommon.GenRelayInfo(c)
-	relayInfo.UseClaudeFormate = true
+	relayInfo.UseClaudeFormat = true
 
 	// get & validate textRequest 获取并验证文本请求
 	textRequest, err := getAndValidateTextRequest(c, relayInfo)
