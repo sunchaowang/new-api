@@ -146,15 +146,15 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 	// pre-consume quota 预消耗配额
 	preConsumedQuota, userQuota, openaiErr := preConsumeQuota(c, preConsumedQuota, relayInfo)
 	if openaiErr != nil {
-		model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
-			"RequestID": c.GetString(common.RequestIdKey),
-			"IsError":   true,
-			"TokenName": c.GetString("token_name"),
-			"TokenId":   c.GetInt("token_id"),
-			"Messages":  textRequest.Messages,
-			"ModelName": c.GetString("model"),
-			"ChannelId": c.GetInt("channel_id"),
-		})
+		//model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
+		//	"RequestID": c.GetString(common.RequestIdKey),
+		//	"IsError":   true,
+		//	"TokenName": c.GetString("token_name"),
+		//	"TokenId":   c.GetInt("token_id"),
+		//	"Messages":  textRequest.Messages,
+		//	"ModelName": c.GetString("model"),
+		//	"ChannelId": c.GetInt("channel_id"),
+		//})
 		return openaiErr
 	}
 	defer func() {
@@ -311,14 +311,14 @@ func ClaudeTextHelper(c *gin.Context) *dto.OpenAIErrorWithStatusCode {
 	// pre-consume quota 预消耗配额
 	preConsumedQuota, userQuota, openaiErr := preConsumeQuota(c, preConsumedQuota, relayInfo)
 	if openaiErr != nil {
-		model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
-			"RequestID": c.GetString(common.RequestIdKey),
-			"ModelName": c.GetString("model"),
-			"ChannelId": c.GetInt("channel_id"),
-			"TokenName": c.GetString("token_name"),
-			"TokenId":   c.GetInt("token_id"),
-			"IsError":   true,
-		})
+		//model.RecordLog(relayInfo.UserId, model.LogTypeConsume, openaiErr.Error.Message, c.ClientIP(), map[string]interface{}{
+		//	"RequestID": c.GetString(common.RequestIdKey),
+		//	"ModelName": c.GetString("model"),
+		//	"ChannelId": c.GetInt("channel_id"),
+		//	"TokenName": c.GetString("token_name"),
+		//	"TokenId":   c.GetInt("token_id"),
+		//	"IsError":   true,
+		//})
 		return openaiErr
 	}
 
