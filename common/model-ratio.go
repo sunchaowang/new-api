@@ -361,9 +361,15 @@ func GetCompletionRatio(name string) float64 {
 	}
 	if strings.Contains(name, "claude-instant-1") {
 		return 3
+	} else if strings.Contains(name, "claude/instant-1") {
+		return 3
 	} else if strings.Contains(name, "claude-2") {
 		return 3
+	} else if strings.Contains(name, "claude/2") {
+		return 3
 	} else if strings.Contains(name, "claude-3") {
+		return 5
+	} else if strings.Contains(name, "claude/3") {
 		return 5
 	}
 	if strings.HasPrefix(name, "gpt-3.5") {
@@ -380,7 +386,7 @@ func GetCompletionRatio(name string) float64 {
 	if strings.HasPrefix(name, "mistral-") {
 		return 3
 	}
-	if strings.HasPrefix(name, "gemini-") {
+	if strings.HasPrefix(name, "gemini-") || strings.HasSuffix(name, "gemini/") {
 		return 4
 	}
 	if strings.HasPrefix(name, "command") {
