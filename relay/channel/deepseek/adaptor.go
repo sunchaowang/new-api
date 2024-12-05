@@ -30,17 +30,12 @@ func (a *Adaptor) Init(info *relaycommon.RelayInfo) {
 }
 
 func (a *Adaptor) GetRequestURL(info *relaycommon.RelayInfo) (string, error) {
-	switch info.RelayMode {
-	case relayconstant.RelayModeChatCompletions:
-		return fmt.Sprintf("%s/v1/chat/completions", info.BaseUrl), nil
-	default:
-	}
-	return "", fmt.Errorf("unsupported relay mode %d for doubao", info.RelayMode)
+	return fmt.Sprintf("%s/chat/completions", info.BaseUrl), nil
 }
 
 func (a *Adaptor) SetupRequestHeader(c *gin.Context, req *http.Header, info *relaycommon.RelayInfo) error {
-	//channel.SetupApiRequestHeader(info, c, req)
-	//req.Set("Authorization", "Bearer "+info.ApiKey)
+	channel.SetupApiRequestHeader(info, c, req)
+	req.Set("Authorization", "Bearer "+info.ApiKey)
 	return nil
 }
 
@@ -60,14 +55,9 @@ func (a *Adaptor) DoRequest(c *gin.Context, info *relaycommon.RelayInfo, request
 }
 
 func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, info *relaycommon.RelayInfo) (usage any, err *dto.OpenAIErrorWithStatusCode) {
-	switch info.RelayMode {
-	case relayconstant.RelayModeChatCompletions:
-		if info.IsStream {
-			err, usage = openai.OaiStreamHandler(c, resp, info)
-		} else {
-			err, usage = openai.OpenaiHandler(c, resp, info.PromptTokens, info.UpstreamModelName)
-		}
-	case relayconstant.RelayModeEmbeddings:
+	if info.IsStream {
+		err, usage = openai.OaiStreamHandler(c, resp, info)
+	} else {
 		err, usage = openai.OpenaiHandler(c, resp, info.PromptTokens, info.UpstreamModelName)
 	}
 	return
