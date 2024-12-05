@@ -124,19 +124,18 @@ const EditUser = (props) => {
     <>
       <SideSheet
         placement={'right'}
-        title={<Title level={3}>{'编辑用户'}</Title>}
+        title={'编辑用户'}
         headerStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
         bodyStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
         visible={props.visible}
         footer={
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Space>
-              <Button theme='solid' size={'large'} onClick={submit}>
+              <Button theme='solid' onClick={submit}>
                 提交
               </Button>
               <Button
                 theme='solid'
-                size={'large'}
                 type={'tertiary'}
                 onClick={handleCancel}
               >

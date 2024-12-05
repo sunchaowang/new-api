@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { API, showError, showSuccess } from '../helpers';
 import {
-  Button,
+  Button, Descriptions,
   Form,
   Popconfirm,
   Space,
@@ -495,6 +495,23 @@ const UsersTable = () => {
           onPageChange: handlePageChange,
         }}
         loading={loading}
+        expandedRowRender={
+            (record, index, expanded) => (
+                <Descriptions>
+                  <Descriptions.Item itemKey={'email'}>{record.email}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'github_id'}>{record.github_id}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'github_username'}>{record.github_username}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'github_email'}>{record.github_email}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'github_created_at'}>{record.github_created_at}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'linuxdo_id'}>{record.linuxdo_id}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'linuxdo_level'}>{record.linuxdo_level}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'linuxdo_username'}>{record.linuxdo_username}</Descriptions.Item>
+                  <Descriptions.Item itemKey={'linuxdo_name'}>{record.linuxdo_name}</Descriptions.Item>
+                </Descriptions>
+            )
+        }
+        expandRowByClick={true}
+        scroll={{ x: true }}
       />
     </>
   );

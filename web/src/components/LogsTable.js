@@ -59,49 +59,49 @@ function renderType(type) {
   switch (type) {
     case 1:
       return (
-        <Tag color="cyan" size="large">
+        <Tag color="cyan">
           {' '}
           充值{' '}
         </Tag>
       );
     case 2:
       return (
-        <Tag color="lime" size="large">
+        <Tag color="lime">
           {' '}
           消费{' '}
         </Tag>
       );
     case 3:
       return (
-        <Tag color="orange" size="large">
+        <Tag color="orange">
           {' '}
           管理{' '}
         </Tag>
       );
     case 4:
       return (
-        <Tag color="purple" size="large">
+        <Tag color="purple">
           {' '}
           系统{' '}
         </Tag>
       );
     case 5:
       return (
-        <Tag color="green" size="large">
+        <Tag color="green">
           {' '}
           签到{' '}
         </Tag>
       );
     case 6:
       return (
-        <Tag color="green" size="large">
+        <Tag color="green">
           {' '}
           登录{' '}
         </Tag>
       );
     default:
       return (
-        <Tag color="black" size="large">
+        <Tag color="black">
           {' '}
           未知{' '}
         </Tag>
@@ -112,13 +112,13 @@ function renderType(type) {
 function renderIsStream(bool) {
   if (bool) {
     return (
-      <Tag color="blue" size="large">
+      <Tag color="blue">
         流
       </Tag>
     );
   } else {
     return (
-      <Tag color="purple" size="large">
+      <Tag color="purple">
         非流
       </Tag>
     );
@@ -129,21 +129,21 @@ function renderUseTime(type) {
   const time = parseInt(type);
   if (time < 101) {
     return (
-      <Tag color="green" size="large">
+      <Tag color="green">
         {' '}
         {time} s{' '}
       </Tag>
     );
   } else if (time < 300) {
     return (
-      <Tag color="orange" size="large">
+      <Tag color="orange">
         {' '}
         {time} s{' '}
       </Tag>
     );
   } else {
     return (
-      <Tag color="red" size="large">
+      <Tag color="red">
         {' '}
         {time} s{' '}
       </Tag>
@@ -153,24 +153,24 @@ function renderUseTime(type) {
 
 function renderFirstUseTime(type) {
   let time = parseFloat(type) / 1000.0;
-  time = time.toFixed(1);
+  time = time.toFixed(2);
   if (time < 3) {
     return (
-      <Tag color="green" size="large">
+      <Tag color="green">
         {' '}
         {time} s{' '}
       </Tag>
     );
   } else if (time < 10) {
     return (
-      <Tag color="orange" size="large">
+      <Tag color="orange">
         {' '}
         {time} s{' '}
       </Tag>
     );
   } else {
     return (
-      <Tag color="red" size="large">
+      <Tag color="red">
         {' '}
         {time} s{' '}
       </Tag>
@@ -185,6 +185,7 @@ const LogsTable = ({ groups }) => {
     {
       title: '时间',
       dataIndex: 'timestamp2string',
+      width: 120,
       render: (text, record, index) => {
         return (
           <div>
@@ -198,14 +199,13 @@ const LogsTable = ({ groups }) => {
     {
       title: '渠道',
       dataIndex: 'channel',
-      width: 100,
       className: isAdmin() ? 'tableShow' : 'tableHiddle',
       render: (text, record, index) => {
         return isAdminUser ? (
           record.type === 0 || record.type === 2 ? (
             <div>
               {
-                <Tag color={colors[parseInt(text) % colors.length]} size="large">
+                <Tag color={colors[parseInt(text) % colors.length]}>
                   {' '}
                   {text}{' '}
                 </Tag>
@@ -222,6 +222,7 @@ const LogsTable = ({ groups }) => {
     {
       title: '用户',
       dataIndex: 'username',
+      width: 150,
       className: isAdmin() ? 'tableShow' : 'tableHiddle',
       render: (text, record, index) => {
         return isAdminUser ? (
@@ -242,18 +243,24 @@ const LogsTable = ({ groups }) => {
       width: 120,
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? (
-          <div>
+          <Space vertical align={'start'}>
             <Tag
               color="grey"
-              size="large"
               onClick={() => {
-                copyText(text);
+                copyText(record.token_id);
               }}
             >
-              {' '}
-              {text}{' '}
+              {record.token_id}
             </Tag>
-          </div>
+            <Tag
+                color="grey"
+                onClick={() => {
+                  copyText(text);
+                }}
+            >
+              {text || '--'}
+            </Tag>
+          </Space>
         ) : (
           <></>
         );
@@ -275,7 +282,6 @@ const LogsTable = ({ groups }) => {
           <>
             <Tag
               color={stringToColor(text)}
-              size="large"
               onClick={() => {
                 copyText(text);
               }}
@@ -300,7 +306,7 @@ const LogsTable = ({ groups }) => {
           let other = getLogOther(record.other);
           return (
             <>
-              <Space>
+              <Space vertical align={'start'}>
                 {renderUseTime(text)}
                 {renderFirstUseTime(other.frt)}
                 {renderIsStream(record.is_stream)}
@@ -506,20 +512,23 @@ const LogsTable = ({ groups }) => {
     if (!isAdminUser) {
       return;
     }
+    setLoading(true)
     const res = await API.get(`/api/user/${userId}`);
+    setLoading(false)
     const { success, message, data } = res.data;
     if (success) {
       Modal.info({
         title: '用户信息',
         content: (
-          <div style={{ padding: 12 }}>
-            <p>用户名: {data.username}</p>
-            <p>余额: {renderQuota(data.quota)}</p>
-            <p>已用额度：{renderQuota(data.used_quota)}</p>
-            <p>请求次数：{renderNumber(data.request_count)}</p>
-          </div>
+          <Descriptions style={{paddingTop: 12, paddingBottom: 12}}>
+            <Descriptions.Item itemKey={'用户Id'}>{data.id}</Descriptions.Item>
+            <Descriptions.Item itemKey={'用户名'}>{data.username}</Descriptions.Item>
+            <Descriptions.Item itemKey={'余额'}>{renderQuota(data.quota)}</Descriptions.Item>
+            <Descriptions.Item itemKey={'已用额度'}>{renderQuota(data.used_quota)}</Descriptions.Item>
+            <Descriptions.Item itemKey={'请求次数'}>{renderNumber(data.request_count)}</Descriptions.Item>
+          </Descriptions>
         ),
-        centered: true
+        centered: true,
       });
     } else {
       showError(message);
