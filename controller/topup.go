@@ -91,13 +91,13 @@ func RequestEpay(c *gin.Context) {
 		topUpRateMoney = payMoney * constant.TopUpRate
 	}
 
-	var payType epay.PurchaseType
+	var payType = "wxpay"
 	if req.PaymentMethod == "zfb" {
-		payType = epay.Alipay
+		payType = "alipay"
 	}
 	if req.PaymentMethod == "wx" {
 		req.PaymentMethod = "wxpay"
-		payType = epay.WechatPay
+		payType = "wxpay"
 	}
 	callBackAddress := service.GetCallbackAddress()
 	returnUrl, _ := url.Parse(callBackAddress + "/dashboard/log")

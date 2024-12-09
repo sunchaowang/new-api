@@ -10,7 +10,6 @@ import (
 	"one-api/relay/channel"
 	"one-api/relay/channel/openai"
 	relaycommon "one-api/relay/common"
-	relayconstant "one-api/relay/constant"
 )
 
 type Adaptor struct {

@@ -43,6 +43,7 @@ type User struct {
 	AffHistoryQuota  int            `json:"aff_history_quota" gorm:"type:int;default:0;column:aff_history"` // 邀请历史额度
 	InviterId        int            `json:"inviter_id" gorm:"type:int;column:inviter_id;index"`
 	LastLoginAt      int            `json:"last_login_at" gorm:"column:last_login_at;type:int"`
+	Ratio            int            `json:"ratio" gorm:"column:ratio;type:int;default:1"` // 用户专属折扣倍率
 	DeletedAt        gorm.DeletedAt `gorm:"index"`
 }
 
