@@ -579,6 +579,8 @@ const ChannelsTable = () => {
     channelToCopy.name += '_复制';
     channelToCopy.created_time = null;
     channelToCopy.balance = 0;
+    channelToCopy.balance_updated_time = null;
+    channelToCopy.test_time = null;
     channelToCopy.used_quota = 0;
     if (!channelToCopy) {
       showError('渠道未找到，请刷新页面后重试。');
@@ -779,7 +781,22 @@ const ChannelsTable = () => {
       if (enableTagMode) {
         setChannelFormat(data, enableTagMode);
       } else {
-        setChannels(data.map(channel => ({...channel, key: '' + channel.id})));
+        setChannels(
+          data.map((channel) => {
+            let test_models = [];
+            channel.models.split(',').forEach((item, index) => {
+              test_models.push({
+                node: 'item',
+                name: item,
+                onClick: () => {
+                  testChannel(channels[i], item);
+                }
+              });
+            });
+            channel.test_models = test_models;
+            return { ...channel, key: '' + channel.id };
+          })
+        );
         setChannelCount(data.length);
       }
       setActivePage(1);
