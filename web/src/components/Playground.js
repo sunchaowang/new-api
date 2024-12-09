@@ -10,13 +10,13 @@ const defaultMessage = [
     role: 'user',
     id: '2',
     createAt: 1715676751919,
-    content: "你好",
+    content: '你好'
   },
   {
     role: 'assistant',
     id: '3',
     createAt: 1715676751919,
-    content: "你好，请问有什么可以帮助您的吗？",
+    content: '你好，请问有什么可以帮助您的吗？'
   }
 ];
 
@@ -24,7 +24,21 @@ const defaultInputs = {
   model: 'gpt-4o-mini',
   group: '',
   max_tokens: 0,
-  temperature: 0,
+  temperature: 0
+};
+const roleInfo = {
+  user: {
+    name: 'User',
+    avatar: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/docs-icon.png'
+  },
+  assistant: {
+    name: 'Assistant',
+    avatar: 'logo.png'
+  },
+  system: {
+    name: 'System',
+    avatar: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/other/logo.png'
+  }
 };
 
 let id = 4;
@@ -38,7 +52,7 @@ const Playground = () => {
   const [userState, userDispatch] = useContext(UserContext);
   const [status, setStatus] = useState({});
   const [systemPrompt, setSystemPrompt] = useState(
-    'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.',
+    'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.'
   );
   const [message, setMessage] = useState(defaultMessage);
   const [models, setModels] = useState([]);
@@ -64,9 +78,9 @@ const Playground = () => {
 
   useMemo(() => {
     if (localStorage.getItem('playground_config')) {
-      setInputs(JSON.parse(localStorage.getItem('playground_config')))
+      setInputs(JSON.parse(localStorage.getItem('playground_config')));
     }
-  }, [localStorage.getItem('playground_config')])
+  }, [localStorage.getItem('playground_config')]);
 
   const loadModels = async () => {
     let res = await API.get(`/api/user/models`);
@@ -74,7 +88,7 @@ const Playground = () => {
     if (success) {
       let localModelOptions = data.map((model) => ({
         label: model,
-        value: model,
+        value: model
       }));
       setModels(localModelOptions);
     } else {
@@ -91,7 +105,7 @@ const Playground = () => {
       // label is group description, value is group name
       let localGroupOptions = Object.keys(usableGroups).map((group) => ({
         label: usableGroups[group],
-        value: group,
+        value: group
       }));
       // handleInputChange('group', localGroupOptions[0].value);
 
@@ -99,14 +113,14 @@ const Playground = () => {
         // set default group at first
         localGroupOptions.unshift({
           label: '用户分组',
-          value: '',
+          value: ''
         });
       } else {
         localGroupOptions = [
           {
             label: '默认分组',
-            value: 'default',
-          },
+            value: 'default'
+          }
         ];
         setGroups(localGroupOptions);
       }
@@ -120,7 +134,7 @@ const Playground = () => {
   const commonOuterStyle = {
     border: '1px solid var(--semi-color-border)',
     borderRadius: '16px',
-    margin: '0px 8px',
+    margin: '0px 8px'
   };
 
   const getSystemMessage = () => {
@@ -129,7 +143,7 @@ const Playground = () => {
         role: 'system',
         id: '1',
         createAt: 1715676751919,
-        content: systemPrompt,
+        content: systemPrompt
       };
     }
   };
@@ -138,10 +152,10 @@ const Playground = () => {
     let source = new SSE('/pg/chat/completions', {
       headers: {
         'Content-Type': 'application/json',
-        'New-Api-User': getUserIdFromLocalStorage(),
+        'New-Api-User': getUserIdFromLocalStorage()
       },
       method: 'POST',
-      payload: JSON.stringify(payload),
+      payload: JSON.stringify(payload)
     });
     source.addEventListener('message', (e) => {
       if (e.data !== '[DONE]') {
@@ -187,8 +201,8 @@ const Playground = () => {
             role: 'user',
             content: content,
             createAt: Date.now(),
-            id: getId(),
-          },
+            id: getId()
+          }
         ];
 
         // 将 getPayload 移到这里
@@ -197,7 +211,7 @@ const Playground = () => {
           let messages = newMessage.map((item) => {
             return {
               role: item.role,
-              content: item.content,
+              content: item.content
             };
           });
           if (systemMessage) {
@@ -209,7 +223,7 @@ const Playground = () => {
             model: inputs.model,
             group: inputs.group,
             max_tokens: parseInt(inputs.max_tokens),
-            temperature: inputs.temperature,
+            temperature: inputs.temperature
           };
         };
 
@@ -220,12 +234,12 @@ const Playground = () => {
           content: '',
           createAt: Date.now(),
           id: getId(),
-          status: 'loading',
+          status: 'loading'
         });
         return newMessage;
       });
     },
-    [getSystemMessage],
+    [getSystemMessage]
   );
 
   const completeMessage = useCallback((status = 'complete') => {
@@ -249,7 +263,7 @@ const Playground = () => {
         newMessage = {
           ...newMessage,
           content: (lastMessage.content || '') + content,
-          status: 'incomplete',
+          status: 'incomplete'
         };
       }
       return [...message.slice(0, -1), newMessage];
@@ -341,8 +355,9 @@ const Playground = () => {
             chatBoxRenderConfig={{
               renderChatBoxAction: () => {
                 return <div></div>;
-              },
+              }
             }}
+            roleConfig={roleInfo}
             style={commonOuterStyle}
             chats={message}
             onMessageSend={onMessageSend}
