@@ -18,8 +18,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bytedance/sonic"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -196,7 +194,7 @@ func TextHelper(c *gin.Context) (openaiErr *dto.OpenAIErrorWithStatusCode) {
 	if err != nil {
 		return service.OpenAIErrorWrapperLocal(err, "convert_request_failed", http.StatusInternalServerError)
 	}
-	jsonData, err := sonic.Marshal(convertedRequest)
+	jsonData, err := json.Marshal(convertedRequest)
 	if err != nil {
 		return service.OpenAIErrorWrapperLocal(err, "json_marshal_failed", http.StatusInternalServerError)
 	}
