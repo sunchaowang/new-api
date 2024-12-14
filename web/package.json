@@ -39,7 +39,11 @@
     "tailwind-merge": "^2.5.5",
     "usehooks-ts": "^3.1.0",
     "vite-plugin-semi-theme": "^0.6.0",
-    "vite-plugin-svgr": "^4.2.0"
+    "vite-plugin-svgr": "^4.2.0",
+    "sse": "github:mpetazzoni/sse.js",
+    "i18next": "^23.16.8",
+    "react-i18next": "^13.0.0",
+    "i18next-browser-languagedetector": "^7.2.0"
   },
   "scripts": {
     "dev": "vite",

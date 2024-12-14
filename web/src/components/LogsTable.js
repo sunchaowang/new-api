@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { API, copy, getTodayStartTimestamp, isAdmin, showError, showSuccess, timestamp2string } from '../helpers';
+import { useTranslation } from 'react-i18next';
+import {
+  API,
+  copy,
+  getTodayStartTimestamp,
+  isAdmin,
+  showError,
+  showSuccess,
+  timestamp2string,
+} from '../helpers';
 
 import {
   Table,
@@ -33,8 +42,8 @@ function renderTimestamp(timestamp) {
 }
 
 const MODE_OPTIONS = [
-  { key: 'all', text: '全部用户', value: 'all' },
-  { key: 'self', text: '当前用户', value: 'self' }
+  { key: 'all', text: 'all', value: 'all' },
+  { key: 'self', text: 'current user', value: 'self' },
 ];
 
 const colors = [
@@ -55,135 +64,104 @@ const colors = [
   'yellow'
 ];
 
-function renderType(type) {
-  switch (type) {
-    case 1:
-      return (
-        <Tag color="cyan">
-          {' '}
-          充值{' '}
-        </Tag>
-      );
-    case 2:
-      return (
-        <Tag color="lime">
-          {' '}
-          消费{' '}
-        </Tag>
-      );
-    case 3:
-      return (
-        <Tag color="orange">
-          {' '}
-          管理{' '}
-        </Tag>
-      );
-    case 4:
-      return (
-        <Tag color="purple">
-          {' '}
-          系统{' '}
-        </Tag>
-      );
-    case 5:
-      return (
-        <Tag color="green">
-          {' '}
-          签到{' '}
-        </Tag>
-      );
-    case 6:
-      return (
-        <Tag color="green">
-          {' '}
-          登录{' '}
-        </Tag>
-      );
-    default:
-      return (
-        <Tag color="black">
-          {' '}
-          未知{' '}
-        </Tag>
-      );
-  }
-}
+const LogsTable = () => {
+  const { t } = useTranslation();
+    const isMobile = useIsMobile();
 
-function renderIsStream(bool) {
-  if (bool) {
-    return (
-      <Tag color="blue">
-        流
-      </Tag>
-    );
-  } else {
-    return (
-      <Tag color="purple">
-        非流
-      </Tag>
-    );
-  }
-}
 
-function renderUseTime(type) {
-  const time = parseInt(type);
-  if (time < 101) {
-    return (
-      <Tag color="green">
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
-  } else if (time < 300) {
-    return (
-      <Tag color="orange">
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
-  } else {
-    return (
-      <Tag color="red">
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
+    function renderType(type) {
+    switch (type) {
+      case 1:
+        return <Tag color='cyan' size='large'>{t('充值')}</Tag>;
+      case 2:
+        return <Tag color='lime' size='large'>{t('消费')}</Tag>;
+      case 3:
+        return <Tag color='orange' size='large'>{t('管理')}</Tag>;
+      case 4:
+        return <Tag color='purple' size='large'>{t('系统')}</Tag>;
+        case 5:
+            return (
+                <Tag color="green">
+                    {' '}
+                    签到{' '}
+                </Tag>
+            );
+        case 6:
+            return (
+                <Tag color="green">
+                    {' '}
+                    登录{' '}
+                </Tag>
+            );
+        default:
+        return <Tag color='black' size='large'>{t('未知')}</Tag>;
+    }
   }
-}
 
-function renderFirstUseTime(type) {
-  let time = parseFloat(type) / 1000.0;
-  time = time.toFixed(2);
-  if (time < 3) {
-    return (
-      <Tag color="green">
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
-  } else if (time < 10) {
-    return (
-      <Tag color="orange">
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
-  } else {
-    return (
-      <Tag color="red">
-        {' '}
-        {time} s{' '}
-      </Tag>
-    );
+  function renderIsStream(bool) {
+    if (bool) {
+      return <Tag color='blue' size='large'>{t('流')}</Tag>;
+    } else {
+      return <Tag color='purple' size='large'>{t('非流')}</Tag>;
+    }
   }
-}
 
-const LogsTable = ({ groups }) => {
-  const isMobile = useIsMobile();
+  function renderUseTime(type) {
+    const time = parseInt(type);
+    if (time < 101) {
+      return (
+        <Tag color='green'>
+          {' '}
+          {time} s{' '}
+        </Tag>
+      );
+    } else if (time < 300) {
+      return (
+        <Tag color='orange'>
+          {' '}
+          {time} s{' '}
+        </Tag>
+      );
+    } else {
+      return (
+        <Tag color='red'>
+          {' '}
+          {time} s{' '}
+        </Tag>
+      );
+    }
+  }
+
+  function renderFirstUseTime(type) {
+    let time = parseFloat(type) / 1000.0;
+    time = time.toFixed(1);
+    if (time < 3) {
+      return (
+        <Tag color='green'>
+          {' '}
+          {time} s{' '}
+        </Tag>
+      );
+    } else if (time < 10) {
+      return (
+        <Tag color='orange'>
+          {' '}
+          {time} s{' '}
+        </Tag>
+      );
+    } else {
+      return (
+        <Tag color='red'>
+          {' '}
+          {time} s{' '}
+        </Tag>
+      );
+    }
+  }
 
   const columns = [
     {
-      title: '时间',
+      title: t('时间'),
       dataIndex: 'timestamp2string',
       width: 120,
       render: (text, record, index) => {
@@ -197,7 +175,7 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '渠道',
+      title: t('渠道'),
       dataIndex: 'channel',
       className: isAdmin() ? 'tableShow' : 'tableHiddle',
       render: (text, record, index) => {
@@ -220,7 +198,7 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '用户',
+      title: t('用户'),
       dataIndex: 'username',
       width: 150,
       className: isAdmin() ? 'tableShow' : 'tableHiddle',
@@ -238,7 +216,7 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '令牌',
+      title: t('令牌'),
       dataIndex: 'token_name',
       width: 120,
       render: (text, record, index) => {
@@ -258,7 +236,7 @@ const LogsTable = ({ groups }) => {
                   copyText(text);
                 }}
             >
-              {text || '--'}
+              {text ? t(text) : '--'}
             </Tag>
           </Space>
         ) : (
@@ -267,15 +245,22 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '令牌分组',
-      dataIndex: 'token_group',
-      width: 120,
+      title: t('类型'),
+      dataIndex: 'type',
       render: (text, record, index) => {
-        return record.type === 0 || record.type === 2 ? <div>{renderGroup(text, groups)}</div> : <></>;
-      }
+        return <>{renderType(text)}</>;
+      },
     },
+      {
+          title: '令牌分组',
+          dataIndex: 'token_group',
+          width: 120,
+          render: (text, record, index) => {
+              return record.type === 0 || record.type === 2 ? <div>{renderGroup(text, groups)}</div> : <></>;
+          }
+      },
     {
-      title: '模型',
+      title: t('模型'),
       dataIndex: 'model_name',
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? (
@@ -296,7 +281,7 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '用时/首字',
+      title: t('用时/首字'),
       dataIndex: 'use_time',
       headerCellStyle: {
         'min-width': '150px'
@@ -326,7 +311,7 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '提示',
+      title: t('提示'),
       dataIndex: 'prompt_tokens',
       width: 100,
       render: (text, record, index) => {
@@ -334,7 +319,7 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '补全',
+      title: t('补全'),
       dataIndex: 'completion_tokens',
       width: 100,
       render: (text, record, index) => {
@@ -342,18 +327,18 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '花费',
+      title: t('花费'),
       dataIndex: 'quota',
       render: (text, record, index) => {
         return record.type === 0 || record.type === 2 ? <>{renderQuota(text, 6)}</> : <></>;
       }
     },
     {
-      title: '重试',
+      title: t('重试'),
       dataIndex: 'retry',
       className: isAdmin() ? 'tableShow' : 'tableHiddle',
       render: (text, record, index) => {
-        let content = '渠道：' + record.channel;
+        let content = t('渠道') + `：${record.channel}`;
         if (record.other !== '') {
           let other = JSON.parse(record.other);
           if (other === null) {
@@ -368,7 +353,7 @@ const LogsTable = ({ groups }) => {
               // channel id array
               let useChannel = other.admin_info.use_channel;
               let useChannelStr = useChannel.join('->');
-              content = `渠道：${useChannelStr}`;
+              content = t('渠道') + `：${useChannelStr}`;
             }
           }
         }
@@ -376,7 +361,7 @@ const LogsTable = ({ groups }) => {
       }
     },
     {
-      title: '详情',
+      title: t('详情'),
       dataIndex: 'content',
       width: 120,
       ...(isMobile ? {} : { fixed: 'right' }),
@@ -440,7 +425,7 @@ const LogsTable = ({ groups }) => {
   const [logCount, setLogCount] = useState(ITEMS_PER_PAGE);
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
   const [logType, setLogType] = useState(0);
-  const [expandedRowKeys, setExpandedRowKeys] = useState([487050]);
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
   const isAdminUser = isAdmin();
   let now = new Date();
   // 初始化start_timestamp为今天0点
@@ -453,7 +438,15 @@ const LogsTable = ({ groups }) => {
     end_timestamp: timestamp2string(getTodayStartTimestamp() + 3600 * 24),
     channel: ''
   });
-  const { username, user_id, token_name, model_name, start_timestamp, end_timestamp, channel } = inputs;
+  const {
+    username,
+      user_id,
+    token_name,
+    model_name,
+    start_timestamp,
+    end_timestamp,
+    channel,
+  } = inputs;
 
   const [stat, setStat] = useState({
     quota: 0,
@@ -518,15 +511,15 @@ const LogsTable = ({ groups }) => {
     const { success, message, data } = res.data;
     if (success) {
       Modal.info({
-        title: '用户信息',
+        title: t('用户信息'),
         content: (
-          <Descriptions style={{paddingTop: 12, paddingBottom: 12}}>
-            <Descriptions.Item itemKey={'用户Id'}>{data.id}</Descriptions.Item>
-            <Descriptions.Item itemKey={'用户名'}>{data.username}</Descriptions.Item>
-            <Descriptions.Item itemKey={'余额'}>{renderQuota(data.quota)}</Descriptions.Item>
-            <Descriptions.Item itemKey={'已用额度'}>{renderQuota(data.used_quota)}</Descriptions.Item>
-            <Descriptions.Item itemKey={'请求次数'}>{renderNumber(data.request_count)}</Descriptions.Item>
-          </Descriptions>
+            <Descriptions style={{paddingTop: 12, paddingBottom: 12}}>
+                <Descriptions.Item itemKey={'用户Id'}>{data.id}</Descriptions.Item>
+                <Descriptions.Item itemKey={'用户名'}>{data.username}</Descriptions.Item>
+                <Descriptions.Item itemKey={'余额'}>{renderQuota(data.quota)}</Descriptions.Item>
+                <Descriptions.Item itemKey={'已用额度'}>{renderQuota(data.used_quota)}</Descriptions.Item>
+                <Descriptions.Item itemKey={'请求次数'}>{renderNumber(data.request_count)}</Descriptions.Item>
+            </Descriptions>
         ),
         centered: true,
       });
@@ -564,24 +557,24 @@ const LogsTable = ({ groups }) => {
       }
       if (other?.ws || other?.audio) {
         expandDataLocal.push({
-          key: '语音输入',
-          label: '语音输入',
-          value: other.audio_input
+          key: t('语音输入'),
+            label: t('语音输入'),
+          value: other.audio_input,
         });
         expandDataLocal.push({
-          key: '语音输出',
-          label: '语音输出',
-          value: other.audio_output
+          key: t('语音输出'),
+            label: t('语音输出'),
+          value: other.audio_output,
         });
         expandDataLocal.push({
-          key: '文字输入',
-          label: '文字输入',
-          value: other.text_input
+          key: t('文字输入'),
+            label: t('文字输入'),
+          value: other.text_input,
         });
         expandDataLocal.push({
-          key: '文字输出',
-          label: '文字输出',
-          value: other.text_output
+          key: t('文字输出'),
+            label: t('文字输出'),
+          value: other.text_output,
         });
       }
       expandDataLocal.push({
@@ -590,9 +583,9 @@ const LogsTable = ({ groups }) => {
         value: logs[i].request_ip
       });
       expandDataLocal.push({
-        key: '日志详情',
-        label: '日志详情',
-        value: logs[i].content
+        key: t('日志详情'),
+          label: t('日志详情'),
+        value: logs[i].content,
       });
       if (logs[i].type === 2) {
         let content = '';
@@ -619,13 +612,11 @@ const LogsTable = ({ groups }) => {
             other.group_ratio
           );
         }
-        if (!logs[i].is_error) {
-          expandDataLocal.push({
-            key: '计费过程',
-            label: '计费过程',
-            value: content
-          });
-        }
+        expandDataLocal.push({
+          key: t('计费过程'),
+            label: t('计费过程'),
+          value: content,
+        });
       }
 
       expandDatesLocal[logs[i].key] = expandDataLocal;
@@ -784,26 +775,26 @@ const LogsTable = ({ groups }) => {
         <Card bordered={false} bodyStyle={{ paddingLeft: 0, paddingRight: 0 }}>
           <Form layout={'horizontal'} labelPosition={'inset'} style={{ marginTop: 10 }}>
             <Form.Input
-              field="token_name"
-              label="令牌名称"
-              style={{ width: 200 }}
+              field='token_name'
+              label={t('令牌名称')}
+              style={{ width: 176 }}
               value={token_name}
-              placeholder={'可选值'}
-              name="token_name"
+              placeholder={t('可选值')}
+              name='token_name'
               onChange={(value) => handleInputChange(value, 'token_name')}
             />
             <Form.Input
-              field="model_name"
-              label="模型名称"
-              style={{ width: 200 }}
+              field='model_name'
+              label={t('模型名称')}
+              style={{ width: 176 }}
               value={model_name}
-              placeholder="可选值"
-              name="model_name"
+              placeholder={t('可选值')}
+              name='model_name'
               onChange={(value) => handleInputChange(value, 'model_name')}
             />
             <Form.DatePicker
-              field="start_timestamp"
-              label="起始时间"
+              field='start_timestamp'
+              label={t('起始时间')}
               style={{ width: 272 }}
               initValue={start_timestamp}
               value={start_timestamp}
@@ -814,7 +805,7 @@ const LogsTable = ({ groups }) => {
             <Form.DatePicker
               field="end_timestamp"
               fluid
-              label="结束时间"
+              label={t('结束时间')}
               style={{ width: 272 }}
               initValue={end_timestamp}
               value={end_timestamp}
@@ -822,41 +813,24 @@ const LogsTable = ({ groups }) => {
               name="end_timestamp"
               onChange={(value) => handleInputChange(value, 'end_timestamp')}
             />
-            <Form.Select
-              field="log_type"
-              fluid
-              label="日志类型"
-              initValue="0"
-              onChange={(value) => {
-                setLogType(parseInt(value));
-                loadLogs(0, pageSize, parseInt(value));
-              }}
-            >
-              <Select.Option value="0">全部</Select.Option>
-              <Select.Option value="1">充值</Select.Option>
-              <Select.Option value="2">消费</Select.Option>
-              <Select.Option value="3">管理</Select.Option>
-              <Select.Option value="4">系统</Select.Option>
-              <Select.Option value="5">签到</Select.Option>
-            </Form.Select>
             {isAdminUser && (
               <>
                 <Form.Input
-                  field="channel"
-                  label="渠道 ID"
-                  style={{ width: 200 }}
+                  field='channel'
+                  label={t('渠道 ID')}
+                  style={{ width: 176 }}
                   value={channel}
-                  placeholder="可选值"
-                  name="channel"
+                  placeholder={t('可选值')}
+                  name='channel'
                   onChange={(value) => handleInputChange(value, 'channel')}
                 />
                 <Form.Input
-                  field="username"
-                  label="用户名称"
-                  style={{ width: 200 }}
+                  field='username'
+                  label={t('用户名称')}
+                  style={{ width: 176 }}
                   value={username}
-                  placeholder={'可选值'}
-                  name="username"
+                  placeholder={t('可选值')}
+                  name='username'
                   onChange={(value) => handleInputChange(value, 'username')}
                 />
                 <Form.Input
@@ -870,12 +844,38 @@ const LogsTable = ({ groups }) => {
                 />
               </>
             )}
-            <Button label="查询" type="primary" htmlType="submit" className="btn-margin-right" onClick={refresh} loading={loading}>
-              查询
+            <Button
+              label={t('查询')}
+              type='primary'
+              htmlType='submit'
+              className='btn-margin-right'
+              onClick={refresh}
+              loading={loading}
+              style={{ marginTop: 24 }}
+            >
+              {t('查询')}
             </Button>
-          </Form>
-        </Card>
-
+            <Form.Section></Form.Section>
+          </>
+        </Form>
+        <div style={{marginTop:10}}>
+          <Select
+              defaultValue='0'
+              style={{ width: 120 }}
+              onChange={(value) => {
+                setLogType(parseInt(value));
+                loadLogs(0, pageSize, parseInt(value));
+              }}
+          >
+            <Select.Option value='0'>{t('全部')}</Select.Option>
+            <Select.Option value='1'>{t('充值')}</Select.Option>
+            <Select.Option value='2'>{t('消费')}</Select.Option>
+            <Select.Option value='3'>{t('管理')}</Select.Option>
+            <Select.Option value='4'>{t('系统')}</Select.Option>
+              <Select.Option value="5">签到</Select.Option>
+              <Select.Option value="6">登录</Select.Option>
+          </Select>
+        </div>
         <Table
           style={{ width: '100%' }}
           columns={columns}

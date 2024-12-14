@@ -24,34 +24,43 @@ export default defineConfig(({ command, mode }) => {
           });
         }
       },
-      react(),
+    },
+    react(),
       SemiPlugin({
-        theme: '@semi-bot/semi-theme-wochirou',
-        options: {},
+          theme: '@semi-bot/semi-theme-wochirou',
+          options: {},
       }),
       svgr({ include: 'src/assets/svg/**/*.svg?react' })
-    ],
-    optimizeDeps: {
-      force: true,
-      esbuildOptions: {
-        loader: {
-          '.js': 'jsx'
-        }
-      }
+
+  ],
+  optimizeDeps: {
+    force: true,
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+        '.json': 'json',
+      },
     },
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'react-core': ['react', 'react-dom', 'react-router-dom'],
-            'semi-ui': ['@douyinfe/semi-icons', '@douyinfe/semi-ui'],
-            semantic: ['semantic-ui-offline', 'semantic-ui-react'],
-            visactor: ['@visactor/react-vchart', '@visactor/vchart'],
-            tools: ['axios', 'history', 'marked'],
-            'react-components': ['react-dropzone', 'react-fireworks', 'react-telegram-login', 'react-toastify', 'react-turnstile']
-          }
-        }
-      }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-core': ['react', 'react-dom', 'react-router-dom'],
+          'semi-ui': ['@douyinfe/semi-icons', '@douyinfe/semi-ui'],
+          semantic: ['semantic-ui-offline', 'semantic-ui-react'],
+          visactor: ['@visactor/react-vchart', '@visactor/vchart'],
+          tools: ['axios', 'history', 'marked'],
+          'react-components': [
+            'react-dropzone',
+            'react-fireworks',
+            'react-telegram-login',
+            'react-toastify',
+            'react-turnstile',
+          ],
+          'i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+        },
+      },
     },
     server: {
       // https: true,

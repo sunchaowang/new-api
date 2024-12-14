@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, TabPane, Tabs } from '@douyinfe/semi-ui';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import SystemSetting from '../../components/SystemSetting';
 import { isRoot } from '../../helpers';
 import OtherSetting from '../../components/OtherSetting';
 import PersonalSetting from '../../components/PersonalSetting';
 import OperationSetting from '../../components/OperationSetting';
+
 const Setting = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [tabActiveKey, setTabActiveKey] = useState('operation');
@@ -15,17 +18,17 @@ const Setting = () => {
 
   if (isRoot()) {
     panes.push({
-      tab: '运营设置',
+      tab: t('运营设置'),
       content: <OperationSetting />,
       itemKey: 'operation',
     });
     panes.push({
-      tab: '系统设置',
+      tab: t('系统设置'),
       content: <SystemSetting />,
       itemKey: 'system',
     });
     panes.push({
-      tab: '其他设置',
+      tab: t('其他设置'),
       content: <OtherSetting />,
       itemKey: 'other',
     });

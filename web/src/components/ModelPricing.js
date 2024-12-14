@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useMemo, useState } from 'react';
-import { API, copy, showError, showInfo, showSuccess, stringToRGB, stringToTagColor } from '../helpers';
+import { API, copy, showError, showInfo, showSuccess } from '../helpers';
+import { useTranslation } from 'react-i18next';
 
 import {
     Banner,
@@ -23,72 +24,14 @@ import {
 import { UserContext } from '../context/User/index.js';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 
-function renderQuotaType(type) {
-  // Ensure all cases are string literals by adding quotes.
-  switch (type) {
-    case 1:
-      return (
-        <Tag color='teal' size='large'>
-          按次计费
-        </Tag>
-      );
-    case 0:
-      return (
-        <Tag color='violet' size='large'>
-          按量计费
-        </Tag>
-      );
-    default:
-      return '未知';
-  }
-}
-
-function renderAvailable(available) {
-  return available ? (
-    <Popover
-        content={
-          <div style={{ padding: 8 }}>您的分组可以使用该模型</div>
-        }
-        position='top'
-        key={available}
-        style={{
-            backgroundColor: 'rgba(var(--semi-blue-4),1)',
-            borderColor: 'rgba(var(--semi-blue-4),1)',
-            color: 'var(--semi-color-white)',
-            borderWidth: 1,
-            borderStyle: 'solid',
-        }}
-    >
-        <IconVerify style={{ color: 'green' }}  size="large" />
-    </Popover>
-  ) : (
-    <Popover
-        content={
-          <div style={{ padding: 8 }}>您的分组无权使用该模型</div>
-        }
-        position='top'
-        key={available}
-        style={{
-            backgroundColor: 'rgba(var(--semi-blue-4),1)',
-            borderColor: 'rgba(var(--semi-blue-4),1)',
-            color: 'var(--semi-color-white)',
-            borderWidth: 1,
-            borderStyle: 'solid',
-        }}
-    >
-        <IconUploadError style={{ color: '#FFA54F' }}  size="large" />
-    </Popover>
-  );
-}
-
 const ModelPricing = () => {
+  const { t } = useTranslation();
   const [filteredValue, setFilteredValue] = useState([]);
   const compositionRef = useRef({ isComposition: false });
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [modalImageUrl, setModalImageUrl] = useState('');
   const [isModalOpenurl, setIsModalOpenurl] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState('default');
-  const [userUsableGroups, setUserUsableGroups] = useState([]);
 
   const rowSelection = useMemo(
       () => ({
@@ -117,9 +60,67 @@ const ModelPricing = () => {
     setFilteredValue(newFilteredValue);
   };
 
+  function renderQuotaType(type) {
+    // Ensure all cases are string literals by adding quotes.
+    switch (type) {
+      case 1:
+        return (
+          <Tag color='teal' size='large'>
+            {t('按次计费')}
+          </Tag>
+        );
+      case 0:
+        return (
+          <Tag color='violet' size='large'>
+            {t('按量计费')}
+          </Tag>
+        );
+      default:
+        return t('未知');
+    }
+  }
+
+  function renderAvailable(available) {
+    return available ? (
+      <Popover
+          content={
+            <div style={{ padding: 8 }}>{t('您的分组可以使用该模型')}</div>
+          }
+          position='top'
+          key={available}
+          style={{
+              backgroundColor: 'rgba(var(--semi-blue-4),1)',
+              borderColor: 'rgba(var(--semi-blue-4),1)',
+              color: 'var(--semi-color-white)',
+              borderWidth: 1,
+              borderStyle: 'solid',
+          }}
+      >
+          <IconVerify style={{ color: 'green' }}  size="large" />
+      </Popover>
+    ) : (
+      <Popover
+          content={
+            <div style={{ padding: 8 }}>{t('您的分组无权使用该模型')}</div>
+          }
+          position='top'
+          key={available}
+          style={{
+              backgroundColor: 'rgba(var(--semi-blue-4),1)',
+              borderColor: 'rgba(var(--semi-blue-4),1)',
+              color: 'var(--semi-color-white)',
+              borderWidth: 1,
+              borderStyle: 'solid',
+          }}
+      >
+          <IconUploadError style={{ color: '#FFA54F' }}  size="large" />
+      </Popover>
+    );
+  }
+
   const columns = [
     {
-      title: '可用性',
+      title: t('可用性'),
       dataIndex: 'available',
       render: (text, record, index) => {
          // if record.enable_groups contains selectedGroup, then available is true
@@ -128,20 +129,8 @@ const ModelPricing = () => {
       sorter: (a, b) => a.available - b.available,
     },
     {
-      title: (
-        <Space>
-          <span>模型名称</span>
-          <Input
-            placeholder='模糊搜索'
-            style={{ width: 200 }}
-            onCompositionStart={handleCompositionStart}
-            onCompositionEnd={handleCompositionEnd}
-            onChange={handleChange}
-            showClear
-          />
-        </Space>
-      ),
-      dataIndex: 'model_name', // 以finish_time作为dataIndex
+      title: t('模型名称'),
+      dataIndex: 'model_name',
       render: (text, record, index) => {
         return (
           <>
@@ -162,7 +151,7 @@ const ModelPricing = () => {
       filteredValue,
     },
     {
-      title: '计费类型',
+      title: t('计费类型'),
       dataIndex: 'quota_type',
       render: (text, record, index) => {
         return renderQuotaType(parseInt(text));
@@ -170,59 +159,53 @@ const ModelPricing = () => {
       sorter: (a, b) => a.quota_type - b.quota_type,
     },
     {
-      title: (<>
-          <Space spacing={8}>
-              <span>可用分组</span>
-              {/*<Select value={selectedGroup} style={{width: '200px'}} onChange={(e) => setSelectedGroup(e)} placeholder="选择分组">*/}
-              {/*    {*/}
-              {/*        Object.keys(userUsableGroups).map((group) => {*/}
-              {/*            return <Select.Option value={group}>{userUsableGroups[group]}</Select.Option>*/}
-
-              {/*        })*/}
-              {/*    }*/}
-              {/*</Select>*/}
-          </Space>
-      </>),
-        dataIndex: 'enable_groups',
-        render: (text, record, index) => {
-            // enable_groups is a string array
-            return (
-                <Space wrap={true} style={{'max-width': '500px'}}>
-                    {record.enable_groups.map((group) => {
-                        if (group === selectedGroup) {
-                            return (
-                              <Tag color={stringToTagColor(group)} size="large" prefixIcon={<IconVerify />}>
+        title: t('可用分组'),
+      dataIndex: 'enable_groups',
+      render: (text, record, index) => {
+        // enable_groups is a string array
+        return (
+            <Space wrap={true} style={{'max-width': '500px'}}>
+                {record.enable_groups.map((group) => {
+                    if (group === selectedGroup) {
+                        return (
+                            <Tag color={stringToTagColor(group)} size="large" prefixIcon={<IconVerify />}>
                                 {userUsableGroups[group]}
-                              </Tag>
-                            );
-              } else if (userUsableGroups[group] && !['admin'].includes(group)){
-                return (
-                  <Tag
-                    color={stringToTagColor(group)}
-                    size="large"
-                    onClick={() => {
-                      setSelectedGroup(group);
-                      showInfo('当前查看的分组为：' + userUsableGroups[group] + '，倍率为：' + groupRatio[group]);
-                    }}
-                  >
-                    {userUsableGroups[group]}
-                  </Tag>
-                );
-              } else {
-                  return <></>
-              }
-            })}
-          </Space>
+                            </Tag>
+                        );
+                    } else if (userUsableGroups[group] && !['admin'].includes(group)){
+                        return (
+                            <Tag
+                                color={stringToTagColor(group)}
+                                size="large"
+                                onClick={() => {
+                                    setSelectedGroup(group);
+                                    showInfo(t('当前查看的分组为：{{group}}，倍率为：{{ratio}}', {
+                                        group: userUsableGroups[group],
+                                        ratio: groupRatio[group]
+                                    }));
+                                }}
+                            >
+                                {userUsableGroups[group]}
+                            </Tag>
+                        );
+                    } else {
+                        return <></>
+                    }
+                })}
+            </Space>
         );
       },
     },
     {
       title: () => (
         <span style={{'display':'flex','alignItems':'center'}}>
-          倍率
+          {t('倍率')}
           <Popover
             content={
-              <div style={{ padding: 8 }}>倍率是为了方便换算不同价格的模型<br/>点击查看倍率说明</div>
+              <div style={{ padding: 8 }}>
+                {t('倍率是为了方便换算不同价格的模型')}<br/>
+                {t('点击查看倍率说明')}
+              </div>
             }
             position='top'
             style={{
@@ -248,18 +231,18 @@ const ModelPricing = () => {
         let completionRatio = parseFloat(record.completion_ratio.toFixed(3));
         content = (
           <>
-            <Text>模型：{record.quota_type === 0 ? text : '无'}</Text>
+            <Text>{t('模型倍率')}：{record.quota_type === 0 ? text : t('无')}</Text>
             <br />
-            <Text>补全：{record.quota_type === 0 ? completionRatio : '无'}</Text>
+            <Text>{t('补全倍率')}：{record.quota_type === 0 ? completionRatio : t('无')}</Text>
             <br />
-            <Text>分组：{groupRatio[selectedGroup]}</Text>
+            <Text>{t('分组倍率')}：{groupRatio[selectedGroup]}</Text>
           </>
         );
         return <div>{content}</div>;
       },
     },
     {
-      title: '模型价格',
+      title: t('模型价格'),
       dataIndex: 'model_price',
       render: (text, record, index) => {
         let content = text;
@@ -272,14 +255,14 @@ const ModelPricing = () => {
             groupRatio[selectedGroup];
           content = (
             <>
-              <Text>提示 ${inputRatioPrice} / 1M tokens</Text>
+              <Text>{t('提示')} ${inputRatioPrice} / 1M tokens</Text>
               <br />
-              <Text>补全 ${completionRatioPrice} / 1M tokens</Text>
+              <Text>{t('补全')} ${completionRatioPrice} / 1M tokens</Text>
             </>
           );
         } else {
           let price = parseFloat(text) * groupRatio[selectedGroup];
-          content = <>模型价格：${price}</>;
+          content = <>${t('模型价格')}：${price}</>;
         }
         return <div>{content}</div>;
       },
@@ -361,41 +344,62 @@ const ModelPricing = () => {
             type="success"
             fullMode={false}
             closeIcon="null"
-            description={`您的默认令牌分组为：default，分组倍率为：${groupRatio['default']}`}
+            description={t('您的默认分组为：{{group}}，分组倍率为：{{ratio}}', {
+              group: 'default',
+              ratio: groupRatio['default']
+            })}
           />
         ) : (
           <Banner
             type='warning'
             fullMode={false}
             closeIcon="null"
-            description={`您还未登陆，显示的价格为默认分组倍率: ${groupRatio['default'] ?? 1}`}
+            description={t('您还未登陆，显示的价格为默认分组倍率: {{ratio}}', {
+              ratio: groupRatio['default']
+            })}
           />
         )}
         <br/>
         <Banner 
             type="info"
             fullMode={false}
-            description={<div>按量计费费用 = 分组倍率 × 模型倍率 × （提示token数 + 补全token数 × 补全倍率）/ 500000 （单位：美元）</div>}
+            description={<div>{t('按量计费费用 = 分组倍率 × 模型倍率 × （提示token数 + 补全token数 × 补全倍率）/ 500000 （单位：美元）')}</div>}
             closeIcon="null"
         />
         <br/>
-        <Button
-          theme='light'
-          type='tertiary'
-          style={{width: 150}}
-          onClick={() => {
-            copyText(selectedRowKeys);
-          }}
-          disabled={selectedRowKeys == ""}
-        >
-          复制选中模型
-        </Button>
+        <Space style={{ marginBottom: 16 }}>
+          <Input
+            placeholder={t('模糊搜索模型名称')}
+            style={{ width: 200 }}
+            onCompositionStart={handleCompositionStart}
+            onCompositionEnd={handleCompositionEnd}
+            onChange={handleChange}
+            showClear
+          />
+          <Button
+            theme='light'
+            type='tertiary'
+            style={{width: 150}}
+            onClick={() => {
+              copyText(selectedRowKeys);
+            }}
+            disabled={selectedRowKeys == ""}
+          >
+            {t('复制选中模型')}
+          </Button>
+        </Space>
         <Table
           style={{ marginTop: 5 }}
           columns={columns}
           dataSource={models}
           loading={loading}
           pagination={{
+            formatPageText: (page) =>
+              t('第 {{start}} - {{end}} 条，共 {{total}} 条', {
+                start: page.currentStart,
+                end: page.currentEnd,
+                total: models.length
+              }),
             pageSize: models.length,
             showSizeChanger: false,
           }}
