@@ -251,14 +251,6 @@ const LogsTable = () => {
         return <>{renderType(text)}</>;
       },
     },
-      {
-          title: '令牌分组',
-          dataIndex: 'token_group',
-          width: 120,
-          render: (text, record, index) => {
-              return record.type === 0 || record.type === 2 ? <div>{renderGroup(text, groups)}</div> : <></>;
-          }
-      },
     {
       title: t('模型'),
       dataIndex: 'model_name',
@@ -855,8 +847,6 @@ const LogsTable = () => {
             >
               {t('查询')}
             </Button>
-            <Form.Section></Form.Section>
-          </>
         </Form>
         <div style={{marginTop:10}}>
           <Select
@@ -907,6 +897,7 @@ const LogsTable = () => {
           }}
         />
       </Card>
+    </Card>
     </>
   );
 };

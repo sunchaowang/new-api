@@ -3,24 +3,24 @@ import { API, copy, showError, showInfo, showSuccess } from '../helpers';
 import { useTranslation } from 'react-i18next';
 
 import {
-    Banner,
-    Input,
-    Layout,
-    Modal,
-    Space,
-    Table,
-    Tag,
-    Tooltip,
-    Popover,
-    ImagePreview,
-    Button, Select,
+  Banner,
+  Input,
+  Layout,
+  Modal,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  Popover,
+  ImagePreview,
+  Button,
+  Select,
+  Tabs,
+  TabPane,
+  Image,
+  Typography
 } from '@douyinfe/semi-ui';
-import {
-  IconMore,
-  IconVerify,
-  IconUploadError,
-  IconHelpCircle,
-} from '@douyinfe/semi-icons';
+import { IconMore, IconVerify, IconUploadError, IconHelpCircle } from '@douyinfe/semi-icons';
 import { UserContext } from '../context/User/index.js';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 
@@ -123,10 +123,10 @@ const ModelPricing = () => {
       title: t('可用性'),
       dataIndex: 'available',
       render: (text, record, index) => {
-         // if record.enable_groups contains selectedGroup, then available is true
+        // if record.enable_groups contains selectedGroup, then available is true
         return renderAvailable(record.enable_groups.includes(selectedGroup));
       },
-      sorter: (a, b) => a.available - b.available,
+      sorter: (a, b) => a.available - b.available
     },
     {
       title: t('模型名称'),
@@ -135,8 +135,8 @@ const ModelPricing = () => {
         return (
           <>
             <Tag
-              color='green'
-              size='large'
+              color="green"
+              size="large"
               onClick={() => {
                 copyText(text);
               }}
@@ -146,9 +146,8 @@ const ModelPricing = () => {
           </>
         );
       },
-      onFilter: (value, record) =>
-        record.model_name.toLowerCase().includes(value.toLowerCase()),
-      filteredValue,
+      onFilter: (value, record) => record.model_name.toLowerCase().includes(value.toLowerCase()),
+      filteredValue
     },
     {
       title: t('计费类型'),
@@ -156,7 +155,7 @@ const ModelPricing = () => {
       render: (text, record, index) => {
         return renderQuotaType(parseInt(text));
       },
-      sorter: (a, b) => a.quota_type - b.quota_type,
+      sorter: (a, b) => a.quota_type - b.quota_type
     },
     {
         title: t('可用分组'),
@@ -194,7 +193,7 @@ const ModelPricing = () => {
                 })}
             </Space>
         );
-      },
+      }
     },
     {
       title: () => (
@@ -207,13 +206,13 @@ const ModelPricing = () => {
                 {t('点击查看倍率说明')}
               </div>
             }
-            position='top'
+            position="top"
             style={{
-                backgroundColor: 'rgba(var(--semi-blue-4),1)',
-                borderColor: 'rgba(var(--semi-blue-4),1)',
-                color: 'var(--semi-color-white)',
-                borderWidth: 1,
-                borderStyle: 'solid',
+              backgroundColor: 'rgba(var(--semi-blue-4),1)',
+              borderColor: 'rgba(var(--semi-blue-4),1)',
+              color: 'var(--semi-color-white)',
+              borderWidth: 1,
+              borderStyle: 'solid'
             }}
           >
             <IconHelpCircle
@@ -239,7 +238,7 @@ const ModelPricing = () => {
           </>
         );
         return <div>{content}</div>;
-      },
+      }
     },
     {
       title: t('模型价格'),
@@ -249,10 +248,7 @@ const ModelPricing = () => {
         if (record.quota_type === 0) {
           // 这里的 *2 是因为 1倍率=0.002刀，请勿删除
           let inputRatioPrice = record.model_ratio * 2 * groupRatio[selectedGroup];
-          let completionRatioPrice =
-            record.model_ratio *
-            record.completion_ratio * 2 *
-            groupRatio[selectedGroup];
+          let completionRatioPrice = record.model_ratio * record.completion_ratio * 2 * groupRatio[selectedGroup];
           content = (
             <>
               <Text>{t('提示')} ${inputRatioPrice} / 1M tokens</Text>
@@ -265,14 +261,15 @@ const ModelPricing = () => {
           content = <>${t('模型价格')}：${price}</>;
         }
         return <div>{content}</div>;
-      },
-    },
+      }
+    }
   ];
 
   const [models, setModels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userState, userDispatch] = useContext(UserContext);
   const [groupRatio, setGroupRatio] = useState({});
+  const [modelOwner, setModelOwner] = useState('');
 
   const setModelsFormat = (models, groupRatio) => {
     for (let i = 0; i < models.length; i++) {
@@ -288,10 +285,7 @@ const ModelPricing = () => {
     models.sort((a, b) => {
       if (a.model_name.startsWith('gpt') && !b.model_name.startsWith('gpt')) {
         return -1;
-      } else if (
-        !a.model_name.startsWith('gpt') &&
-        b.model_name.startsWith('gpt')
-      ) {
+      } else if (!a.model_name.startsWith('gpt') && b.model_name.startsWith('gpt')) {
         return 1;
       } else {
         return a.model_name.localeCompare(b.model_name);
@@ -307,11 +301,13 @@ const ModelPricing = () => {
     let url = '';
     url = `/api/pricing`;
     const res = await API.get(url);
-    const { success, message, data, group_ratio, user_usable_group } = res.data;
+    const { success, message, data, group_ratio, user_usable_group, manufacturers = '[]' } = res.data;
     if (success) {
       setGroupRatio(group_ratio);
       setUserUsableGroups(user_usable_group);
-      setSelectedGroup('default')
+      setPlatformManufacturers(JSON.parse(manufacturers));
+      setModelOwner(JSON.parse(manufacturers)[0].Manufacturer);
+      setSelectedGroup('default');
       setModelsFormat(data, group_ratio);
     } else {
       showError(message);
@@ -331,6 +327,11 @@ const ModelPricing = () => {
       Modal.error({ title: '无法复制到剪贴板，请手动复制', content: text });
     }
   };
+
+  function handleModelTabClick(currentKey) {
+    console.log('handleModelTabClick', currentKey);
+    setModelOwner(currentKey);
+  }
 
   useEffect(() => {
     refresh().then();
@@ -360,7 +361,7 @@ const ModelPricing = () => {
           />
         )}
         <br/>
-        <Banner 
+        <Banner
             type="info"
             fullMode={false}
             description={<div>{t('按量计费费用 = 分组倍率 × 模型倍率 × （提示token数 + 补全token数 × 补全倍率）/ 500000 （单位：美元）')}</div>}

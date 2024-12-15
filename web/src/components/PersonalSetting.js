@@ -10,7 +10,7 @@ import {
 } from '../helpers';
 import Turnstile from 'react-turnstile';
 import {UserContext} from '../context/User';
-import {onGitHubOAuthClicked, onLinuxDOOAuthClicked} from './utils';
+import {onGitHubOAuthClicked, onLinuxDoOAuthClicked} from './utils';
 import {
     Avatar,
     Banner,
@@ -629,7 +629,7 @@ const PersonalSetting = () => {
                                     <div>
                                         <Button
                                             onClick={() => {
-                                                onLinuxDOOAuthClicked(status.linuxdo_client_id);
+                                                onLinuxDoOAuthClicked(status.linuxdo_client_id);
                                             }}
                                             disabled={
                                                 (userState.user && userState.user.linux_do_id !== '') ||

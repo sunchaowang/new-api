@@ -13,8 +13,8 @@ import {
   stringToColor,
 } from '../../helpers/render';
 import { UserContext } from '../../context/User/index.js';
-import { StyleContext } from '../../context/Style/index.js';
 import { useTranslation } from 'react-i18next';
+import {useIsMobile} from "../../helpers/hooks.js";
 
 const Detail = (props) => {
   const { t } = useTranslation();
@@ -165,63 +165,64 @@ const Detail = (props) => {
     color: {
       specified: modelColorMap,
     },
-  };
+  });
+  const isMobile = useIsMobile();
 
-  const spec_pie = {
-    type: 'pie',
-    data: [
-      {
-        id: 'id0',
-        values: [{ type: 'null', value: '0' }],
-      },
-    ],
-    outerRadius: 0.8,
-    innerRadius: 0.5,
-    padAngle: 0.6,
-    valueField: 'value',
-    categoryField: 'type',
-    pie: {
-      style: {
-        cornerRadius: 10,
-      },
-      state: {
-        hover: {
-          outerRadius: 0.85,
-          stroke: '#000',
-          lineWidth: 1,
-        },
-        selected: {
-          outerRadius: 0.85,
-          stroke: '#000',
-          lineWidth: 1,
-        },
-      },
-    },
-    title: {
-      visible: true,
-      text: '模型调用次数占比',
-    },
-    legends: {
-      visible: true,
-      orient: 'bottom',
-    },
-    label: {
-      visible: true,
-    },
-    tooltip: {
-      mark: {
-        content: [
-          {
-            key: (datum) => datum['type'],
-            value: (datum) => renderNumber(datum['value']),
-          },
-        ],
-      },
-    },
-    color: {
-      specified: modelColorMap,
-    },
-  };
+  // const spec_pie = {
+  //   type: 'pie',
+  //   data: [
+  //     {
+  //       id: 'id0',
+  //       values: [{ type: 'null', value: '0' }],
+  //     },
+  //   ],
+  //   outerRadius: 0.8,
+  //   innerRadius: 0.5,
+  //   padAngle: 0.6,
+  //   valueField: 'value',
+  //   categoryField: 'type',
+  //   pie: {
+  //     style: {
+  //       cornerRadius: 10,
+  //     },
+  //     state: {
+  //       hover: {
+  //         outerRadius: 0.85,
+  //         stroke: '#000',
+  //         lineWidth: 1,
+  //       },
+  //       selected: {
+  //         outerRadius: 0.85,
+  //         stroke: '#000',
+  //         lineWidth: 1,
+  //       },
+  //     },
+  //   },
+  //   title: {
+  //     visible: true,
+  //     text: '模型调用次数占比',
+  //   },
+  //   legends: {
+  //     visible: true,
+  //     orient: 'bottom',
+  //   },
+  //   label: {
+  //     visible: true,
+  //   },
+  //   tooltip: {
+  //     mark: {
+  //       content: [
+  //         {
+  //           key: (datum) => datum['type'],
+  //           value: (datum) => renderNumber(datum['value']),
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   color: {
+  //     specified: modelColorMap,
+  //   },
+  // };
 
   const loadQuotaData = async (lineChart, pieChart) => {
     setLoading(true);
@@ -506,7 +507,7 @@ const Detail = (props) => {
             )}
           <Spin spinning={loading}>
             <Row gutter={{ xs: 16, sm: 16, md: 16, lg: 24, xl: 24, xxl: 24 }} style={{marginTop: 20}} type="flex" justify="space-between">
-              <Col span={styleState.isMobile?24:8}>
+              <Col span={isMobile? 24:8}>
                 <Card className='panel-desc-card'>
                   <Descriptions row size="small">
                     <Descriptions.Item itemKey={t('当前余额')}>
@@ -521,7 +522,7 @@ const Detail = (props) => {
                   </Descriptions>
                 </Card>
               </Col>
-              <Col span={styleState.isMobile?24:8}>
+              <Col span={isMobile?24:8}>
                 <Card>
                   <Descriptions row size="small">
                     <Descriptions.Item itemKey={t('统计额度')}>
@@ -536,7 +537,7 @@ const Detail = (props) => {
                   </Descriptions>
                 </Card>
               </Col>
-              <Col span={styleState.isMobile ? 24 : 8}>
+              <Col span={isMobile ? 24 : 8}>
                 <Card>
                   <Descriptions row size='small'>
                     <Descriptions.Item itemKey={t('平均RPM')}>

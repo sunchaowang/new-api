@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"one-api/common"
+	"one-api/constant"
 	"one-api/model"
 )
 
@@ -13,6 +14,7 @@ func GetPricing(c *gin.Context) {
 		"data":              pricing,
 		"group_ratio":       common.GroupRatio,
 		"user_usable_group": common.UserUsableGroups,
+		"manufacturers":     constant.Manufacturers2JSONString(),
 	})
 }
 

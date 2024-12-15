@@ -33,7 +33,7 @@ import DashboardSetting from '../pages/Setting';
 import DashboardChannel from '../pages/Channel';
 import DashboardHome from '../pages/Dashboard/Home';
 import DashboardDetail from '../pages/Detail';
-import DashboardPlayground from '../components/Playground';
+import DashboardPlayground from '../pages/Playground/Playground.js';
 import DashboardToken from '../pages/Token';
 import DashboardMidJourney from '../pages/Midjourney';
 import DashboardTask from '../pages/Task';

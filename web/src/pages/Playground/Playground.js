@@ -5,7 +5,8 @@ import { API, getUserIdFromLocalStorage, showError } from '../../helpers/index.j
 import { Card, Chat, Input, Layout, Select, Slider, TextArea, Typography, Button } from '@douyinfe/semi-ui';
 import { SSE } from 'sse';
 import { IconSetting } from '@douyinfe/semi-icons';
-import { StyleContext } from '../../context/Style/index.js';
+// import { StyleContext } from '../../context/Style/index.js';
+import {useIsMobile} from "../../helpers/hooks.js";
 import { useTranslation } from 'react-i18next';
 
 const roleInfo = {
@@ -59,6 +60,9 @@ const Playground = () => {
   const [message, setMessage] = useState(defaultMessage);
   const [models, setModels] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [showSettings, setShowSettings] = useState(true);
+  // const [styleState, styleDispatch] = useContext(StyleContext);
+  const isMobile = useIsMobile();
 
   const handleInputChange = (name, value) => {
     localStorage.setItem('playground_config', JSON.stringify({ ...inputs, [name]: value }));
@@ -102,8 +106,11 @@ const Playground = () => {
     let res = await API.get(`/api/user/self/groups`);
     const { success, message, data } = res.data;
     if (success) {
-      let localGroupOptions = Object.keys(data).map((group) => ({
-        label: data[group],
+      // return data is a map, key is group name, value is group description
+      // label is group description, value is group name
+      const usableGroups = data.usableGroups;
+      let localGroupOptions = Object.keys(usableGroups).filter((group) => group !== 'admin').map((group) => ({
+        label: usableGroups[group],
         value: group,
       }));
 
@@ -126,7 +133,8 @@ const Playground = () => {
       }
 
       setGroups(localGroupOptions);
-      handleInputChange('group', localGroupOptions[0].value);
+      handleInputChange('group', 'default');
+      // handleInputChange('group', localGroupOptions[0].value);
     } else {
       showError(t(message));
     }
@@ -272,7 +280,7 @@ const Playground = () => {
   }, []);
 
   const SettingsToggle = () => {
-    if (!styleState.isMobile) return null;
+    if (!isMobile) return null;
     return (
       <Button
         icon={<IconSetting />}
@@ -315,8 +323,8 @@ const Playground = () => {
 
   return (
     <Layout style={{height: '100%'}}>
-      {(showSettings || !styleState.isMobile) && (
-        <Layout.Sider style={{ display: styleState.isMobile ? 'block' : 'initial' }}>
+      {(showSettings || !isMobile) && (
+        <Layout.Sider style={{ display: isMobile ? 'block' : 'initial' }}>
           <Card style={commonOuterStyle}>
             <div style={{ marginTop: 10 }}>
               <Typography.Text strong>{t('分组')}：</Typography.Text>
@@ -333,7 +341,7 @@ const Playground = () => {
               autoComplete='new-password'
               optionList={groups.map((group) => ({
                 ...group,
-                label: styleState.isMobile && group.label.length > 16
+                label: isMobile && group.label.length > 16
                   ? group.label.substring(0, 16) + '...'
                   : group.label,
               }))}

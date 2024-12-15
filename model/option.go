@@ -117,6 +117,7 @@ func InitOptionMap() {
 	common.OptionMap["StreamCacheQueueLength"] = strconv.Itoa(constant.StreamCacheQueueLength)
 
 	common.OptionMap["globalModelMapping"] = common.GlobalModelMapping2JSONString()
+	common.OptionMap["Manufacturers"] = constant.Manufacturers2JSONString()
 
 	common.OptionMapRWMutex.Unlock()
 	loadOptionsFromDatabase()
@@ -350,6 +351,8 @@ func updateOptionMap(key string, value string) (err error) {
 		constant.SensitiveWordsFromString(value)
 	case "StreamCacheQueueLength":
 		constant.StreamCacheQueueLength, _ = strconv.Atoi(value)
+	case "Manufacturers":
+		err = constant.UpdateManufacturersByJSONString(value)
 	}
 	return err
 }
