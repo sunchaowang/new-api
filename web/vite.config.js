@@ -1,6 +1,5 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, transformWithEsbuild, loadEnv } from 'vite';
-import SemiPlugin from "vite-plugin-semi-theme";
 import svgr from 'vite-plugin-svgr'; // 新增
 
 // https://vitejs.dev/config/
@@ -25,10 +24,7 @@ export default defineConfig(({ command, mode }) => {
         }
       },
       react(),
-      SemiPlugin({
-        theme: '@semi-bot/semi-theme-wochirou',
-        options: {},
-      }),
+
       svgr({include: 'src/assets/svg/**/*.svg?react'})
 
     ],

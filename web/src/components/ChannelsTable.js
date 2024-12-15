@@ -61,7 +61,7 @@ const ChannelsTable = () => {
       type2label[0] = { value: 0, text: t('未知类型'), color: 'grey' };
     }
     return (
-      <Tag size="large" color={type2label[type]?.color}>
+      <Tag color={type2label[type]?.color}>
         {type2label[type]?.text}
       </Tag>
     );
@@ -85,25 +85,25 @@ const ChannelsTable = () => {
     switch (status) {
       case 1:
         return (
-          <Tag size="large" color="green">
+          <Tag color="green">
             {t('已启用')}
           </Tag>
         );
       case 2:
         return (
-          <Tag size="large" color="yellow">
+          <Tag color="yellow">
             {t('已禁用')}
           </Tag>
         );
       case 3:
         return (
-          <Tag size="large" color="yellow">
+          <Tag color="yellow">
             {t('自动禁用')}
           </Tag>
         );
       default:
         return (
-          <Tag size="large" color="grey">
+          <Tag color="grey">
             {t('未知状态')}
           </Tag>
         );
@@ -115,31 +115,31 @@ const ChannelsTable = () => {
     time = time.toFixed(2) + t(' 秒');
     if (responseTime === 0) {
       return (
-        <Tag size="large" color="grey">
+        <Tag color="grey">
           {t('未测试')}
         </Tag>
       );
     } else if (responseTime <= 1000) {
       return (
-        <Tag size="large" color="green">
+        <Tag color="green">
           {time}
         </Tag>
       );
     } else if (responseTime <= 3000) {
       return (
-        <Tag size="large" color="lime">
+        <Tag color="lime">
           {time}
         </Tag>
       );
     } else if (responseTime <= 5000) {
       return (
-        <Tag size="large" color="yellow">
+        <Tag color="yellow">
           {time}
         </Tag>
       );
     } else {
       return (
-        <Tag size="large" color="red">
+        <Tag color="red">
           {time}
         </Tag>
       );

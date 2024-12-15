@@ -718,7 +718,7 @@ const LogsTable = () => {
                       key: '总消耗额度',
                       label: '总消耗额度',
                       value: (
-                        <Tag color="green" size="large" style={{marginTop: 4, marginBottom: 4}}>
+                        <Tag color="green" style={{marginTop: 4, marginBottom: 4}}>
                           {renderQuota(stat.quota)}
                         </Tag>
                       )
@@ -735,7 +735,7 @@ const LogsTable = () => {
                       key: '近一分钟内请求次数',
                       label: '近一分钟内请求次数',
                       value: (
-                        <Tag color="blue" size="large" style={{marginTop: 4, marginBottom: 4}}>
+                        <Tag color="blue" style={{marginTop: 4, marginBottom: 4}}>
                           {stat.rpm}
                         </Tag>
                       )
@@ -752,7 +752,7 @@ const LogsTable = () => {
                       key: '近一分钟内消耗Token数',
                       label: '近一分钟内消耗Token数',
                       value: (
-                        <Tag color="purple" size="large" style={{marginTop: 4, marginBottom: 4}}>
+                        <Tag color="purple" style={{marginTop: 4, marginBottom: 4}}>
                           {stat.tpm}
                         </Tag>
                       )
@@ -765,7 +765,8 @@ const LogsTable = () => {
         </Spin>
 
         <Card bordered={false} bodyStyle={{ paddingLeft: 0, paddingRight: 0 }}>
-          <Form layout={'horizontal'} labelPosition={'inset'} style={{ marginTop: 10 }}>
+          <Form layout={'horizontal'} style={{ marginTop: 10 }}
+                labelPosition="left">
             <Form.Input
               field='token_name'
               label={t('令牌名称')}
@@ -836,35 +837,38 @@ const LogsTable = () => {
                 />
               </>
             )}
-            <Button
-              label={t('查询')}
-              type='primary'
-              htmlType='submit'
-              className='btn-margin-right'
-              onClick={refresh}
-              loading={loading}
-              style={{ marginTop: 24 }}
-            >
-              {t('查询')}
-            </Button>
+              <Form.Select
+                  label={t('日志类型')}
+                  defaultValue='0'
+                  style={{ width: 120 }}
+                  onChange={(value) => {
+                    setLogType(parseInt(value));
+                    loadLogs(0, pageSize, parseInt(value));
+                  }}
+              >
+                <Select.Option value='0'>{t('全部')}</Select.Option>
+                <Select.Option value='1'>{t('充值')}</Select.Option>
+                <Select.Option value='2'>{t('消费')}</Select.Option>
+                <Select.Option value='3'>{t('管理')}</Select.Option>
+                <Select.Option value='4'>{t('系统')}</Select.Option>
+                <Select.Option value="5">签到</Select.Option>
+                <Select.Option value="6">登录</Select.Option>
+              </Form.Select>
+            <Form.Section>
+              <Button
+                  label={t('查询')}
+                  type='primary'
+                  className='btn-margin-right'
+                  onClick={refresh}
+                  loading={loading}
+                  style={{ marginTop: 24 }}
+              >
+                {t('查询')}
+              </Button>
+            </Form.Section>
         </Form>
         <div style={{marginTop:10}}>
-          <Select
-              defaultValue='0'
-              style={{ width: 120 }}
-              onChange={(value) => {
-                setLogType(parseInt(value));
-                loadLogs(0, pageSize, parseInt(value));
-              }}
-          >
-            <Select.Option value='0'>{t('全部')}</Select.Option>
-            <Select.Option value='1'>{t('充值')}</Select.Option>
-            <Select.Option value='2'>{t('消费')}</Select.Option>
-            <Select.Option value='3'>{t('管理')}</Select.Option>
-            <Select.Option value='4'>{t('系统')}</Select.Option>
-              <Select.Option value="5">签到</Select.Option>
-              <Select.Option value="6">登录</Select.Option>
-          </Select>
+
         </div>
         <Table
           style={{ width: '100%' }}

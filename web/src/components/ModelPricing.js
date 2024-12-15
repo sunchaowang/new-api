@@ -96,7 +96,7 @@ const ModelPricing = () => {
               borderStyle: 'solid',
           }}
       >
-          <IconVerify style={{ color: 'green' }}  size="large" />
+          <IconVerify style={{ color: 'green' }}  />
       </Popover>
     ) : (
       <Popover
@@ -113,7 +113,7 @@ const ModelPricing = () => {
               borderStyle: 'solid',
           }}
       >
-          <IconUploadError style={{ color: '#FFA54F' }}  size="large" />
+          <IconUploadError style={{ color: '#FFA54F' }}  />
       </Popover>
     );
   }
@@ -167,7 +167,7 @@ const ModelPricing = () => {
                 {record.enable_groups.map((group) => {
                     if (group === selectedGroup) {
                         return (
-                            <Tag color={stringToTagColor(group)} size="large" prefixIcon={<IconVerify />}>
+                            <Tag color={stringToTagColor(group)} prefixIcon={<IconVerify />}>
                                 {userUsableGroups[group]}
                             </Tag>
                         );
