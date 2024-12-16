@@ -23,6 +23,7 @@ import {
 import { IconMore, IconVerify, IconUploadError, IconHelpCircle } from '@douyinfe/semi-icons';
 import { UserContext } from '../context/User/index.js';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
+import { stringToTagColor } from "../helpers";
 
 const ModelPricing = () => {
   const { t } = useTranslation();
@@ -270,6 +271,8 @@ const ModelPricing = () => {
   const [userState, userDispatch] = useContext(UserContext);
   const [groupRatio, setGroupRatio] = useState({});
   const [modelOwner, setModelOwner] = useState('');
+  const [userUsableGroups, setUserUsableGroups] = useState({});
+  const [platformManufacturers, setPlatformManufacturers] = useState([]);
 
   const setModelsFormat = (models, groupRatio) => {
     for (let i = 0; i < models.length; i++) {

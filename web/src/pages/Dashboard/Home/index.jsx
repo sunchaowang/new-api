@@ -99,7 +99,6 @@ export default function Home() {
         <Row style={{ width: '100%' }}>
           <Card
             style={{ width: '100%' }}
-            bodyStyle={{ padding: 0 }}
             title="数据看板(近1天)"
             headerExtraContent={
               <Typography.Text link onClick={() => navigate('/dashboard/detail')}>
