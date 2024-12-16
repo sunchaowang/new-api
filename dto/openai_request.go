@@ -7,8 +7,8 @@ type ResponseFormat struct {
 }
 
 type GeneralOpenAIRequest struct {
-	Model               string         `json:"model,omitempty"`
-	OriginModelName     string         `json:"origin_model_name,omitempty"`
+	Model string `json:"model,omitempty"`
+	//OriginModelName     string         `json:"origin_model_name,omitempty"`
 	Messages            []Message      `json:"messages,omitempty"`
 	Prompt              any            `json:"prompt,omitempty"`
 	Stream              bool           `json:"stream,omitempty"`

@@ -51,17 +51,17 @@ func (a *Adaptor) ConvertRequest(c *gin.Context, info *relaycommon.RelayInfo, re
 	if request == nil {
 		return nil, errors.New("request is nil")
 	}
-	
+
 	// Create a copy of the request
 	requestCopy := *request
-	
+
 	endpoint := ModelEndpoint[info.UpstreamModelName]
 	if endpoint == "" {
 		return nil, fmt.Errorf("unsupported model %s for doubao", info.UpstreamModelName)
 	}
-	
+
 	requestCopy.Model = endpoint
-	requestCopy.OriginModelName = info.UpstreamModelName
+	//requestCopy.OriginModelName = info.UpstreamModelName
 	return &requestCopy, nil
 }
 
