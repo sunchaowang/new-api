@@ -2,7 +2,6 @@
   "name": "react-template",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@douyinfe/semi-icons": "~2.71.1",
     "@douyinfe/semi-icons-lab": "^2.71.1",

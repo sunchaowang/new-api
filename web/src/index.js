@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import HeaderBar from './components/HeaderBar';
 import 'semantic-ui-offline/semantic.min.css';
-import "./index.css";
+import './index.css';
 import { UserProvider } from './context/User';
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,9 +32,9 @@ root.render(
         <UserProvider>
           <ThemeProvider>
             <StyleProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
             </StyleProvider>
           </ThemeProvider>
         </UserProvider>

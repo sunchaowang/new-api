@@ -23,13 +23,9 @@ export default function ModelSettingsVisualEditor(props) {
       const completionRatio = JSON.parse(props.options.CompletionRatio || '{}');
 
       // 合并所有模型名称
-      const modelNames = new Set([
-        ...Object.keys(modelPrice),
-        ...Object.keys(modelRatio),
-        ...Object.keys(completionRatio)
-      ]);
+      const modelNames = new Set([...Object.keys(modelPrice), ...Object.keys(modelRatio), ...Object.keys(completionRatio)]);
 
-      const modelData = Array.from(modelNames).map(name => ({
+      const modelData = Array.from(modelNames).map((name) => ({
         name,
         price: modelPrice[name] === undefined ? '' : modelPrice[name],
         ratio: modelRatio[name] === undefined ? '' : modelRatio[name],
@@ -50,9 +46,7 @@ export default function ModelSettingsVisualEditor(props) {
   };
 
   // 在 return 语句之前，先处理过滤和分页逻辑
-  const filteredModels = models.filter(model =>
-    searchText ? model.name.toLowerCase().includes(searchText.toLowerCase()) : true
-  );
+  const filteredModels = models.filter((model) => (searchText ? model.name.toLowerCase().includes(searchText.toLowerCase()) : true));
 
   // 然后基于过滤后的数据计算分页数据
   const pagedData = getPagedData(filteredModels, currentPage, pageSize);
@@ -68,11 +62,11 @@ export default function ModelSettingsVisualEditor(props) {
 
     try {
       // 数据转换
-      models.forEach(model => {
+      models.forEach((model) => {
         currentConvertModelName = model.name;
         if (model.price !== '') {
           // 如果价格不为空，则转换为浮点数，忽略倍率参数
-          output.ModelPrice[model.name] = parseFloat(model.price)
+          output.ModelPrice[model.name] = parseFloat(model.price);
         } else {
           if (model.ratio !== '') output.ModelRatio[model.name] = parseFloat(model.ratio);
           if (model.completionRatio != '') output.CompletionRatio[model.name] = parseFloat(model.completionRatio);
@@ -114,7 +108,6 @@ export default function ModelSettingsVisualEditor(props) {
 
       showSuccess('保存成功');
       props.refresh();
-
     } catch (error) {
       console.error('保存失败:', error);
       showError('保存失败，请重试');
@@ -127,18 +120,14 @@ export default function ModelSettingsVisualEditor(props) {
     {
       title: t('模型名称'),
       dataIndex: 'name',
-      key: 'name',
+      key: 'name'
     },
     {
       title: t('模型固定价格'),
       dataIndex: 'price',
       key: 'price',
       render: (text, record) => (
-        <Input
-          value={text}
-          placeholder={t('按量计费')}
-          onChange={value => updateModel(record.name, 'price', value)}
-        />
+        <Input value={text} placeholder={t('按量计费')} onChange={(value) => updateModel(record.name, 'price', value)} />
       )
     },
     {
@@ -150,7 +139,7 @@ export default function ModelSettingsVisualEditor(props) {
           value={text}
           placeholder={record.price !== '' ? t('模型倍率') : t('默认补全倍率')}
           disabled={record.price !== ''}
-          onChange={value => updateModel(record.name, 'ratio', value)}
+          onChange={(value) => updateModel(record.name, 'ratio', value)}
         />
       )
     },
@@ -163,20 +152,14 @@ export default function ModelSettingsVisualEditor(props) {
           value={text}
           placeholder={record.price !== '' ? t('补全倍率') : t('默认补全倍率')}
           disabled={record.price !== ''}
-          onChange={value => updateModel(record.name, 'completionRatio', value)}
+          onChange={(value) => updateModel(record.name, 'completionRatio', value)}
         />
       )
     },
     {
       title: t('操作'),
       key: 'action',
-      render: (_, record) => (
-        <Button
-          icon={<IconDelete />}
-          type="danger"
-          onClick={() => deleteModel(record.name)}
-        />
-      )
+      render: (_, record) => <Button icon={<IconDelete />} type="danger" onClick={() => deleteModel(record.name)} />
     }
   ];
 
@@ -185,21 +168,15 @@ export default function ModelSettingsVisualEditor(props) {
       showError('请输入数字');
       return;
     }
-    setModels(prev =>
-      prev.map(model =>
-        model.name === name
-          ? { ...model, [field]: value }
-          : model
-      )
-    );
+    setModels((prev) => prev.map((model) => (model.name === name ? { ...model, [field]: value } : model)));
   };
 
   const deleteModel = (name) => {
-    setModels(prev => prev.filter(model => model.name !== name));
+    setModels((prev) => prev.filter((model) => model.name !== name));
   };
   const addModel = (values) => {
     // 检查模型名称是否存在, 如果存在则拒绝添加
-    if (models.some(model => model.name === values.name)) {
+    if (models.some((model) => model.name === values.name)) {
       showError('模型名称已存在');
       return;
     }
@@ -208,16 +185,18 @@ export default function ModelSettingsVisualEditor(props) {
       showError('固定价格和倍率不能同时存在');
       return;
     }
-    setModels(prev => [{
-      name: values.name,
-      price: values.price || '',
-      ratio: values.ratio || '',
-      completionRatio: values.completionRatio || ''
-    }, ...prev]);
+    setModels((prev) => [
+      {
+        name: values.name,
+        price: values.price || '',
+        ratio: values.ratio || '',
+        completionRatio: values.completionRatio || ''
+      },
+      ...prev
+    ]);
     setVisible(false);
     showSuccess('添加成功');
   };
-
 
   return (
     <>
@@ -233,8 +212,8 @@ export default function ModelSettingsVisualEditor(props) {
             prefix={<IconSearch />}
             placeholder={t('搜索模型名称')}
             value={searchText}
-            onChange={value => {
-              setSearchText(value)
+            onChange={(value) => {
+              setSearchText(value);
               setCurrentPage(1);
             }}
             style={{ width: 200 }}
@@ -247,7 +226,7 @@ export default function ModelSettingsVisualEditor(props) {
             currentPage: currentPage,
             pageSize: pageSize,
             total: filteredModels.length,
-            onPageChange: page => setCurrentPage(page),
+            onPageChange: (page) => setCurrentPage(page),
             formatPageText: (page) =>
               t('第 {{start}} - {{end}} 条，共 {{total}} 条', {
                 start: page.currentStart,
@@ -274,13 +253,17 @@ export default function ModelSettingsVisualEditor(props) {
             label={t('模型名称')}
             placeholder="strawberry"
             required
-            onChange={value => setCurrentModel(prev => ({ ...prev, name: value }))}
+            onChange={(value) => setCurrentModel((prev) => ({ ...prev, name: value }))}
           />
           <Form.Switch
             field="priceMode"
-            label={<>{t('定价模式')}：{currentModel?.priceMode ? t("固定价格") : t("倍率模式")}</>}
-            onChange={checked => {
-              setCurrentModel(prev => ({
+            label={
+              <>
+                {t('定价模式')}：{currentModel?.priceMode ? t('固定价格') : t('倍率模式')}
+              </>
+            }
+            onChange={(checked) => {
+              setCurrentModel((prev) => ({
                 ...prev,
                 price: '',
                 ratio: '',
@@ -294,7 +277,7 @@ export default function ModelSettingsVisualEditor(props) {
               field="price"
               label={t('固定价格(每次)')}
               placeholder={t('输入每次价格')}
-              onChange={value => setCurrentModel(prev => ({ ...prev, price: value }))}
+              onChange={(value) => setCurrentModel((prev) => ({ ...prev, price: value }))}
             />
           ) : (
             <>
@@ -302,13 +285,13 @@ export default function ModelSettingsVisualEditor(props) {
                 field="ratio"
                 label={t('模型倍率')}
                 placeholder={t('输入模型倍率')}
-                onChange={value => setCurrentModel(prev => ({ ...prev, ratio: value }))}
+                onChange={(value) => setCurrentModel((prev) => ({ ...prev, ratio: value }))}
               />
               <Form.Input
                 field="completionRatio"
                 label={t('补全倍率')}
                 placeholder={t('输入补全价格')}
-                onChange={value => setCurrentModel(prev => ({ ...prev, completionRatio: value }))}
+                onChange={(value) => setCurrentModel((prev) => ({ ...prev, completionRatio: value }))}
               />
             </>
           )}
