@@ -23,7 +23,11 @@ jobs:
 
       - name: Save version info
         run: |
-          git describe --tags > VERSION
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "${{ github.event.inputs.name }}" > VERSION
+          else
+            git describe --tags > VERSION
+          fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
