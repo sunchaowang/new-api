@@ -53,7 +53,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            calciumion/new-api
+            sunchaowang/new-api
             ghcr.io/${{ github.repository }}
 
       - name: Build and push Docker images
