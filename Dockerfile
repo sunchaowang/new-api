@@ -22,7 +22,7 @@ RUN go build -ldflags "-s -w -X 'one-api/common.Version=$(cat VERSION)' -extldfl
 
 FROM alpine
 
-RUN apk update \
+RUN --platform=$BUILDPLATFORM apk update \
     && apk upgrade \
     && apk add --no-cache ca-certificates tzdata \
     && update-ca-certificates 2>/dev/null || true
