@@ -49,14 +49,14 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            calciumion/new-api
+            sunchaowang/new-api
             ghcr.io/${{ github.repository }}
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v3
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
