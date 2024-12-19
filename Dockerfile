@@ -29,6 +29,10 @@ RUN apk update \
     && apk add --no-cache ca-certificates tzdata \
     && update-ca-certificates 2>/dev/null || true
 
+RUN apt-get update && apt-get install -y libsqlite3-dev
+
+RUN apk add --no-cache sqlite-dev
+
 COPY --from=builder2 /build/one-api /
 EXPOSE 3000
 WORKDIR /data
