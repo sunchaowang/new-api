@@ -7,9 +7,9 @@ COPY ./web .
 COPY ./VERSION .
 RUN DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) npm run build
 
-FROM golang AS builder2
+FROM golang:alpine AS builder2
 
-RUN apk add --no-cache g++
+RUN apk add --no-cache gcc musl-dev g++ make sqlite-dev
 
 ENV GO111MODULE=on \
     CGO_ENABLED=1 \
@@ -26,7 +26,7 @@ FROM alpine
 
 RUN apk update \
     && apk upgrade \
-    && apk add --no-cache ca-certificates tzdata libsqlite3-dev sqlite-dev \
+    && apk add --no-cache ca-certificates tzdata libsqlite3-dev \
     && update-ca-certificates 2>/dev/null || true
 
 COPY --from=builder2 /build/one-api /
