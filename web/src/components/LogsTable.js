@@ -22,7 +22,13 @@ import {
 } from '@douyinfe/semi-ui';
 import { IconLightningStroked } from '@douyinfe/semi-icons';
 import { ITEMS_PER_PAGE } from '../constants';
-import { renderAudioModelPrice, renderGroup, renderModelPrice, renderNumber, renderQuota, stringToColor } from '../helpers/render';
+import {
+  renderAudioModelPrice, renderGroup,
+  renderModelPrice, renderModelPriceSimple,
+  renderNumber,
+  renderQuota,
+  stringToColor
+} from '../helpers/render';
 import Paragraph from '@douyinfe/semi-ui/lib/es/typography/paragraph';
 import { getLogOther } from '../helpers/other.js';
 import { useIsMobile } from '../helpers/hooks.js';
@@ -219,6 +225,29 @@ const LogsTable = (props) => {
         );
       }
     },
+    // {
+    //   title: t('分组'),
+    //   dataIndex: 'group',
+    //   render: (text, record, index) => {
+    //     if (record.type === 0 || record.type === 2) {
+    //       let other = JSON.parse(record.other);
+    //       if (other === null) {
+    //         return <></>;
+    //       }
+    //       if (other.group !== undefined) {
+    //         return (
+    //           <>
+    //             {renderGroup(other.group)}
+    //           </>
+    //         );
+    //       } else {
+    //         return <></>;
+    //       }
+    //     } else {
+    //       return <></>;
+    //     }
+    //   },
+    // },
     {
       title: t('类型'),
       dataIndex: 'type',
@@ -402,8 +431,8 @@ const LogsTable = (props) => {
     token_name: '',
     model_name: '',
     start_timestamp: timestamp2string(getTodayStartTimestamp()),
-    end_timestamp: timestamp2string(getTodayStartTimestamp() + 3600 * 24),
-    channel: ''
+    end_timestamp: timestamp2string(now.getTime() / 1000 + 3600),
+    channel: '',
   });
   const { username, user_id, token_name, model_name, start_timestamp, end_timestamp, channel } = inputs;
 
