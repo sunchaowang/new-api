@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/url"
 	"one-api/common"
-	"one-api/constant"
 	"one-api/model"
 	"one-api/service"
+	"one-api/setting"
 	"strconv"
 	"sync"
 	"time"
@@ -29,13 +29,13 @@ type AmountRequest struct {
 }
 
 func GetEpayClient() *epay.Client {
-	if constant.PayAddress == "" || constant.EpayId == "" || constant.EpayKey == "" {
+	if setting.PayAddress == "" || setting.EpayId == "" || setting.EpayKey == "" {
 		return nil
 	}
 	withUrl, err := epay.NewClient(&epay.Config{
-		PartnerID: constant.EpayId,
-		Key:       constant.EpayKey,
-	}, constant.PayAddress)
+		PartnerID: setting.EpayId,
+		Key:       setting.EpayKey,
+	}, setting.PayAddress)
 	if err != nil {
 		return nil
 	}
@@ -51,12 +51,12 @@ func getPayMoney(amount float64, group string) float64 {
 	if topupGroupRatio == 0 {
 		topupGroupRatio = 1
 	}
-	payMoney := amount * constant.Price * topupGroupRatio
+	payMoney := amount * setting.Price * topupGroupRatio
 	return payMoney
 }
 
 func getMinTopup() int {
-	minTopup := constant.MinTopUp
+	minTopup := setting.MinTopUp
 	if !common.DisplayInCurrencyEnabled {
 		minTopup = minTopup * int(common.QuotaPerUnit)
 	}
@@ -87,8 +87,8 @@ func RequestEpay(c *gin.Context) {
 		return
 	}
 	var topUpRateMoney float64
-	if constant.TopUpRate > 0 {
-		topUpRateMoney = payMoney * constant.TopUpRate
+	if setting.TopUpRate > 0 {
+		topUpRateMoney = payMoney * setting.TopUpRate
 	}
 
 	var payType = "wxpay"
@@ -256,8 +256,8 @@ func RequestAmount(c *gin.Context) {
 		return
 	}
 	var topUpRateMoney float64
-	if constant.TopUpRate > 0 {
-		topUpRateMoney = payMoney * constant.TopUpRate
+	if setting.TopUpRate > 0 {
+		topUpRateMoney = payMoney * setting.TopUpRate
 	}
 	//组装 Map 结构数据
 
@@ -267,7 +267,7 @@ func RequestAmount(c *gin.Context) {
 		"data": gin.H{
 			"amount":      strconv.FormatFloat(payMoney, 'f', 2, 64),
 			"payMoney":    strconv.FormatFloat(payMoney+topUpRateMoney, 'f', 2, 64),
-			"topUpRate":   constant.TopUpRate,
+			"topUpRate":   setting.TopUpRate,
 			"payMoneyFee": strconv.FormatFloat(topUpRateMoney, 'f', 2, 64),
 		},
 	})
