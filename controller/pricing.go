@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"one-api/common"
-	"one-api/constant"
 	"one-api/model"
+	"one-api/setting"
 )
 
 func GetPricing(c *gin.Context) {
@@ -14,7 +14,7 @@ func GetPricing(c *gin.Context) {
 		"data":              pricing,
 		"group_ratio":       common.GroupRatio,
 		"user_usable_group": common.UserUsableGroups,
-		"manufacturers":     constant.Manufacturers2JSONString(),
+		"manufacturers":     setting.Manufacturers2JSONString(),
 	})
 }
 

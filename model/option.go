@@ -117,7 +117,7 @@ func InitOptionMap() {
 	common.OptionMap["StreamCacheQueueLength"] = strconv.Itoa(setting.StreamCacheQueueLength)
 
 	common.OptionMap["globalModelMapping"] = common.GlobalModelMapping2JSONString()
-	common.OptionMap["Manufacturers"] = constant.Manufacturers2JSONString()
+	common.OptionMap["Manufacturers"] = setting.Manufacturers2JSONString()
 
 	common.OptionMapRWMutex.Unlock()
 	loadOptionsFromDatabase()

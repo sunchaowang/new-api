@@ -275,7 +275,7 @@ func ClaudeTextHelper(c *gin.Context) *dto.OpenAIErrorWithStatusCode {
 	var modelRatio float64
 	//err := service.SensitiveWordsCheck(textRequest)
 
-	if constant.ShouldCheckPromptSensitive() {
+	if setting.ShouldCheckPromptSensitive() {
 		err = checkRequestSensitive(textRequest, relayInfo)
 		if err != nil {
 			return service.OpenAIErrorWrapperLocal(err, "sensitive_words_detected", http.StatusBadRequest)
