@@ -8,4 +8,5 @@ build
 logs
 web/dist
 .env
+one-api
 *.env*.local
