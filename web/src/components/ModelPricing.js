@@ -162,6 +162,7 @@ const ModelPricing = () => {
         title: t('可用分组'),
       dataIndex: 'enable_groups',
       render: (text, record, index) => {
+
         // enable_groups is a string array
         return (
             <Space wrap={true} style={{'max-width': '500px'}}>
@@ -169,10 +170,10 @@ const ModelPricing = () => {
                     if (group === selectedGroup) {
                         return (
                             <Tag color={stringToTagColor(group)} prefixIcon={<IconVerify />}>
-                                {userUsableGroups[group]}
+                                {usableGroup[group]}
                             </Tag>
                         );
-                    } else if (userUsableGroups[group] && !['admin'].includes(group)){
+                    } else if (usableGroup[group] && !['admin'].includes(group)){
                         return (
                             <Tag
                                 color={stringToTagColor(group)}
@@ -180,12 +181,12 @@ const ModelPricing = () => {
                                 onClick={() => {
                                     setSelectedGroup(group);
                                     showInfo(t('当前查看的分组为：{{group}}，倍率为：{{ratio}}', {
-                                        group: userUsableGroups[group],
+                                        group: usableGroup[group],
                                         ratio: groupRatio[group]
                                     }));
                                 }}
                             >
-                                {userUsableGroups[group]}
+                                {usableGroup[group]}
                             </Tag>
                         );
                     } else {
@@ -270,8 +271,8 @@ const ModelPricing = () => {
   const [loading, setLoading] = useState(true);
   const [userState, userDispatch] = useContext(UserContext);
   const [groupRatio, setGroupRatio] = useState({});
+  const [usableGroup, setUsableGroup] = useState({});
   const [modelOwner, setModelOwner] = useState('');
-  const [userUsableGroups, setUserUsableGroups] = useState({});
   const [platformManufacturers, setPlatformManufacturers] = useState([]);
 
   const setModelsFormat = (models, groupRatio) => {
@@ -304,13 +305,13 @@ const ModelPricing = () => {
     let url = '';
     url = `/api/pricing`;
     const res = await API.get(url);
-    const { success, message, data, group_ratio, user_usable_group, manufacturers = '[]' } = res.data;
+    const { success, message, data, group_ratio, usable_group, manufacturers = '[]' } = res.data;
     if (success) {
       setGroupRatio(group_ratio);
-      setUserUsableGroups(user_usable_group);
+      setUsableGroup(usable_group);
+      setSelectedGroup(userState.user ? userState.user.group : 'default')
       setPlatformManufacturers(JSON.parse(manufacturers));
       setModelOwner(JSON.parse(manufacturers)[0].Manufacturer);
-      setSelectedGroup('default');
       setModelsFormat(data, group_ratio);
     } else {
       showError(message);

@@ -9,11 +9,35 @@ import (
 
 func GetPricing(c *gin.Context) {
 	pricing := model.GetPricing()
+	userId, exists := c.Get("id")
+	usableGroup := map[string]string{}
+	groupRatio := common.GroupRatio
+	var group string
+	if exists {
+		user, err := model.GetChannelById(userId.(int), false)
+		if err != nil {
+			c.JSON(200, gin.H{
+				"success": false,
+				"message": err.Error(),
+			})
+			return
+		}
+		group = user.Group
+	}
+
+	usableGroup = common.GetUserUsableGroups(group)
+	// check groupRatio contains usableGroup
+	for group := range common.GroupRatio {
+		if _, ok := usableGroup[group]; !ok {
+			delete(groupRatio, group)
+		}
+	}
+
 	c.JSON(200, gin.H{
-		"success":           true,
-		"data":              pricing,
-		"group_ratio":       common.GroupRatio,
-		"user_usable_group": common.UserUsableGroups,
+		"success":      true,
+		"data":         pricing,
+		"group_ratio":  groupRatio,
+		"usable_group": usableGroup,
 		"manufacturers":     setting.Manufacturers2JSONString(),
 	})
 }

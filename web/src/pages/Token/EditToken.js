@@ -18,6 +18,7 @@ import {
 } from '@douyinfe/semi-ui';
 import Title from '@douyinfe/semi-ui/lib/es/typography/title';
 import { Divider } from 'semantic-ui-react';
+import { useTranslation } from 'react-i18next';
 
 const EditToken = (props) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -48,6 +49,7 @@ const EditToken = (props) => {
   const [groups, setGroups] = useState([]);
   const [groupsRatio, setGroupsRatio] = useState({});
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleInputChange = (name, value) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   };
@@ -83,7 +85,7 @@ const EditToken = (props) => {
       }));
       setModels(localModelOptions);
     } else {
-      showError(message);
+      showError(t(message));
     }
   };
 
@@ -92,8 +94,6 @@ const EditToken = (props) => {
     const { success, message, data } = res.data;
     const { usableGroups, usableGroupsRatio } = data;
     if (success) {
-      // return data is a map, key is group name, value is group description
-      // label is group description, value is group name
       let localGroupOptions = Object.keys(usableGroups).map((group) => ({
         label: `${usableGroups[group]} (倍率: ${usableGroupsRatio[group]})`,
         value: group,
@@ -101,7 +101,7 @@ const EditToken = (props) => {
       setGroups(localGroupOptions);
       setGroupsRatio(usableGroupsRatio)
     } else {
-      showError(message);
+      showError(t(message));
     }
   };
 
@@ -181,7 +181,7 @@ const EditToken = (props) => {
       if (localInputs.expired_time !== -1) {
         let time = Date.parse(localInputs.expired_time);
         if (isNaN(time)) {
-          showError('过期时间格式错误！');
+          showError(t('过期时间格式错误！'));
           setLoading(false);
           return;
         }
@@ -194,11 +194,11 @@ const EditToken = (props) => {
       });
       const { success, message } = res.data;
       if (success) {
-        showSuccess('令牌更新成功！');
+        showSuccess(t('令牌更新成功！'));
         props.refresh();
         props.handleClose();
       } else {
-        showError(message);
+        showError(t(message));
       }
     } else {
       // 处理新增多个令牌的情况
@@ -214,7 +214,7 @@ const EditToken = (props) => {
         if (localInputs.expired_time !== -1) {
           let time = Date.parse(localInputs.expired_time);
           if (isNaN(time)) {
-            showError('过期时间格式错误！');
+            showError(t('过期时间格式错误！'));
             setLoading(false);
             break;
           }
@@ -227,13 +227,15 @@ const EditToken = (props) => {
         if (success) {
           successCount++;
         } else {
-          showError(message);
+          showError(t(message));
           break; // 如果创建失败，终止循环
         }
       }
 
       if (successCount > 0) {
-        showSuccess(`${successCount}个令牌创建成功，请在列表页面点击复制获取令牌！`);
+        showSuccess(
+          t('令牌创建成功，请在列表页面点击复制获取令牌！')
+        );
         props.refresh();
         props.handleClose();
       }
@@ -246,6 +248,7 @@ const EditToken = (props) => {
   return (
     <>
       <SideSheet
+        placement={isEdit ? 'right' : 'left'}
         title={isEdit ? '更新令牌信息' : '创建新的令牌'}
         headerStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
         bodyStyle={{ borderBottom: '1px solid var(--semi-color-border)' }}
@@ -253,11 +256,16 @@ const EditToken = (props) => {
         footer={
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Space>
-              <Button theme="solid" size={'middle'} onClick={submit}>
-                提交
+              <Button theme='solid' size={'middle'} onClick={submit}>
+                {t('提交')}
               </Button>
-              <Button theme="solid" size={'middle'} type={'tertiary'} onClick={handleCancel}>
-                取消
+              <Button
+                theme='solid'
+                size={'middle'}
+                type={'tertiary'}
+                onClick={handleCancel}
+              >
+                {t('取消')}
               </Button>
             </Space>
           </div>
@@ -272,24 +280,24 @@ const EditToken = (props) => {
       >
         <Card loading={loading} style={{height: '100%', overflow: 'auto'}} bodyStyle={{padding: 0}} bordered={false}>
           <Input
-              style={{marginTop: 20}}
-              label="名称"
-              name="name"
-              placeholder={'请输入名称'}
-              onChange={(value) => handleInputChange('name', value)}
-              value={name}
-              autoComplete="new-password"
-              required={!isEdit}
+            style={{ marginTop: 20 }}
+            label={t('名称')}
+            name='name'
+            placeholder={t('请输入名称')}
+            onChange={(value) => handleInputChange('name', value)}
+            value={name}
+            autoComplete='new-password'
+            required={!isEdit}
           />
           <Divider/>
           <DatePicker
-              label="过期时间"
-              name="expired_time"
-              placeholder={'请选择过期时间'}
-              onChange={(value) => handleInputChange('expired_time', value)}
-              value={expired_time}
-              autoComplete="new-password"
-              type="dateTime"
+            label={t('过期时间')}
+            name='expired_time'
+            placeholder={t('请选择过期时间')}
+            onChange={(value) => handleInputChange('expired_time', value)}
+            value={expired_time}
+            autoComplete='new-password'
+            type='dateTime'
           />
           <div style={{marginTop: 20}}>
             <Space>
@@ -299,7 +307,7 @@ const EditToken = (props) => {
                     setExpiredTime(0, 0, 0, 0);
                   }}
               >
-                永不过期
+                {t('永不过期')}
               </Button>
               <Button
                   type={'tertiary'}
@@ -307,7 +315,7 @@ const EditToken = (props) => {
                     setExpiredTime(0, 0, 1, 0);
                   }}
               >
-                一小时
+                {t('一小时')}
               </Button>
               <Button
                   type={'tertiary'}
@@ -315,7 +323,7 @@ const EditToken = (props) => {
                     setExpiredTime(1, 0, 0, 0);
                   }}
               >
-                一个月
+                {t('一个月')}
               </Button>
               <Button
                   type={'tertiary'}
@@ -323,64 +331,62 @@ const EditToken = (props) => {
                     setExpiredTime(0, 1, 0, 0);
                   }}
               >
-                一天
+                {t('一天')}
               </Button>
             </Space>
           </div>
 
           <Divider/>
           <Banner
-              type={'warning'}
-              description={
-                '注意，令牌的额度仅用于限制令牌本身的最大额度使用量，实际的使用受到账户的剩余额度限制。'
-              }
+            type={'warning'}
+            description={t('注意，令牌的额度仅用于限制令牌本身的最大额度使用量，实际的使用受到账户的剩余额度限制。')}
           ></Banner>
-          <div style={{marginTop: 20}}>
-            <Typography.Text>{`额度${renderQuotaWithPrompt(remain_quota)}`}</Typography.Text>
+          <div style={{ marginTop: 20 }}>
+            <Typography.Text>{`${t('额度')}${renderQuotaWithPrompt(remain_quota)}`}</Typography.Text>
           </div>
           <AutoComplete
-              style={{marginTop: 8}}
-              name="remain_quota"
-              placeholder={'请输入额度'}
-              onChange={(value) => handleInputChange('remain_quota', value)}
-              value={remain_quota}
-              autoComplete="new-password"
-              type="number"
-              // position={'top'}
-              data={[
-                {value: 500000, label: '1$'},
-                {value: 5000000, label: '10$'},
-                {value: 25000000, label: '50$'},
-                {value: 50000000, label: '100$'},
-                {value: 250000000, label: '500$'},
-                {value: 500000000, label: '1000$'},
-              ]}
-              disabled={unlimited_quota}
+            style={{ marginTop: 8 }}
+            name='remain_quota'
+            placeholder={t('请输入额度')}
+            onChange={(value) => handleInputChange('remain_quota', value)}
+            value={remain_quota}
+            autoComplete='new-password'
+            type='number'
+            // position={'top'}
+            data={[
+              { value: 500000, label: '1$' },
+              { value: 5000000, label: '10$' },
+              { value: 25000000, label: '50$' },
+              { value: 50000000, label: '100$' },
+              { value: 250000000, label: '500$' },
+              { value: 500000000, label: '1000$' },
+            ]}
+            disabled={unlimited_quota}
           />
 
           {!isEdit && (
-              <>
-                <div style={{marginTop: 20}}>
-                  <Typography.Text>新建数量</Typography.Text>
-                </div>
-                <AutoComplete
-                    style={{marginTop: 8}}
-                    label="数量"
-                    placeholder={'请选择或输入创建令牌的数量'}
-                    onChange={(value) => handleTokenCountChange(value)}
-                    onSelect={(value) => handleTokenCountChange(value)}
-                    value={tokenCount.toString()}
-                    autoComplete="off"
-                    type="number"
-                    data={[
-                      {value: 10, label: '10个'},
-                      {value: 20, label: '20个'},
-                      {value: 30, label: '30个'},
-                      {value: 100, label: '100个'},
-                    ]}
-                    disabled={unlimited_quota}
-                />
-              </>
+            <>
+              <div style={{ marginTop: 20 }}>
+                <Typography.Text>{t('新建数量')}</Typography.Text>
+              </div>
+              <AutoComplete
+                style={{ marginTop: 8 }}
+                label={t('数量')}
+                placeholder={t('请选择或输入创建令牌的数量')}
+                onChange={(value) => handleTokenCountChange(value)}
+                onSelect={(value) => handleTokenCountChange(value)}
+                value={tokenCount.toString()}
+                autoComplete='off'
+                type='number'
+                data={[
+                  { value: 10, label: t('10个') },
+                  { value: 20, label: t('20个') },
+                  { value: 30, label: t('30个') },
+                  { value: 100, label: t('100个') },
+                ]}
+                disabled={unlimited_quota}
+              />
+            </>
           )}
 
           <div>
@@ -391,74 +397,78 @@ const EditToken = (props) => {
                   setUnlimitedQuota();
                 }}
             >
-              {unlimited_quota ? '取消无限额度' : '设为无限额度'}
+              {unlimited_quota ? t('取消无限额度') : t('设为无限额度')}
             </Button>
           </div>
-          <Divider/>
-          <div style={{marginTop: 10}}>
-            <Typography.Text>令牌分组，默认为用户的分组</Typography.Text>
+          <Divider />
+          <div style={{ marginTop: 10 }}>
+            <Typography.Text>{t('IP白名单（请勿过度信任此功能）')}</Typography.Text>
           </div>
+          <TextArea
+            label={t('IP白名单')}
+            name='allow_ips'
+            placeholder={t('允许的IP，一行一个')}
+            onChange={(value) => {
+              handleInputChange('allow_ips', value);
+            }}
+            value={inputs.allow_ips}
+            style={{ fontFamily: 'JetBrains Mono, Consolas' }}
+          />
+          <div style={{marginTop: 10, display: 'flex'}}>
+            <Space>
+              <Checkbox
+                name='model_limits_enabled'
+                checked={model_limits_enabled}
+                onChange={(e) =>
+                  handleInputChange('model_limits_enabled', e.target.checked)
+                }
+              >
+                {t('启用模型限制（非必要，不建议启用）')}
+              </Checkbox>
+            </Space>
+          </div>
+
           <Select
-              style={{marginTop: 8, width: '100%'}}
-              placeholder={group.length ? '令牌分组，默认为用户的分组' : '管理员未设置用户可选分组'}
-              name="gruop"
+            style={{marginTop: 8, width: '100%'}}
+            placeholder={t('请选择该渠道所支持的模型')}
+            name='models'
+            required
+            multiple
+            selection
+            onChange={(value) => {
+              handleInputChange('model_limits', value);
+            }}
+            value={inputs.model_limits}
+            autoComplete='new-password'
+            optionList={models}
+            disabled={!model_limits_enabled}
+            filter={true}
+            searchPosition='dropdown'
+          />
+          <div style={{ marginTop: 10 }}>
+            <Typography.Text>{t('令牌分组，默认为用户的分组')}</Typography.Text>
+          </div>
+          {groups.length > 0 ?
+            <Select
+              style={{ marginTop: 8 }}
+              placeholder={t('令牌分组，默认为用户的分组')}
+              name='gruop'
               required
               selection
               onChange={(value) => {
                 handleInputChange('group', value);
               }}
               value={inputs.group}
-              autoComplete="new-password"
-              filter={true}
-              searchPosition='dropdown'
-              disabled={!groups.length}
-          >
-            {
-              groups.filter((group) => !group?.label?.includes('合作伙伴')).map((group) => (
-                  <Select.Option value={group.value}>{group.label}</Select.Option>
-              ))
-            }
-          </Select>
-          <Divider/>
-          <Typography.Text>IP白名单（请勿过度信任此功能）</Typography.Text>
-          <TextArea
-              label="IP白名单"
-              name="allow_ips"
-              placeholder={'允许的IP，一行一个'}
-              onChange={(value) => {
-                handleInputChange('allow_ips', value);
-              }}
-              value={inputs.allow_ips}
-              style={{fontFamily: 'JetBrains Mono, Consolas'}}
-          />
-          <div style={{marginTop: 10, display: 'flex'}}>
-            <Space>
-              <Checkbox
-                  name="model_limits_enabled"
-                  checked={model_limits_enabled}
-                  onChange={(e) => handleInputChange('model_limits_enabled', e.target.checked)}
-              ></Checkbox>
-              <Typography.Text>启用模型限制（非必要，不建议启用）</Typography.Text>
-            </Space>
-          </div>
-
-          <Select
-              style={{marginTop: 8, width: '100%'}}
-              placeholder={'请选择该渠道所支持的模型'}
-              name="models"
-              required
-              multiple
-              selection
-              onChange={(value) => {
-                handleInputChange('model_limits', value);
-              }}
-              value={inputs.model_limits}
-              autoComplete="new-password"
-              optionList={models}
-              disabled={!model_limits_enabled}
-              filter={true}
-              searchPosition='dropdown'
-          />
+              autoComplete='new-password'
+              optionList={groups}
+            />:
+            <Select
+              style={{ marginTop: 8 }}
+              placeholder={t('管理员未设置用户可选分组')}
+              name='gruop'
+              disabled={true}
+            />
+          }
         </Card>
       </SideSheet>
     </>
