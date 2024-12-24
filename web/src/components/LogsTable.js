@@ -226,37 +226,39 @@ const LogsTable = (props) => {
         );
       },
     },
-    {
-      title: t('分组'),
-      dataIndex: 'group',
-      render: (text, record, index) => {
-        if (record.type === 0 || record.type === 2) {
-         if (record.group) {
-            return (
-              <>
-                {renderGroup(record.group)}
-              </>
-            );
-         } else {
-           let other = JSON.parse(record.other);
-           if (other === null) {
-             return <></>;
-           }
-           if (other.group !== undefined) {
-             return (
-               <>
-                 {renderGroup(other.group)}
-               </>
-             );
-           } else {
-             return <></>;
-           }
-         }
-        } else {
-          return <></>;
-        }
-      },
-    },
+    // {
+    //   title: t('分组'),
+    //   dataIndex: 'group',
+    //   render: (text, record, index) => {
+    //     if (record.type === 0 || record.type === 2) {
+    //      if (record.group) {
+    //         return (
+    //           <>
+    //             {renderGroup(record.group)}
+    //           </>
+    //         );
+    //      } else if(record.other) {
+    //        let other = JSON.parse(record.other);
+    //        if (other === null) {
+    //          return <></>;
+    //        }
+    //        if (other.group !== undefined) {
+    //          return (
+    //            <>
+    //              {renderGroup(other.group)}
+    //            </>
+    //          );
+    //        } else {
+    //          return <></>;
+    //        }
+    //      } else {
+    //       return <></>
+    //      }
+    //     } else {
+    //       return <></>;
+    //     }
+    //   },
+    // },
     {
       title: t('类型'),
       dataIndex: 'type',
@@ -437,13 +439,13 @@ const LogsTable = (props) => {
   // 初始化start_timestamp为今天0点
   const [inputs, setInputs] = useState({
     username: '',
-    user_id: '',
     token_name: '',
     model_name: '',
     start_timestamp: timestamp2string(getTodayStartTimestamp()),
     end_timestamp: timestamp2string(now.getTime() / 1000 + 3600),
     channel: '',
     group: '',
+    user_id: '',
   });
   const {
     username,
@@ -453,6 +455,7 @@ const LogsTable = (props) => {
     end_timestamp,
     channel,
     group,
+    user_id
   } = inputs;
 
   const [stat, setStat] = useState({
