@@ -169,7 +169,7 @@ func RelaySwapFace(c *gin.Context) *dto.MidjourneyResponse {
 			modelPrice = defaultPrice
 		}
 	}
-	groupRatio := common.GetGroupRatio(group)
+	groupRatio := setting.GetGroupRatio(group)
 	ratio := modelPrice * groupRatio
 	userQuota, err := model.CacheGetUserQuota(userId)
 	if err != nil {
@@ -479,7 +479,7 @@ func RelayMidjourneySubmit(c *gin.Context, relayMode int) *dto.MidjourneyRespons
 			modelPrice = defaultPrice
 		}
 	}
-	groupRatio := common.GetGroupRatio(group)
+	groupRatio := setting.GetGroupRatio(group)
 	ratio := modelPrice * groupRatio
 	userQuota, err := model.CacheGetUserQuota(userId)
 	if err != nil {

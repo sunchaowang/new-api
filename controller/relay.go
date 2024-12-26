@@ -16,6 +16,7 @@ import (
 	"one-api/relay/constant"
 	relayconstant "one-api/relay/constant"
 	"one-api/service"
+	"one-api/setting"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -100,7 +101,7 @@ func Playground(c *gin.Context) {
 	if group == "" {
 		group = userGroup
 	} else {
-		if !common.GroupInUserUsableGroups(group) && group != userGroup {
+		if !setting.GroupInUserUsableGroups(group) && group != userGroup {
 			openaiErr = service.OpenAIErrorWrapperLocal(errors.New("无权访问该分组"), "group_not_allowed", http.StatusForbidden)
 			return
 		}
