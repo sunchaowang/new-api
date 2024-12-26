@@ -65,7 +65,7 @@ export default function Component() {
       {/* bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 */}
       <div
         className={
-          "absolute w-full h-full inset-0 z-10 bg-gradient-to-tr from-[#ffffff] to-[#9089fc50] opacity-30 blur-[30px]"
+          "absolute w-full h-full inset-0 z-10 bg-gradient-to-tr from-[#f4f4f5] to-[#a9eaf050] opacity-30 blur-[30px]"
         }
       />
       <main
@@ -73,12 +73,12 @@ export default function Component() {
           "flex flex-col items-center rounded-2xl bg-hero-section-centered-navbar px-3 md:rounded-3xl md:px-0 hero-bg "
         }
       >
-        <section className="my-14 mt-16 flex flex-col items-center justify-center gap-6">
-          <CenteredNavbar />
+        <section className="my-14 mt-16 w-full flex flex-col items-center justify-center gap-24">
+          <CenteredNavbar className={"w-full"} />
           <LazyMotion features={domAnimation}>
             <m.div
               animate="kick"
-              className="flex flex-col gap-6"
+              className="flex flex-col gap-6 w-full"
               exit="auto"
               initial="auto"
               transition={{
@@ -86,8 +86,8 @@ export default function Component() {
                 ease: "easeInOut",
               }}
               variants={{
-                auto: { width: "auto" },
-                kick: { width: "auto" },
+                auto: { width: "100%" },
+                kick: { width: "100%" },
               }}
             >
               <AnimatePresence mode="wait">
@@ -105,7 +105,7 @@ export default function Component() {
                     type: "spring",
                   }}
                 >
-                  <h1 className="flex gap-5 text-center text-[clamp(2.125rem,1.142rem+3.659vw,4rem)] font-bold leading-none">
+                  <h1 className="flex justify-center gap-8 text-center text-[clamp(2.125rem,1.142rem+3.659vw,4rem)] font-bold leading-none">
                     <span className={"text-primary"}>轻松</span>
                     <span className={"text-primary"}>便宜</span>
                     <span className={""}>and</span>
@@ -115,7 +115,7 @@ export default function Component() {
 
                 <m.div
                   animate={{ filter: "blur(0px)", opacity: 1, x: 0 }}
-                  className="text-start font-normal leading-7 text-default-500 sm:text-[18px]"
+                  className="flex justify-center font-normal leading-7 text-default-500 sm:text-[18px]"
                   initial={{ filter: "blur(16px)", opacity: 0, x: 15 + 1 * 3 }}
                   transition={{
                     bounce: 0,
@@ -124,11 +124,11 @@ export default function Component() {
                     type: "spring",
                   }}
                 >
-                  <p className="text-center text-base text-default-500 sm:w-[666px] md:text-lg md:leading-6">
+                  <div className="text-center text-base text-default-500 sm:w-[666px] md:text-lg md:leading-6">
                     致力于为开发者提供快速、便捷的 API
                     接口调用方案，打造稳定且易于使用的 API
                     接口平台，一站式集成几乎所有AI大模型
-                  </p>
+                  </div>
                 </m.div>
               </AnimatePresence>
             </m.div>

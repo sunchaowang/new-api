@@ -274,7 +274,7 @@ func ClaudeTextHelper(c *gin.Context) *dto.OpenAIErrorWithStatusCode {
 	relayInfo.UpstreamModelName = textRequest.Model
 	modelPrice, getModelPriceSuccess := common.GetModelPrice(relayInfo.OriginModelName, false)
 	// modelPrice, getModelPriceSuccess := common.GetModelPrice(textRequest.Model, false)
-	groupRatio := common.GetGroupRatio(relayInfo.Group)
+	groupRatio := setting.GetGroupRatio(relayInfo.Group)
 
 	var preConsumedQuota int
 	var ratio float64

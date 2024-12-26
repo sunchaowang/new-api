@@ -23,7 +23,7 @@ func UserUsableGroups2JSONString() string {
 func HiddenGroups2JSONString() string {
 	jsonBytes, err := json.Marshal(HiddenGroups)
 	if err != nil {
-		SysError("error marshalling hidden groups: " + err.Error())
+		common.SysError("error marshalling hidden groups: " + err.Error())
 	}
 	return string(jsonBytes)
 }

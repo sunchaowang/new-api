@@ -30,7 +30,7 @@ func GetUserGroups(c *gin.Context) {
 		userUsableGroups := setting.GetUserUsableGroups(userGroup)
 		if _, ok := userUsableGroups[groupName]; ok {
 			usableGroups[groupName] = userUsableGroups[groupName]
-			usableGroupsRatio[groupName] = common.GroupRatio[groupName]
+			usableGroupsRatio[groupName] = setting.GetGroupRatio(groupName)
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{

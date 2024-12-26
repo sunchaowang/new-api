@@ -20,7 +20,7 @@ import { Icon } from "@iconify/react";
 
 import { AcmeIcon } from "./social";
 
-const menuItems = ["Home", "Features", "Customers", "About Us"];
+const menuItems = ["首页", "模型定价", "Playground", "帮助文档"];
 
 const CenteredNavbar = React.forwardRef<HTMLElement, NavbarProps>(
   (
@@ -34,7 +34,7 @@ const CenteredNavbar = React.forwardRef<HTMLElement, NavbarProps>(
         ref={ref}
         classNames={{
           base: cn(
-            "max-w-xs sm:max-w-md md:max-w-screen-sm mx-auto bg-default-foreground rounded-full px-1.5 pr-[18px] md:pr-1.5 py-[5px] top-12 shadow-[0_4px_15px_0_rgba(0,0,0,0.25)]",
+            "max-w-xs sm:max-w-md md:max-w-screen-md mx-auto bg-primary rounded-full px-1.5 pr-[18px] md:pr-1.5 py-[5px] top-12 shadow-[0_4px_15px_0_rgba(0,0,0,0.25)]",
             base,
           ),
           wrapper: cn("px-0", wrapper),
@@ -55,14 +55,14 @@ const CenteredNavbar = React.forwardRef<HTMLElement, NavbarProps>(
           </span>
         </NavbarBrand>
 
-        <NavbarContent className="hidden md:flex" justify="center">
+        <NavbarContent className="hidden md:flex gap-12" justify="center">
           <NavbarItem
             isActive
             className="data-[active='true']:font-medium[date-active='true']"
           >
             <Link
               aria-current="page"
-              className="text-background"
+              className="text"
               href="#"
               size="sm"
             >
@@ -70,18 +70,18 @@ const CenteredNavbar = React.forwardRef<HTMLElement, NavbarProps>(
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link className="text-default-500" href="#" size="sm">
-              Features
+            <Link className="text-[#fff]" href="#" size="sm">
+              模型定价
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link className="text-default-500" href="#" size="sm">
-              Customers
+            <Link className="text-[#fff]" href="#" size="sm">
+              Playground
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link className="text-default-500" href="#" size="sm">
-              About Us
+            <Link className="text-[#fff]" href="#" size="sm">
+              帮助文档
             </Link>
           </NavbarItem>
         </NavbarContent>
