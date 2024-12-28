@@ -25,17 +25,16 @@ export default defineConfig(({ command, mode }) => {
       },
       react(),
 
-      svgr({include: 'src/assets/svg/**/*.svg?react'})
-
+      svgr({ include: 'src/assets/svg/**/*.svg?react' })
     ],
     optimizeDeps: {
       force: true,
       esbuildOptions: {
         loader: {
           '.js': 'jsx',
-          '.json': 'json',
-        },
-      },
+          '.json': 'json'
+        }
+      }
     },
     build: {
       rollupOptions: {
@@ -46,17 +45,11 @@ export default defineConfig(({ command, mode }) => {
             semantic: ['semantic-ui-offline', 'semantic-ui-react'],
             visactor: ['@visactor/react-vchart', '@visactor/vchart'],
             tools: ['axios', 'history', 'marked'],
-            'react-components': [
-              'react-dropzone',
-              'react-fireworks',
-              'react-telegram-login',
-              'react-toastify',
-              'react-turnstile',
-            ],
-            'i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
-          },
-        },
-      },
+            'react-components': ['react-dropzone', 'react-fireworks', 'react-telegram-login', 'react-toastify', 'react-turnstile'],
+            i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector']
+          }
+        }
+      }
     },
     server: {
       // https: true,
@@ -76,5 +69,5 @@ export default defineConfig(({ command, mode }) => {
         sass: {}
       }
     }
-  }
+  };
 });

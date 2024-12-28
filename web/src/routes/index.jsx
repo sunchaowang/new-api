@@ -11,6 +11,7 @@ import Dashboard from '../pages/Dashboard';
 import Pricing from '../pages/Pricing';
 import GitHubOAuth from '../components/GitHubOAuth';
 import LinuxDoOAuth from '../components/LinuxDoOAuth';
+import APIDoc from '../pages/Doc';
 
 // Oauth 授权
 const oauthRoutes = {
@@ -18,13 +19,13 @@ const oauthRoutes = {
   children: [
     {
       path: 'github',
-      element: <GitHubOAuth />,
+      element: <GitHubOAuth />
     },
     {
       path: 'linuxdo',
-      element: <LinuxDoOAuth />,
-    },
-  ],
+      element: <LinuxDoOAuth />
+    }
+  ]
 };
 
 // Dashboard
@@ -58,7 +59,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading></Loading>}>
           <DashboardHome />
         </Suspense>
-      ),
+      )
     },
     // playground
     {
@@ -67,7 +68,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading></Loading>}>
           <DashboardPlayground />
         </Suspense>
-      ),
+      )
     },
     {
       path: 'home',
@@ -75,7 +76,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading></Loading>}>
           <DashboardHome />
         </Suspense>
-      ),
+      )
     },
     // token
     {
@@ -84,7 +85,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading></Loading>}>
           <DashboardToken />
         </Suspense>
-      ),
+      )
     },
     {
       path: 'channel',
@@ -92,7 +93,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardChannel />
         </Suspense>
-      ),
+      )
     },
     {
       path: 'log',
@@ -100,7 +101,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardLogs />
         </Suspense>
-      ),
+      )
     },
     // midjourney
     {
@@ -109,7 +110,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardMidJourney />
         </Suspense>
-      ),
+      )
     },
     // task
     {
@@ -118,7 +119,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardTask />
         </Suspense>
-      ),
+      )
     },
     // topup
     {
@@ -127,7 +128,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardTopup />
         </Suspense>
-      ),
+      )
     },
     // redemption
     {
@@ -136,7 +137,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardRedemption />
         </Suspense>
-      ),
+      )
     },
     // user
     {
@@ -145,7 +146,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardUser />
         </Suspense>
-      ),
+      )
     },
     // 个人中心
     {
@@ -154,7 +155,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardPersonal />
         </Suspense>
-      ),
+      )
     },
     // 系统设置
     {
@@ -163,7 +164,7 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardSetting />
         </Suspense>
-      ),
+      )
     },
     {
       path: 'detail',
@@ -171,9 +172,9 @@ const dashboardRoutes = {
         <Suspense fallback={<Loading />}>
           <DashboardDetail />
         </Suspense>
-      ),
-    },
-  ],
+      )
+    }
+  ]
 };
 
 export default function Routes() {
@@ -182,7 +183,8 @@ export default function Routes() {
     { path: '/login', element: <Login /> },
     { path: '/register', element: <Register /> },
     { path: '/pricing', element: <Pricing /> },
+    { path: '/doc', element: <APIDoc /> },
     dashboardRoutes,
-    oauthRoutes,
+    oauthRoutes
   ]);
 }

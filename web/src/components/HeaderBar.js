@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../context/User";
-import { StatusContext } from "../context/Status";
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/User';
+import { StatusContext } from '../context/Status';
 import { ConfigContext } from '../context/Config';
-import { useSetTheme, useTheme } from "../context/Theme";
+import { useSetTheme, useTheme } from '../context/Theme';
 
 import { API, getLogo, getSystemName, showSuccess, isAdmin, showError } from '../helpers';
 import '../index.css';
@@ -78,6 +78,12 @@ const HeaderBar = () => {
         itemKey: 'pricing',
         to: '/pricing',
         icon: isMobile ? null : <IconTag />
+      },
+      {
+        text: 'API文档',
+        itemKey: 'doc',
+        to: '/doc',
+        icon: isMobile ? null : <IconTag />
       }
     ],
     [
@@ -145,8 +151,8 @@ const HeaderBar = () => {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user.is_login_expired) {
         setIsLoginExpired(true);
-      }else {
-        setIsLoginExpired(false)
+      } else {
+        setIsLoginExpired(false);
       }
       console.log('isLoginExpired', isLoginExpired);
     }
@@ -174,7 +180,7 @@ const HeaderBar = () => {
             className={isMobile ? 'header-bar-nav' : ''}
             style={{
               backgroundColor: '#f4f7f9',
-              borderBottom:  'none'
+              borderBottom: 'none'
             }}
             renderWrapper={({ itemElement, isSubNav, isInSubNav, props }) => {
               const routerMap = {
@@ -182,7 +188,8 @@ const HeaderBar = () => {
                 register: '/register',
                 home: '/',
                 dashboard: '/dashboard/home',
-                pricing: '/pricing'
+                pricing: '/pricing',
+                doc: '/doc'
               };
               return (
                 <Link style={{ textDecoration: 'none' }} to={routerMap[props.itemKey]}>
