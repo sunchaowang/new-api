@@ -219,7 +219,7 @@ func tokenAuth(c *gin.Context, key string) {
 		abortWithOpenAiMessage(c, http.StatusUnauthorized, err.Error())
 		return
 	}
-	userEnabled, err := model.CacheIsUserEnabled(token.UserId)
+	userEnabled, err := model.IsUserEnabled(token.UserId, false)
 	if err != nil {
 		abortWithOpenAiMessage(c, http.StatusInternalServerError, err.Error())
 		return

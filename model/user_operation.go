@@ -46,7 +46,7 @@ func InsertOperationCheckIn(userId int, lastDayUsed int64, requestIP string) (qu
 	quota = int(rand.Float64() * float64(lastDayUsed))
 
 	// 查询用户现有额度
-	userQuota, err := GetUserQuota(userId)
+	userQuota, err := GetUserQuota(userId, false)
 	if err != nil {
 		return 0, err
 	}
