@@ -184,7 +184,15 @@ const LogsTable = (props) => {
       render: (text, record, index) => {
         return isAdminUser ? (
           <div>
-            <Avatar size="small" color={stringToColor(text)} style={{ marginRight: 4 }} onClick={() => showUserInfo(record.user_id)}>
+            <Avatar
+              size='small'
+              color={stringToColor(text)}
+              style={{ marginRight: 4 }}
+              onClick={(event) => {
+                event.stopPropagation();
+                showUserInfo(record.user_id)
+              }}
+            >
               {typeof text === 'string' && text.slice(0, 1)}
             </Avatar>
             {text}
@@ -210,9 +218,11 @@ const LogsTable = (props) => {
               {record.token_id}
             </Tag>
             <Tag
-              color="grey"
-              onClick={() => {
-                copyText(text);
+              color='grey'
+              size='large'
+              onClick={(event) => {
+                //cancel the row click event
+                copyText(event, text);
               }}
             >
               {text ? t(text) : '--'}
@@ -274,8 +284,9 @@ const LogsTable = (props) => {
           <>
             <Tag
               color={stringToColor(text)}
-              onClick={() => {
-                copyText(text);
+              size='large'
+              onClick={(event) => {
+                copyText(event, text);
               }}
             >
               {' '}
@@ -542,8 +553,8 @@ const LogsTable = (props) => {
     let expandDatesLocal = {};
     for (let i = 0; i < logs.length; i++) {
       logs[i].timestamp2string = timestamp2string(logs[i].created_at);
-      logs[i].key = '' + logs[i].id;
-      logs[i].label = '' + logs[i].id;
+      logs[i].key = logs[i].id;
+        logs[i].label = '' + logs[i].id;
       let other = getLogOther(logs[i].other);
       let expandDataLocal = [];
       if (isAdmin()) {
@@ -686,11 +697,12 @@ const LogsTable = (props) => {
     await loadLogs(activePage, pageSize, logType);
   };
 
-  const copyText = async (text) => {
+  const copyText = async (e, text) => {
+    e.stopPropagation();
     if (await copy(text)) {
       showSuccess('已复制：' + text);
     } else {
-      Modal.error({ title: '无法复制到剪贴板，请手动复制', content: text });
+      Modal.error({ title: t('无法复制到剪贴板，请手动复制'), content: text });
     }
   };
 

@@ -171,7 +171,7 @@ func RelaySwapFace(c *gin.Context) *dto.MidjourneyResponse {
 	}
 	groupRatio := setting.GetGroupRatio(group)
 	ratio := modelPrice * groupRatio
-	userQuota, err := model.CacheGetUserQuota(userId)
+	userQuota, err := model.GetUserQuota(userId, false)
 	if err != nil {
 		return &dto.MidjourneyResponse{
 			Code:        4,
@@ -195,11 +195,11 @@ func RelaySwapFace(c *gin.Context) *dto.MidjourneyResponse {
 	}
 	defer func(ctx context.Context) {
 		if mjResp.StatusCode == 200 && mjResp.Response.Code == 1 {
-			err := model.PostConsumeTokenQuota(relayInfo, userQuota, quota, 0, true)
+			err := model.PostConsumeQuota(relayInfo, userQuota, quota, 0, true)
 			if err != nil {
 				common.SysError("error consuming token remain quota: " + err.Error())
 			}
-			err = model.CacheUpdateUserQuota(userId)
+			//err = model.CacheUpdateUserQuota(userId)
 			if err != nil {
 				common.SysError("error update user quota cache: " + err.Error())
 			}
@@ -481,7 +481,7 @@ func RelayMidjourneySubmit(c *gin.Context, relayMode int) *dto.MidjourneyRespons
 	}
 	groupRatio := setting.GetGroupRatio(group)
 	ratio := modelPrice * groupRatio
-	userQuota, err := model.CacheGetUserQuota(userId)
+	userQuota, err := model.GetUserQuota(userId, false)
 	if err != nil {
 		return &dto.MidjourneyResponse{
 			Code:        4,
@@ -505,13 +505,9 @@ func RelayMidjourneySubmit(c *gin.Context, relayMode int) *dto.MidjourneyRespons
 
 	defer func(ctx context.Context) {
 		if consumeQuota && midjResponseWithStatus.StatusCode == 200 {
-			err := model.PostConsumeTokenQuota(relayInfo, userQuota, quota, 0, true)
+			err := model.PostConsumeQuota(relayInfo, userQuota, quota, 0, true)
 			if err != nil {
 				common.SysError("error consuming token remain quota: " + err.Error())
-			}
-			err = model.CacheUpdateUserQuota(userId)
-			if err != nil {
-				common.SysError("error update user quota cache: " + err.Error())
 			}
 			if quota != 0 {
 				tokenName := c.GetString("token_name")
