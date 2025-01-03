@@ -14,6 +14,20 @@ import (
 	"gorm.io/gorm"
 )
 
+var groupCol string
+var keyCol string
+
+func initCol() {
+	if common.UsingPostgreSQL {
+		groupCol = `"group"`
+		keyCol = `"key"`
+
+	} else {
+		groupCol = "`group`"
+		keyCol = "`key`"
+	}
+}
+
 var DB *gorm.DB
 
 var LOG_DB *gorm.DB
@@ -42,6 +56,9 @@ func createRootAccountIfNeed() error {
 }
 
 func chooseDB(envName string) (*gorm.DB, error) {
+	defer func() {
+		initCol()
+	}()
 	dsn := os.Getenv(envName)
 	if dsn != "" {
 		if strings.HasPrefix(dsn, "postgres://") {

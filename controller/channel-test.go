@@ -33,6 +33,9 @@ func testChannel(channel *model.Channel, testModel string) (err error, openAIErr
 	if channel.Type == common.ChannelTypeMidjourney {
 		return errors.New("midjourney channel test is not supported"), nil
 	}
+	if channel.Type == common.ChannelTypeMidjourneyPlus {
+		return errors.New("midjourney plus channel test is not supported!!!"), nil
+	}
 	if channel.Type == common.ChannelTypeSunoAPI {
 		return errors.New("suno channel test is not supported"), nil
 	}

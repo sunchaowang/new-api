@@ -1,7 +1,13 @@
 import React, {useEffect, useLayoutEffect, useMemo, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API, isMobile, showError, showSuccess, timestamp2string } from '../../helpers';
-import { renderQuotaWithPrompt } from '../../helpers/render';
+import {
+  API,
+  isMobile,
+  showError,
+  showSuccess,
+  timestamp2string,
+} from '../../helpers';
+import { renderGroupOption, renderQuotaWithPrompt } from '../../helpers/render';
 import {
   AutoComplete,
   Banner,
@@ -94,9 +100,10 @@ const EditToken = (props) => {
     const { success, message, data } = res.data;
     const { usableGroups, usableGroupsRatio } = data;
     if (success) {
-      let localGroupOptions = Object.keys(usableGroups).map((group) => ({
-        label: `${usableGroups[group]} (倍率: ${usableGroupsRatio[group]})`,
+      let localGroupOptions = Object.entries(data).map(([group, info]) => ({
+        label: info.desc,
         value: group,
+        ratio: info.ratio
       }));
       setGroups(localGroupOptions);
       setGroupsRatio(usableGroupsRatio)
@@ -458,6 +465,8 @@ const EditToken = (props) => {
               onChange={(value) => {
                 handleInputChange('group', value);
               }}
+              position={'topLeft'}
+              renderOptionItem={renderGroupOption}
               value={inputs.group}
               autoComplete='new-password'
               optionList={groups}

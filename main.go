@@ -33,8 +33,10 @@ var indexPage []byte
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		common.SysError("failed to load .env file: " + err.Error())
+		common.SysLog("Support for .env file is disabled")
 	}
+
+	common.LoadEnv()
 
 	common.SetupLogger()
 	common.SysLog("Chirou API " + common.Version + " started")
@@ -83,9 +85,6 @@ func main() {
 		common.SysLog("memory cache enabled")
 		common.SysError(fmt.Sprintf("sync frequency: %d seconds", common.SyncFrequency))
 		model.InitChannelCache()
-	}
-	if common.RedisEnabled {
-		go model.SyncTokenCache(common.SyncFrequency)
 	}
 	if common.MemoryCacheEnabled {
 		go model.SyncOptions(common.SyncFrequency)

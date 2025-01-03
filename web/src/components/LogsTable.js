@@ -924,6 +924,12 @@ const LogsTable = (props) => {
             rowKey="id"
             scroll={{ x: 'max-content', y: true, scrollToFirstRowOnChange: true }}
             pagination={{
+                formatPageText: (page) =>
+                    t('第 {{start}} - {{end}} 条，共 {{total}} 条', {
+                        start: page.currentStart,
+                        end: page.currentEnd,
+                        total: logs.length
+                    }),
               currentPage: activePage,
               current: activePage,
               pageSize: pageSize,

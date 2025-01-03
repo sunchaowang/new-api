@@ -115,14 +115,11 @@ func GetChannelsByTag(tag string, idSort bool) ([]*Channel, error) {
 
 func SearchChannels(keyword string, group string, model string, idSort bool) ([]*Channel, error) {
 	var channels []*Channel
-	keyCol := "`key`"
-	groupCol := "`group`"
 	modelsCol := "`models`"
 
 	// 如果是 PostgreSQL，使用双引号
 	if common.UsingPostgreSQL {
 		keyCol = `"key"`
-		groupCol = `"group"`
 		modelsCol = `"models"`
 	}
 
@@ -438,14 +435,10 @@ func GetPaginatedTags(offset int, limit int) ([]*string, error) {
 
 func SearchTags(keyword string, group string, model string, idSort bool) ([]*string, error) {
 	var tags []*string
-	keyCol := "`key`"
-	groupCol := "`group`"
 	modelsCol := "`models`"
 
 	// 如果是 PostgreSQL，使用双引号
 	if common.UsingPostgreSQL {
-		keyCol = `"key"`
-		groupCol = `"group"`
 		modelsCol = `"models"`
 	}
 
