@@ -307,6 +307,7 @@ const ModelPricing = () => {
     if (success) {
       setGroupRatio(group_ratio);
       setUsableGroup(usable_group);
+      console.log('userState', userState.use)
       setSelectedGroup(userState.user ? userState.user.group : 'default');
       setPlatformManufacturers(JSON.parse(manufacturers));
       setModelOwner(JSON.parse(manufacturers)[0].Manufacturer);

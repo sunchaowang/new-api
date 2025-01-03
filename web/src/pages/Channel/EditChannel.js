@@ -76,7 +76,7 @@ const EditChannel = (props) => {
   const [inputs, setInputs] = useState(originInputs);
   const [originModelOptions, setOriginModelOptions] = useState([]);
   const [modelOptions, setModelOptions] = useState([]);
-  const [groupOptions, setGroupOptions] = useState([]);
+  const [groupsRatio, setGroupsRatio] = useState([]);
   const [basicModels, setBasicModels] = useState([]);
   const [fullModels, setFullModels] = useState([]);
   const [customModel, setCustomModel] = useState('');
@@ -231,16 +231,11 @@ const EditChannel = (props) => {
 
   const fetchGroups = async () => {
     try {
-      let res = await API.get(`/api/group/`);
+      let res = await API.get(`/api/user/groups`);
       if (res === undefined) {
         return;
       }
-      setGroupOptions(
-        res.data.data.map((group) => ({
-          label: group,
-          value: group
-        }))
-      );
+      setGroupsRatio(() => res.data.data);
     } catch (error) {
       showError(error.message);
     }
@@ -545,7 +540,7 @@ const EditChannel = (props) => {
             }}
             value={inputs.groups}
             autoComplete="new-password"
-            optionList={groupOptions}
+            optionList={Object.entries(groupsRatio).map(([key, value]) => ({ label: value.desc, value: key }))}
           />
           {inputs.type === 18 && (
             <>

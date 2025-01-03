@@ -14,7 +14,7 @@ export function renderText(text, limit) {
  * @param {string} group - The input group string
  * @returns {JSX.Element} - The rendered group tags
  */
-export function renderGroup(group, groupsOptions ) {
+export function renderGroup(group, groupsOption) {
   if (group === '') {
     return (
       <Tag size='large' key='default' color='orange'>
@@ -48,7 +48,7 @@ export function renderGroup(group, groupsOptions ) {
             }
           }}
         >
-          {groupsOptions?.has?.(group) ? groupsOptions.get(group) : group}
+          {groupsOption[group] ? groupsOption[group]?.desc + `(倍率 ${groupsOption[group]?.ratio})`: ''}
         </Tag>
       ))}
     </span>
@@ -119,10 +119,10 @@ export const renderGroupOption = (item) => {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <Typography.Text strong type={disabled ? 'tertiary' : undefined}>
-          {value}
+        {label}
         </Typography.Text>
         <Typography.Text type="secondary" size="small">
-          {label}
+        {value}
         </Typography.Text>
       </div>
       {item.ratio && renderRatio(item.ratio)}

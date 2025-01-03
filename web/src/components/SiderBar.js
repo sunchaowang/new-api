@@ -7,7 +7,7 @@ import { API, isAdmin, isMobile, showError } from '../helpers';
 import '../index.css';
 
 import { IconGift } from '@douyinfe/semi-icons';
-import { Avatar, Dropdown, Layout, Nav, Switch, SideSheet } from '@douyinfe/semi-ui';
+import { Avatar, Dropdown, Layout, Nav, Switch, Divider } from '@douyinfe/semi-ui';
 import { setStatusData } from '../helpers/data.js';
 import { stringToColor } from '../helpers/render.js';
 import { useSetTheme, useTheme } from '../context/Theme/index.js';
@@ -103,6 +103,12 @@ const SiderBar = () => {
         icon: <IconToken />,
       },
       {
+        text: '余额充值',
+        itemKey: 'topup',
+        to: '/dashboard/topup',
+        icon: <IconTransfer />,
+      },
+      {
         text: '请求日志',
         itemKey: 'log',
         to: '/dashboard/log',
@@ -140,10 +146,10 @@ const SiderBar = () => {
             : 'tableHiddle',
       },
       {
-        text: '余额充值',
-        itemKey: 'topup',
-        to: '/dashboard/topup',
-        icon: <IconTransfer />,
+        text: '个人中心',
+        itemKey: 'personal',
+        to: '/dashboard/personal',
+        icon: <IconAccessibility />,
       },
       {
         text: '渠道管理',
@@ -159,19 +165,12 @@ const SiderBar = () => {
         icon: <IconGift />,
         className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
       },
-
       {
         text: '用户管理',
         itemKey: 'user',
         to: '/dashboard/user',
         icon: <IconList />,
         className: isAdmin() ? 'semi-navigation-item-normal' : 'tableHiddle',
-      },
-      {
-        text: '个人中心',
-        itemKey: 'personal',
-        to: '/dashboard/personal',
-        icon: <IconAccessibility />,
       },
       {
         text: '系统设置',
@@ -280,11 +279,12 @@ const SiderBar = () => {
               }
             }
           }
-          return (
+          return [
+            (props.itemKey === 'log' || props.itemKey === 'channel') && <Divider style={{marginTop: 16, marginBottom: 16}}></Divider>,
             <Link style={{ textDecoration: 'none' }} to={routerMap[props.itemKey]}>
               {itemElement}
             </Link>
-          );
+          ];
         }}
         items={menuButtons}
         onSelect={(key) => {

@@ -48,13 +48,8 @@ const EditUser = (props) => {
   };
   const fetchGroups = async () => {
     try {
-      let res = await API.get(`/api/group/`);
-      setGroupOptions(
-        res.data.data.map((group) => ({
-          label: group,
-          value: group,
-        })),
-      );
+      let res = await API.get(`/api/user/groups`);
+      setGroupOptions(() => res.data.data);
     } catch (error) {
       showError(error.message);
     }
@@ -203,7 +198,7 @@ const EditUser = (props) => {
                 onChange={(value) => handleInputChange('group', value)}
                 value={inputs.group}
                 autoComplete='new-password'
-                optionList={groupOptions}
+                optionList={Object.entries(groupOptions).map(([key, value]) => ({ value: key, label: value.desc }))}
               />
               <div style={{ marginTop: 20 }}>
                 <Typography.Text>{`${t('剩余额度')}${renderQuotaWithPrompt(quota)}`}</Typography.Text>

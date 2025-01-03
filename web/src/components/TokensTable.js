@@ -3,18 +3,7 @@ import { API, copy, showError, showSuccess, timestamp2string } from '../helpers'
 
 import { ITEMS_PER_PAGE } from '../constants';
 import { renderGroup, renderQuota } from '../helpers/render';
-import {
-  Button,
-  Dropdown,
-  Form,
-  Modal,
-  Popconfirm,
-  Popover,
-  Space,
-  SplitButtonGroup,
-  Table,
-  Tag,
-} from '@douyinfe/semi-ui';
+import { Button, Dropdown, Form, Modal, Popconfirm, Popover, Space, SplitButtonGroup, Table, Tag } from '@douyinfe/semi-ui';
 
 import { IconTreeTriangleDown } from '@douyinfe/semi-icons';
 import EditToken from '../pages/Token/EditToken';
@@ -26,7 +15,6 @@ function renderTimestamp(timestamp) {
 }
 
 const TokensTable = () => {
-
   const { t } = useTranslation();
 
   const renderStatus = (status, model_limits_enabled = false) => {
@@ -34,38 +22,38 @@ const TokensTable = () => {
       case 1:
         if (model_limits_enabled) {
           return (
-            <Tag color='green' size='large'>
+            <Tag color="green" size="large">
               {t('已启用：限制模型')}
             </Tag>
           );
         } else {
           return (
-            <Tag color='green' size='large'>
+            <Tag color="green" size="large">
               {t('已启用')}
             </Tag>
           );
         }
       case 2:
         return (
-          <Tag color='red' size='large'>
+          <Tag color="red" size="large">
             {t('已禁用')}
           </Tag>
         );
       case 3:
         return (
-          <Tag color='yellow' size='large'>
+          <Tag color="yellow" size="large">
             {t('已过期')}
           </Tag>
         );
       case 4:
         return (
-          <Tag color='grey' size='large'>
+          <Tag color="grey" size="large">
             {t('已耗尽')}
           </Tag>
         );
       default:
         return (
-          <Tag color='black' size='large'>
+          <Tag color="black" size="large">
             {t('未知状态')}
           </Tag>
         );
@@ -75,7 +63,7 @@ const TokensTable = () => {
   const columns = [
     {
       title: t('名称'),
-      dataIndex: 'name',
+      dataIndex: 'name'
     },
     {
       title: t('状态'),
@@ -86,18 +74,18 @@ const TokensTable = () => {
           <div>
             <Space>
               {renderStatus(text, record.model_limits_enabled)}
-              {renderGroup(record.group, groupsMap)}
+              {renderGroup(record.group, groupsRatio)}
             </Space>
           </div>
         );
-      },
+      }
     },
     {
       title: t('已用额度'),
       dataIndex: 'used_quota',
       render: (text, record, index) => {
         return <div>{renderQuota(parseInt(text))}</div>;
-      },
+      }
     },
     {
       title: t('剩余额度'),
@@ -116,25 +104,21 @@ const TokensTable = () => {
             )}
           </div>
         );
-      },
+      }
     },
     {
       title: t('创建时间'),
       dataIndex: 'created_time',
       render: (text, record, index) => {
         return <div>{renderTimestamp(text)}</div>;
-      },
+      }
     },
     {
       title: t('过期时间'),
       dataIndex: 'expired_time',
       render: (text, record, index) => {
-        return (
-          <div>
-            {record.expired_time === -1 ? t('永不过期') : renderTimestamp(text)}
-          </div>
-        );
-      },
+        return <div>{record.expired_time === -1 ? t('永不过期') : renderTimestamp(text)}</div>;
+      }
     },
     {
       title: '操作',
@@ -154,7 +138,7 @@ const TokensTable = () => {
             name: 'ChatGPT Next Web',
             onClick: () => {
               onOpenLink('default', chatLink, record);
-            },
+            }
           });
         }
         if (mjLink) {
@@ -166,7 +150,7 @@ const TokensTable = () => {
             name: 'ChatGPT Next Midjourney',
             onClick: () => {
               onOpenLink('mj', mjLink, record);
-            },
+            }
           });
         }
         if (shouldUseCustom) {
@@ -200,12 +184,8 @@ const TokensTable = () => {
         }
         return (
           <div>
-            <Popover
-              content={'sk-' + record.key}
-              style={{ padding: 20 }}
-              position='top'
-            >
-              <Button theme='light' type='tertiary' style={{ marginRight: 1 }}>
+            <Popover content={'sk-' + record.key} style={{ padding: 20 }} position="top">
+              <Button theme="light" type="tertiary" style={{ marginRight: 1 }}>
                 {t('查看')}
               </Button>
             </Popover>
@@ -219,10 +199,7 @@ const TokensTable = () => {
             >
               {t('复制')}
             </Button>
-            <SplitButtonGroup
-              style={{ marginRight: 1 }}
-              aria-label={t('项目操作按钮组')}
-            >
+            <SplitButtonGroup style={{ marginRight: 1 }} aria-label={t('项目操作按钮组')}>
               <Button
                 theme="borderless"
                 style={{ color: 'rgba(var(--semi-teal-7), 1)' }}
@@ -240,7 +217,7 @@ const TokensTable = () => {
                 <Button
                   style={{
                     padding: '8px 4px',
-                    color: 'rgba(var(--semi-teal-7), 1)',
+                    color: 'rgba(var(--semi-teal-7), 1)'
                   }}
                   type="primary"
                   icon={<IconTreeTriangleDown />}
@@ -258,7 +235,7 @@ const TokensTable = () => {
                 });
               }}
             >
-              <Button theme='light' type='danger' style={{ marginRight: 1 }}>
+              <Button theme="light" type="danger" style={{ marginRight: 1 }}>
                 {t('删除')}
               </Button>
             </Popconfirm>
@@ -298,8 +275,8 @@ const TokensTable = () => {
             </Button>
           </div>
         );
-      },
-    },
+      }
+    }
   ];
 
   const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE);
@@ -314,7 +291,7 @@ const TokensTable = () => {
   const [searching, setSearching] = useState(false);
   const [chats, setChats] = useState([]);
   const [editingToken, setEditingToken] = useState({
-    id: undefined,
+    id: undefined
   });
   const [groups, setGroups] = useState([]);
   const [groupsMap, setGroupsMap] = useState(new Map([]));
@@ -324,19 +301,8 @@ const TokensTable = () => {
   const loadGroups = async () => {
     let res = await API.get(`/api/user/groups`);
     const { success, message, data } = res.data;
-    const { usableGroups, usableGroupsRatio } = data;
     if (success) {
-      // return data is a map, key is group name, value is group description
-      // label is group description, value is group name
-      let localGroupOptions = Object.keys(usableGroups)
-        .map((group) => ({
-          label: `${usableGroups[group]} (倍率: ${usableGroupsRatio[group]})`,
-          value: group,
-        }))
-        .map((group) => [group.value, group.label]);
-      setGroups(() => localGroupOptions);
-      setGroupsMap(new Map(localGroupOptions));
-      setGroupsRatio(usableGroupsRatio);
+      setGroupsRatio(() => data);
     } else {
       showError(message);
     }
@@ -350,7 +316,7 @@ const TokensTable = () => {
     setShowEdit(false);
     setTimeout(() => {
       setEditingToken({
-        id: undefined,
+        id: undefined
       });
     }, 500);
   };
@@ -394,7 +360,7 @@ const TokensTable = () => {
       Modal.error({
         title: t('无法复制到剪贴板，请手动复制'),
         content: text,
-        size: 'large',
+        size: 'large'
       });
     }
   };
@@ -526,15 +492,15 @@ const TokensTable = () => {
     onSelectAll: (selected, selectedRows) => {},
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedKeys(selectedRows);
-    },
+    }
   };
 
   const handleRow = (record, index) => {
     if (record.status !== 1) {
       return {
         style: {
-          background: 'var(--semi-color-disabled-border)',
-        },
+          background: 'var(--semi-color-disabled-border)'
+        }
       };
     } else {
       return {};
@@ -560,7 +526,7 @@ const TokensTable = () => {
       ></EditToken>
       <Form layout="horizontal" style={{ marginTop: 10 }} labelPosition={'left'}>
         <Form.Input
-          field='keyword'
+          field="keyword"
           label={t('搜索关键字')}
           placeholder={t('令牌名称')}
           value={searchKeyword}
@@ -568,7 +534,7 @@ const TokensTable = () => {
           onChange={handleKeywordChange}
         />
         <Form.Input
-          field='token'
+          field="token"
           label={t('密钥')}
           placeholder={t('密钥')}
           value={searchToken}
@@ -577,9 +543,9 @@ const TokensTable = () => {
         />
         <Button
           label={t('查询')}
-          type='primary'
-          htmlType='submit'
-          className='btn-margin-right'
+          type="primary"
+          htmlType="submit"
+          className="btn-margin-right"
           onClick={searchTokens}
           style={{ marginRight: 8 }}
         >
@@ -591,36 +557,30 @@ const TokensTable = () => {
           style={{ marginRight: 8 }}
           onClick={() => {
             setEditingToken({
-              id: undefined,
+              id: undefined
             });
             setShowEdit(true);
           }}
         >
-            {t('添加令牌')}
+          {t('添加令牌')}
         </Button>
-          <Button
-              type="primary"
-              theme={'borderless'}
-              style={{ marginRight: 8 }}
-              onClick={copyBaseUrl}
-          >
-              复制 BaseURL
-          </Button>
+        <Button type="primary" theme={'borderless'} style={{ marginRight: 8 }} onClick={copyBaseUrl}>
+          复制 BaseURL
+        </Button>
         <Button
-            label={t('复制所选令牌')}
-            type='warning'
-            onClick={async () => {
-              if (selectedKeys.length === 0) {
-                showError(t('请至少选择一个令牌！'));
-                return;
-              }
-              let keys = '';
-              for (let i = 0; i < selectedKeys.length; i++) {
-                keys +=
-                    selectedKeys[i].name + '    sk-' + selectedKeys[i].key + '\n';
-              }
-              await copyText(keys);
-            }}
+          label={t('复制所选令牌')}
+          type="warning"
+          onClick={async () => {
+            if (selectedKeys.length === 0) {
+              showError(t('请至少选择一个令牌！'));
+              return;
+            }
+            let keys = '';
+            for (let i = 0; i < selectedKeys.length; i++) {
+              keys += selectedKeys[i].name + '    sk-' + selectedKeys[i].key + '\n';
+            }
+            await copyText(keys);
+          }}
         >
           {t('复制所选令牌到剪贴板')}
         </Button>
@@ -649,7 +609,7 @@ const TokensTable = () => {
           onPageChange: handlePageChange,
           formatPageText: false,
           size: isMobile ? 'small' : 'default',
-          showTotal: true,
+          showTotal: true
         }}
         loading={loading}
         rowSelection={rowSelection}

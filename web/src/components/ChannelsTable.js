@@ -174,7 +174,7 @@ const ChannelsTable = () => {
                   return a.localeCompare(b);
                 })
                 .map((item, index) => {
-                  return renderGroup(item);
+                  return renderGroup(item, groupsRatio);
                 })}
             </Space>
           </div>
@@ -499,7 +499,7 @@ const ChannelsTable = () => {
     shouldShowPrompt('channel-test')
   );
   const [channelCount, setChannelCount] = useState(pageSize);
-  const [groupOptions, setGroupOptions] = useState([]);
+  const [groupsRatio, setGroupsRatio] = useState([]);
   const [showEdit, setShowEdit] = useState(false);
   const [enableBatchDelete, setEnableBatchDelete] = useState(false);
   const [editingChannel, setEditingChannel] = useState({
@@ -912,18 +912,15 @@ const ChannelsTable = () => {
 
   const fetchGroups = async () => {
     try {
-      let res = await API.get(`/api/group/`);
+      let res = await API.get(`/api/user/groups`);
+
+      const { success, message, data } = res.data;
       // add 'all' option
       // res.data.data.unshift('all');
-      if (res === undefined) {
-        return;
+      if (success) {
+        setGroupsRatio(() => data);
       }
-      setGroupOptions(
-        res.data.data.map((group) => ({
-          label: group,
-          value: group
-        }))
-      );
+      
     } catch (error) {
       showError(error.message);
     }
@@ -1061,7 +1058,7 @@ const ChannelsTable = () => {
             <Form.Select
               field="group"
               label={t('分组')}
-              optionList={[{ label: t('选择分组'), value: null }, ...groupOptions]}
+              optionList={[{ label: t('选择分组'), value: null }, ...(Object.entries(groupsRatio).map(([key, value]) => ({ label: value.desc, value: key })))]}
               initValue={null}
               onChange={(v) => {
                 setSearchGroup(v);

@@ -228,7 +228,7 @@ const LogsTable = (props) => {
               {text ? t(text) : '--'}
             </Tag>
             <Tag color={stringToColor(record.token_group)}>
-              {record.token_group ? (props.groups.size ? props.groups.get(record.token_group) : record.token_group) : '--'}
+              {record.token_group ? (Object.keys(props.groups).length ? props.groups[record.token_group]?.desc : record.token_group) : '--'}
             </Tag>
           </Space>
         ) : (

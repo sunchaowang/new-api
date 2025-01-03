@@ -10,8 +10,6 @@ import (
 	"one-api/setting"
 	"strconv"
 	"strings"
-
-	"gorm.io/gorm"
 )
 
 type Token struct {

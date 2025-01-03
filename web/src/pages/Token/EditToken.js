@@ -95,23 +95,6 @@ const EditToken = (props) => {
     }
   };
 
-  const loadGroups = async () => {
-    let res = await API.get(`/api/user/groups`);
-    const { success, message, data } = res.data;
-    const { usableGroups, usableGroupsRatio } = data;
-    if (success) {
-      let localGroupOptions = Object.entries(data).map(([group, info]) => ({
-        label: info.desc,
-        value: group,
-        ratio: info.ratio
-      }));
-      setGroups(localGroupOptions);
-      setGroupsRatio(usableGroupsRatio)
-    } else {
-      showError(t(message));
-    }
-  };
-
   const loadToken = async () => {
     setLoading(true);
     let res = await API.get(`/api/token/${props.editingToken.id}`);
@@ -133,7 +116,7 @@ const EditToken = (props) => {
   };
 
   useMemo(()  => {
-    setGroups(props.groups.map((group) => ({value: group[0], label: group[1]})));
+    setGroups(Object.entries(props.groupsRatio).map(([key, value]) => ({value: key, label: `${value.desc}(倍率${value.ratio})`})));
     setGroupsRatio(props.groupsRatio)
   }, [props.visiable])
 

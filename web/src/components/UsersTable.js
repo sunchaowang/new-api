@@ -18,6 +18,8 @@ import { useTranslation } from 'react-i18next';
 const UsersTable = () => {
   const { t } = useTranslation();
 
+  const [groupOptions, setGroupOptions] = useState([]);
+
   function renderRole(role) {
     switch (role) {
       case 1:
@@ -55,7 +57,7 @@ const UsersTable = () => {
       title: t('分组'),
       dataIndex: 'group',
       render: (text, record, index) => {
-        return <div>{renderGroup(text)}</div>;
+        return <div>{renderGroup(text, groupOptions)}</div>;
       },
     },
     {
@@ -235,7 +237,6 @@ const UsersTable = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searching, setSearching] = useState(false);
   const [searchGroup, setSearchGroup] = useState('');
-  const [groupOptions, setGroupOptions] = useState([]);
   const [userCount, setUserCount] = useState(ITEMS_PER_PAGE);
   const [showAddUser, setShowAddUser] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
@@ -382,18 +383,13 @@ const UsersTable = () => {
 
   const fetchGroups = async () => {
     try {
-      let res = await API.get(`/api/group/`);
+      let res = await API.get(`/api/user/groups`);
       // add 'all' option
       // res.data.data.unshift('all');
       if (res === undefined) {
         return;
       }
-      setGroupOptions(
-        res.data.data.map((group) => ({
-          label: group,
-          value: group,
-        })),
-      );
+      setGroupOptions(() => res.data.data);
     } catch (error) {
       showError(error.message);
     }
