@@ -11,7 +11,7 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended'
   ],
-  parser: '@babel/eslint-parser',
+  // parser: 'babel-eslint', // 或者可以直接移除这一行，使用默认解析器
   parserOptions: {
     ecmaFeatures: {
       jsx: true

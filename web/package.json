@@ -16,11 +16,14 @@
     "dayjs": "^1.11.11",
     "framer-motion": "^11.12.0",
     "history": "^5.3.0",
+    "i18next": "^23.16.8",
+    "i18next-browser-languagedetector": "^7.2.0",
     "marked": "^4.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-fireworks": "^1.0.4",
+    "react-i18next": "^13.0.0",
     "react-router-dom": "^6.3.0",
     "react-telegram-login": "^1.1.2",
     "react-toastify": "^9.0.8",
@@ -31,10 +34,7 @@
     "tailwind-merge": "^2.5.5",
     "usehooks-ts": "^3.1.0",
     "vite-plugin-semi-theme": "^0.6.0",
-    "vite-plugin-svgr": "^4.2.0",
-    "i18next": "^23.16.8",
-    "react-i18next": "^13.0.0",
-    "i18next-browser-languagedetector": "^7.2.0"
+    "vite-plugin-svgr": "^4.2.0"
   },
   "scripts": {
     "dev": "vite",
@@ -42,11 +42,6 @@
     "lint": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "prettier . --write",
     "preview": "vite preview --port 5173"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-react"
-    ]
   },
   "browserslist": {
     "production": [
@@ -64,7 +59,7 @@
     "@babel/core": "^7.23.9",
     "@babel/eslint-parser": "^7.23.10",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-react": "^7.26.3",
     "@eslint/js": "^9.11.1",
     "@iconify/react": "^5.0.2",
     "@so1ve/prettier-config": "^3.1.0",

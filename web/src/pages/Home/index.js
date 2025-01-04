@@ -3,7 +3,6 @@ import { Modal } from '@douyinfe/semi-ui';
 import { API, showError, showNotice, timestamp2string } from '../../helpers';
 import { StatusContext } from '../../context/Status';
 import { marked } from 'marked';
-// import HomeContent from "../../components/next-ui/HomeContext";
 import HomeContent from "./HomeContent.js";
 
 const Home = () => {
