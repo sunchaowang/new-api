@@ -147,25 +147,25 @@ var (
 // All duration's unit is seconds
 // Shouldn't larger then RateLimitKeyExpirationDuration
 var (
-	GlobalApiRateLimitEnable   = GetEnvOrDefaultBool("GLOBAL_API_RATE_LIMIT_ENABLE", true)
-	GlobalApiRateLimitNum      = GetEnvOrDefault("GLOBAL_API_RATE_LIMIT", 180)
-	GlobalApiRateLimitDuration = int64(GetEnvOrDefault("GLOBAL_API_RATE_LIMIT_DURATION", 180))
+	GlobalApiRateLimitEnable   = GetEnvOrDefaultBool("GLOBAL_API_RATE_LIMIT_ENABLE", false)
+	GlobalApiRateLimitNum      = GetEnvOrDefault("GLOBAL_API_RATE_LIMIT", 1800)
+	GlobalApiRateLimitDuration = int64(GetEnvOrDefault("GLOBAL_API_RATE_LIMIT_DURATION", 1*60))
 
-	GlobalWebRateLimitEnable   = GetEnvOrDefaultBool("GLOBAL_WEB_RATE_LIMIT_ENABLE", true)
-	GlobalWebRateLimitNum      = GetEnvOrDefault("GLOBAL_WEB_RATE_LIMIT", 60)
-	GlobalWebRateLimitDuration = int64(GetEnvOrDefault("GLOBAL_WEB_RATE_LIMIT_DURATION", 180))
+	GlobalWebRateLimitEnable   = GetEnvOrDefaultBool("GLOBAL_WEB_RATE_LIMIT_ENABLE", false)
+	GlobalWebRateLimitNum      = GetEnvOrDefault("GLOBAL_WEB_RATE_LIMIT", 600)
+	GlobalWebRateLimitDuration = int64(GetEnvOrDefault("GLOBAL_WEB_RATE_LIMIT_DURATION", 1*60))
 
-	UploadRateLimitNum            = 10
+	UploadRateLimitNum            = 100
 	UploadRateLimitDuration int64 = 60
 
-	DownloadRateLimitNum            = 10
+	DownloadRateLimitNum            = 100
 	DownloadRateLimitDuration int64 = 60
 
-	CriticalRateLimitNum            = 20
-	CriticalRateLimitDuration int64 = 20 * 60
+	CriticalRateLimitNum            = 200
+	CriticalRateLimitDuration int64 = 1 * 60
 )
 
-var RateLimitKeyExpirationDuration = 20 * time.Minute
+var RateLimitKeyExpirationDuration = 1 * time.Minute
 
 const (
 	UserStatusEnabled  = 1 // don't use 0, 0 is the default value!
@@ -259,7 +259,7 @@ var ChannelBaseURLs = []string{
 	"https://open.bigmodel.cn",            // 16
 	"https://dashscope.aliyuncs.com",      // 17
 	"",                                    // 18
-	"https://api.360.cn",                   // 19
+	"https://api.360.cn",                  // 19
 	"https://openrouter.ai/api",           // 20
 	"https://api.aiproxy.io",              // 21
 	"https://fastgpt.run/api/openapi",     // 22
