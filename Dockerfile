@@ -1,15 +1,13 @@
-FROM --platform=$BUILDPLATFORM node:16 AS builder
+FROM --platform=$BUILDPLATFORM oven/bun:latest as builder
 
 WORKDIR /build
 COPY web/package.json .
-RUN npm install
+RUN bun install
 COPY ./web .
 COPY ./VERSION .
-RUN DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) npm run build
+RUN DISABLE_ESLINT_PLUGIN='true' VITE_REACT_APP_VERSION=$(cat VERSION) bun run build
 
 FROM golang AS builder2
-
-# RUN apk add --no-cache gcc musl-dev g++ make sqlite-dev
 
 ENV GO111MODULE=on \
     CGO_ENABLED=1 \
